@@ -16,10 +16,9 @@ return [
     */
 
     'ssr' => [
-        'enabled' => true,
+        'enabled' => false,
         'url' => 'http://127.0.0.1:13714',
         // 'bundle' => base_path('bootstrap/ssr/ssr.mjs'),
-
     ],
 
     /*
@@ -42,10 +41,6 @@ return [
         'extensions' => [
             'js',
             'jsx',
-            'svelte',
-            'ts',
-            'tsx',
-            'vue',
         ],
 
     ],

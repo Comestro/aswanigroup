@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/container-queries";
@@ -9,94 +9,124 @@
 @source '../js';
 
 @theme {
-  --font-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Sora', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
+    --font-serif:
+        'Sora', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 
-  /* Color mappings from CSS variables */
-  --color-primary: var(--primary);
-  --color-on-primary: var(--on-primary);
-  --color-primary-container: var(--primary-container);
-  --color-on-primary-container: var(--on-primary-container);
-  --color-secondary: var(--secondary);
-  --color-on-secondary: var(--on-secondary);
-  --color-secondary-container: var(--secondary-container);
-  --color-on-secondary-container: var(--on-secondary-container);
-  --color-background: var(--background);
-  --color-on-background: var(--on-background);
-  --color-surface: var(--surface);
-  --color-on-surface: var(--on-surface);
-  --color-surface-variant: var(--surface-variant);
-  --color-on-surface-variant: var(--on-surface-variant);
-  --color-surface-container: var(--surface-container);
-  --color-surface-container-high: var(--surface-container-high);
-  --color-surface-container-low: var(--surface-container-low);
-  --color-surface-container-lowest: var(--surface-container-lowest);
-  --color-surface-tint: var(--surface-tint);
-  --color-outline: var(--outline);
-  --color-outline-variant: var(--outline-variant);
-  --color-error: var(--error);
-  --color-on-error: var(--on-error);
+    /* Color mappings from CSS variables */
+    --color-primary: var(--primary);
+    --color-on-primary: var(--on-primary);
+    --color-primary-container: var(--primary-container);
+    --color-on-primary-container: var(--on-primary-container);
+    --color-secondary: var(--secondary);
+    --color-on-secondary: var(--on-secondary);
+    --color-secondary-container: var(--secondary-container);
+    --color-on-secondary-container: var(--on-secondary-container);
+    --color-background: var(--background);
+    --color-on-background: var(--on-background);
+    --color-surface: var(--surface);
+    --color-on-surface: var(--on-surface);
+    --color-surface-variant: var(--surface-variant);
+    --color-on-surface-variant: var(--on-surface-variant);
+    --color-surface-container: var(--surface-container);
+    --color-surface-container-high: var(--surface-container-high);
+    --color-surface-container-low: var(--surface-container-low);
+    --color-surface-container-lowest: var(--surface-container-lowest);
+    --color-surface-tint: var(--surface-tint);
+    --color-outline: var(--outline);
+    --color-outline-variant: var(--outline-variant);
+    --color-error: var(--error);
+    --color-on-error: var(--on-error);
 
-  /* Spacing */
-  --spacing-gutter: 24px;
-  --spacing-container-max: 1200px;
+    /* Spacing */
+    --spacing-gutter: 24px;
+    --spacing-container-max: 1200px;
 }
 
 @layer base {
-  :root {
-    /* Institutional & Corporate — Light Only */
-    --primary: #002147;
-    --on-primary: #FFFFFF;
-    --primary-container: #F1F5F9;
-    --on-primary-container: #001229;
+    :root {
+        /* Institutional & Corporate — Light Only */
+        --primary: #002147;
+        --on-primary: #ffffff;
+        --primary-container: #f1f5f9;
+        --on-primary-container: #001229;
 
-    --secondary: #8C1515;
-    --on-secondary: #FFFFFF;
-    --secondary-container: #FDE8E8;
-    --on-secondary-container: #6B0E0E;
+        --secondary: #8c1515;
+        --on-secondary: #ffffff;
+        --secondary-container: #fde8e8;
+        --on-secondary-container: #6b0e0e;
 
-    --background: #FFFFFF;
-    --on-background: #1E293B;
+        --background: #ffffff;
+        --on-background: #1e293b;
 
-    --surface: #FFFFFF;
-    --on-surface: #1E293B;
+        --surface: #ffffff;
+        --on-surface: #1e293b;
 
-    --surface-variant: #F8FAFC;
-    --on-surface-variant: #64748B;
+        --surface-variant: #f8fafc;
+        --on-surface-variant: #64748b;
 
-    --surface-container: #F8FAFC;
-    --surface-container-high: #F1F5F9;
-    --surface-container-low: #F8FAFC;
-    --surface-container-lowest: #FFFFFF;
+        --surface-container: #f8fafc;
+        --surface-container-high: #f1f5f9;
+        --surface-container-low: #f8fafc;
+        --surface-container-lowest: #ffffff;
 
-    --surface-tint: #1E293B;
+        --surface-tint: #1e293b;
 
-    --outline: #CBD5E1;
-    --outline-variant: #E2E8F0;
+        --outline: #cbd5e1;
+        --outline-variant: #e2e8f0;
 
-    --error: #DC2626;
-    --on-error: #FFFFFF;
-  }
+        --error: #dc2626;
+        --on-error: #ffffff;
+    }
 
-  body {
-    @apply bg-background text-on-surface font-sans antialiased;
-  }
+    body {
+        @apply bg-background font-sans text-on-surface antialiased;
+    }
+}
+
+/* Native top-layer modal scroll containment */
+dialog:modal {
+    overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background-color: rgb(0 18 41 / 0.65);
+    backdrop-filter: blur(3px);
+}
+
+.visually-hidden:where(:not(:focus-within, :active)) {
+    position: absolute !important;
+    clip-path: inset(50%) !important;
+    overflow: hidden !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    white-space: nowrap !important;
 }
 
 @keyframes vertical-scroll {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-50%);
-  }
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-50%);
+    }
 }
 
 .animate-vertical-scroll {
-  animation: vertical-scroll 24s linear infinite;
+    animation: vertical-scroll 24s linear infinite;
 }
 
 .animate-vertical-scroll:hover {
-  animation-play-state: paused;
+    animation-play-state: paused;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .animate-vertical-scroll {
+        animation: none;
+    }
+}
