@@ -1,3 +1,5 @@
+import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
+
 export default function PageHero({
     badge,
     title,
@@ -6,52 +8,37 @@ export default function PageHero({
     imageAlt = 'Corporate Header',
     children,
 }) {
-    const words = String(title || '')
-        .trim()
-        .split(/\s+/);
-    const hasAccent = words.length > 1;
-    const leadText = hasAccent ? words.slice(0, -1).join(' ') : title;
-    const accentText = hasAccent ? words[words.length - 1] : '';
-
     return (
-        <section className="relative overflow-hidden border-b border-outline-variant bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
-            {heroImage && (
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src={heroImage}
-                        alt={imageAlt}
-                        className="h-full w-full object-cover opacity-20"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/75" />
-                </div>
-            )}
-
-            <div className="relative z-10 mx-auto w-full max-w-container-max text-center md:text-left">
-                <div className="max-w-3xl">
+        <section className="border-b border-outline-variant bg-surface-container-low pt-24 pb-12 sm:pt-28 md:pt-32 md:pb-16">
+            <div className="mx-auto grid w-full max-w-container-max items-center gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8">
+                <div className="text-left lg:col-span-7">
                     {badge && (
-                        <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded border border-secondary/40 bg-secondary/15 px-3 py-1 text-[10px] font-semibold tracking-wider text-secondary-container uppercase md:mx-0 md:text-xs">
+                        <p className="mb-3 text-xs font-bold tracking-[0.16em] text-secondary uppercase">
                             {badge}
-                        </div>
+                        </p>
                     )}
-                    <h1 className="mb-4 font-serif text-3xl leading-tight font-bold text-white sm:text-5xl md:text-6xl">
-                        {leadText}
-                        {hasAccent && (
-                            <>
-                                {' '}
-                                <span className="text-secondary-container">
-                                    {accentText}
-                                </span>
-                            </>
-                        )}
+                    <h1 className="mb-4 font-serif text-3xl leading-[1.1] font-bold text-primary sm:text-5xl">
+                        {title}
                     </h1>
                     {subtitle && (
-                        <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 md:mx-0 md:text-xl">
+                        <p className="max-w-2xl text-base leading-relaxed text-on-surface-variant md:text-lg">
                             {subtitle}
                         </p>
                     )}
+
+                    {children && <div className="mt-7">{children}</div>}
                 </div>
 
-                {children && <div className="mt-8">{children}</div>}
+                <div className="lg:col-span-5">
+                    <div className="overflow-hidden rounded-xl border border-outline-variant bg-white p-1.5 shadow-xs">
+                        <img
+                            src={heroImage || DEMO_IMAGE_URL}
+                            alt={imageAlt}
+                            onError={handleImageError}
+                            className="aspect-[16/10] w-full rounded-lg object-cover"
+                        />
+                    </div>
+                </div>
             </div>
         </section>
     );

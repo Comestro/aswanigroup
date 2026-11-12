@@ -49,15 +49,15 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
             />
 
             {/* Chairman's Message */}
-            <section className="bg-white px-gutter py-16 md:py-20">
-                <div className="mx-auto max-w-container-max">
-                    <div className="relative overflow-hidden rounded border border-outline-variant bg-white shadow-sm">
-                        <div className="relative z-10 grid grid-cols-1 items-center gap-0 lg:grid-cols-12">
+            <section className="bg-white py-14 md:py-20">
+                <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
+                    <div className="overflow-hidden rounded-xl border border-outline-variant bg-white">
+                        <div className="grid grid-cols-1 items-stretch gap-0 lg:grid-cols-12">
                             <motion.div
                                 {...fadeUp}
                                 className="h-full lg:col-span-5"
                             >
-                                <div className="aspect-square h-full w-full border-b border-outline-variant bg-surface-container-low lg:aspect-auto lg:border-r lg:border-b-0">
+                                <div className="aspect-[4/3] h-full w-full border-b border-outline-variant bg-surface-container-low sm:aspect-[16/10] lg:aspect-auto lg:border-r lg:border-b-0">
                                     <img
                                         src={
                                             settings.chairman_image ||
@@ -75,36 +75,42 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
                             <motion.div
                                 {...fadeUp}
                                 transition={{ delay: 0.1, duration: 0.5 }}
-                                className="relative p-8 lg:col-span-7 lg:p-12"
+                                className="relative flex flex-col justify-between p-6 sm:p-8 lg:col-span-7 lg:p-12"
                             >
-                                <div className="absolute top-8 right-10 text-outline-variant/30">
-                                    <Quote size={80} />
+                                <div>
+                                    <div className="mb-3 flex items-center justify-between gap-4">
+                                        <p className="text-xs font-bold tracking-[0.16em] text-secondary uppercase">
+                                            Chairman&apos;s Message
+                                        </p>
+                                        <Quote
+                                            size={28}
+                                            className="shrink-0 text-outline-variant"
+                                        />
+                                    </div>
+                                    <h2 className="mb-5 font-serif text-xl leading-snug font-bold text-primary sm:text-2xl md:text-3xl">
+                                        &ldquo;{settings.chairman_quote}&rdquo;
+                                    </h2>
+                                    <div className="space-y-4 text-sm leading-relaxed text-on-surface-variant sm:text-base">
+                                        {messageParagraphs.map((para, idx) => (
+                                            <p key={idx}>{para}</p>
+                                        ))}
+                                    </div>
                                 </div>
-                                <p className="mb-4 text-sm font-bold tracking-widest text-secondary uppercase">
-                                    Chairman&apos;s Message
-                                </p>
-                                <h2 className="mb-6 font-serif text-2xl leading-tight font-bold text-primary md:text-3xl">
-                                    &ldquo;{settings.chairman_quote}&rdquo;
-                                </h2>
-                                <div className="space-y-4 text-base leading-relaxed text-on-surface-variant">
-                                    {messageParagraphs.map((para, idx) => (
-                                        <p key={idx}>{para}</p>
-                                    ))}
-                                </div>
-                                <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-outline-variant pt-6">
+
+                                <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-outline-variant pt-5">
                                     <div>
-                                        <div className="font-serif text-xl font-bold text-primary">
+                                        <div className="font-serif text-lg font-bold text-primary sm:text-xl">
                                             {settings.founder_name ||
                                                 'Mr. R.K. Ashwin'}
                                         </div>
-                                        <div className="mt-1 text-sm font-semibold tracking-widest text-secondary uppercase">
+                                        <div className="mt-0.5 text-xs font-semibold tracking-widest text-secondary uppercase">
                                             {settings.founder_title ||
                                                 'Founder & Chairman'}
                                         </div>
                                     </div>
                                     <Link
                                         href={route('certifications')}
-                                        className="inline-flex items-center gap-1.5 text-sm font-bold text-secondary hover:underline"
+                                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline"
                                     >
                                         View Verified Partnerships{' '}
                                         <ArrowRight size={15} />
@@ -117,75 +123,69 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
             </section>
 
             {/* Vision, Mission, Core Values */}
-            <section className="border-y border-outline-variant bg-surface-variant px-gutter py-12 md:py-16">
-                <div className="mx-auto grid max-w-container-max grid-cols-1 gap-5 md:grid-cols-3">
+            <section className="border-y border-outline-variant bg-surface-container-low py-14 md:py-20">
+                <div className="mx-auto grid w-full max-w-container-max grid-cols-1 gap-6 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
                     <motion.div
                         {...fadeUp}
-                        className="flex flex-col justify-between border-outline-variant bg-white p-6 shadow-sm"
+                        className="flex h-full flex-col rounded-xl border border-outline-variant bg-white p-6 transition-colors hover:border-primary/40 sm:p-7"
                     >
-                        <div>
-                            <div className="mb-5 flex h-12 w-12 items-center justify-center border border-outline-variant bg-surface-container-low text-primary">
-                                <Eye size={24} />
-                            </div>
-                            <h3 className="mb-3 font-serif text-xl font-bold text-primary">
-                                Our Vision
-                            </h3>
-                            <p className="text-base leading-relaxed text-on-surface-variant">
-                                {settings.vision_text}
-                            </p>
+                        <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg border border-outline-variant bg-surface-container-low text-secondary">
+                            <Eye size={22} />
                         </div>
+                        <h3 className="mb-2.5 font-serif text-xl font-bold text-primary">
+                            Our Vision
+                        </h3>
+                        <p className="text-sm leading-relaxed text-on-surface-variant sm:text-base">
+                            {settings.vision_text}
+                        </p>
                     </motion.div>
 
                     <motion.div
                         {...fadeUp}
-                        className="flex flex-col justify-between border-outline-variant bg-white p-6 shadow-sm"
+                        className="flex h-full flex-col rounded-xl border border-outline-variant bg-white p-6 transition-colors hover:border-primary/40 sm:p-7"
                     >
-                        <div>
-                            <div className="mb-5 flex h-12 w-12 items-center justify-center border border-outline-variant bg-surface-container-low text-primary">
-                                <Target size={24} />
-                            </div>
-                            <h3 className="mb-3 font-serif text-xl font-bold text-primary">
-                                Our Mission
-                            </h3>
-                            <p className="text-base leading-relaxed text-on-surface-variant">
-                                {settings.mission_text}
-                            </p>
+                        <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg border border-outline-variant bg-surface-container-low text-secondary">
+                            <Target size={22} />
                         </div>
+                        <h3 className="mb-2.5 font-serif text-xl font-bold text-primary">
+                            Our Mission
+                        </h3>
+                        <p className="text-sm leading-relaxed text-on-surface-variant sm:text-base">
+                            {settings.mission_text}
+                        </p>
                     </motion.div>
 
                     <motion.div
                         {...fadeUp}
-                        className="flex flex-col justify-between border-outline-variant bg-white p-6 shadow-sm"
+                        className="flex h-full flex-col rounded-xl border border-outline-variant bg-white p-6 transition-colors hover:border-primary/40 sm:p-7"
                     >
-                        <div>
-                            <div className="mb-5 flex h-12 w-12 items-center justify-center border border-outline-variant bg-surface-container-low text-primary">
-                                <Trophy size={24} />
-                            </div>
-                            <h3 className="mb-3 font-serif text-xl font-bold text-primary">
-                                Core Values
-                            </h3>
-                            <ul className="mt-2 space-y-3 text-base text-on-surface-variant">
-                                {coreValues.map((item) => (
-                                    <li
-                                        key={item}
-                                        className="flex items-start gap-3"
-                                    >
-                                        <div className="mt-2 h-1.5 w-1.5 shrink-0 bg-secondary" />
-                                        <span className="leading-relaxed">
-                                            {item}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
+                        <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg border border-outline-variant bg-surface-container-low text-secondary">
+                            <Trophy size={22} />
                         </div>
+                        <h3 className="mb-2.5 font-serif text-xl font-bold text-primary">
+                            Core Values
+                        </h3>
+                        <ul className="mt-1 space-y-2.5 text-sm text-on-surface-variant sm:text-base">
+                            {coreValues.map((item) => (
+                                <li
+                                    key={item}
+                                    className="flex items-start gap-2.5"
+                                >
+                                    <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                                    <span className="leading-relaxed">
+                                        {item}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
                     </motion.div>
                 </div>
             </section>
 
             {/* Timeline */}
             {timelineItems.length > 0 && (
-                <section className="border-b border-outline-variant bg-surface-container-low px-gutter py-16 md:py-24">
-                    <div className="mx-auto max-w-container-max">
+                <section className="border-b border-outline-variant bg-white py-14 md:py-20">
+                    <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
                         <motion.div
                             initial="initial"
                             whileInView="animate"
@@ -195,13 +195,13 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
                         >
                             <motion.h2
                                 variants={fadeIn}
-                                className="mb-4 font-serif text-2xl font-bold tracking-tight text-primary md:text-4xl lg:text-5xl"
+                                className="mb-3 font-serif text-2xl font-bold tracking-tight text-primary sm:text-3xl md:text-4xl"
                             >
                                 Our Journey
                             </motion.h2>
                             <motion.p
                                 variants={fadeIn}
-                                className="text-sm text-on-surface-variant md:text-lg"
+                                className="text-sm text-on-surface-variant sm:text-base"
                             >
                                 Key milestones that have shaped {companyName}
                                 &apos;s corporate legacy since{' '}
@@ -210,7 +210,7 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
                         </motion.div>
 
                         <div className="relative mx-auto max-w-4xl">
-                            <div className="absolute top-0 bottom-0 left-4 w-px bg-outline-variant md:left-1/2 md:-translate-x-px" />
+                            <div className="absolute top-0 bottom-0 left-3.5 w-px bg-outline-variant md:left-1/2 md:-translate-x-px" />
 
                             {timelineItems.map((item, i) => (
                                 <motion.div
@@ -222,27 +222,27 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
                                         duration: 0.4,
                                         delay: i * 0.08,
                                     }}
-                                    className={`relative mb-10 flex items-start ${
+                                    className={`relative mb-8 flex items-start last:mb-0 ${
                                         i % 2 === 0 ? 'md:flex-row-reverse' : ''
                                     }`}
                                 >
                                     <div className="hidden w-5/12 md:block" />
-                                    <div className="absolute left-4 z-10 mt-1 h-4 w-4 -translate-x-[0.45rem] rounded-full border-4 border-secondary bg-white md:left-1/2 md:-translate-x-1/2" />
+                                    <div className="absolute left-3.5 z-10 mt-6 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-3 border-secondary bg-white md:left-1/2" />
                                     <div
-                                        className={`w-full pl-12 md:w-5/12 md:pl-0 ${
+                                        className={`w-full pl-10 md:w-5/12 md:pl-0 ${
                                             i % 2 === 0
-                                                ? 'md:pr-12 md:text-right'
-                                                : 'md:pl-12'
+                                                ? 'md:pr-10 md:text-right'
+                                                : 'md:pl-10'
                                         }`}
                                     >
-                                        <div className="relative border border-outline-variant bg-white p-6 shadow-sm">
-                                            <div className="mb-1 font-serif text-2xl font-bold text-secondary">
+                                        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-5 transition-colors hover:border-primary/40 sm:p-6">
+                                            <div className="mb-1 font-serif text-xl font-bold text-secondary sm:text-2xl">
                                                 {item.year}
                                             </div>
-                                            <div className="text-lg font-bold text-primary">
+                                            <div className="text-base font-bold text-primary sm:text-lg">
                                                 {item.title}
                                             </div>
-                                            <p className="mt-2 text-base leading-relaxed text-on-surface-variant">
+                                            <p className="mt-1.5 text-sm leading-relaxed text-on-surface-variant">
                                                 {item.description}
                                             </p>
                                         </div>

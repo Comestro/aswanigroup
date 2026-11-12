@@ -33,104 +33,101 @@ export default function Contact({ ventures = [] }) {
                 imageAlt="Office Workspace"
             />
 
-            <section className="bg-surface-container-low px-gutter py-12 md:py-16">
-                <div className="mx-auto max-w-container-max">
-                    <div className="grid grid-cols-1 overflow-hidden rounded border border-outline-variant bg-white shadow-sm lg:grid-cols-12">
+            <section className="bg-white py-14 md:py-20">
+                <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 overflow-hidden rounded-xl border border-outline-variant bg-white lg:grid-cols-12">
                         <motion.div
                             {...fadeUp}
-                            className="relative overflow-hidden bg-primary p-8 text-white md:p-12 lg:col-span-5"
+                            className="bg-primary p-6 text-white sm:p-8 md:p-10 lg:col-span-5"
                         >
-                            <div className="absolute top-0 right-0 h-32 w-32 translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary/10" />
-                            <div className="absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-secondary/5" />
-
-                            <div className="relative z-10">
-                                <h2 className="mb-3 font-serif text-3xl font-bold">
+                            <div>
+                                <h2 className="mb-2.5 font-serif text-2xl font-bold sm:text-3xl">
                                     {headers.sidebar_title ||
                                         'Corporate Office'}
                                 </h2>
-                                <p className="mb-10 text-base text-white/80">
+                                <p className="mb-8 text-sm text-white/75 sm:text-base">
                                     {headers.sidebar_subtitle ||
                                         'Direct lines to our division managers.'}
                                 </p>
 
-                                <div className="space-y-8">
-                                    <div className="flex gap-5">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/10 bg-white/5">
+                                <div className="space-y-6 sm:space-y-7">
+                                    <div className="flex gap-4">
+                                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5">
                                             <Building
                                                 className="text-secondary-container"
-                                                size={24}
+                                                size={20}
                                             />
                                         </div>
-                                        <div>
-                                            <div className="mb-1.5 text-sm font-bold tracking-widest text-secondary-container uppercase">
+                                        <div className="min-w-0">
+                                            <div className="mb-1 text-xs font-bold tracking-widest text-secondary-container uppercase">
                                                 HQ Address
                                             </div>
-                                            <p className="text-base leading-relaxed whitespace-pre-line text-white/85">
+                                            <p className="text-sm leading-relaxed whitespace-pre-line text-white/85 sm:text-base">
                                                 {settings.hq_address}
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-5">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/10 bg-white/5">
+                                    <div className="flex gap-4">
+                                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5">
                                             <Phone
                                                 className="text-secondary-container"
-                                                size={24}
+                                                size={20}
                                             />
                                         </div>
-                                        <div>
-                                            <div className="mb-1.5 text-sm font-bold tracking-widest text-secondary-container uppercase">
+                                        <div className="min-w-0">
+                                            <div className="mb-1 text-xs font-bold tracking-widest text-secondary-container uppercase">
                                                 Distributor Hotlines
                                             </div>
                                             {settings.primary_phone && (
-                                                <p className="font-serif text-base text-white/85">
+                                                <p className="font-serif text-sm text-white/85 sm:text-base">
                                                     {settings.primary_phone}
                                                 </p>
                                             )}
                                             {settings.secondary_phone && (
-                                                <p className="font-serif text-base text-white/85">
+                                                <p className="font-serif text-sm text-white/85 sm:text-base">
                                                     {settings.secondary_phone}
                                                 </p>
                                             )}
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-5">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/10 bg-white/5">
+                                    <div className="flex gap-4">
+                                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5">
                                             <Mail
                                                 className="text-secondary-container"
-                                                size={24}
+                                                size={20}
                                             />
                                         </div>
-                                        <div>
-                                            <div className="mb-1.5 text-sm font-bold tracking-widest text-secondary-container uppercase">
+                                        <div className="min-w-0">
+                                            <div className="mb-1 text-xs font-bold tracking-widest text-secondary-container uppercase">
                                                 Emails
                                             </div>
                                             {settings.distributor_email && (
-                                                <p className="text-base text-white/85">
+                                                <p className="truncate text-sm text-white/85 sm:text-base">
                                                     {settings.distributor_email}
                                                 </p>
                                             )}
                                             {settings.primary_email && (
-                                                <p className="text-base text-white/85">
+                                                <p className="truncate text-sm text-white/85 sm:text-base">
                                                     {settings.primary_email}
                                                 </p>
                                             )}
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-5">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/10 bg-white/5">
+                                    <div className="flex gap-4">
+                                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5">
                                             <Clock
                                                 className="text-secondary-container"
-                                                size={24}
+                                                size={20}
                                             />
                                         </div>
-                                        <div>
-                                            <div className="mb-1.5 text-sm font-bold tracking-widest text-secondary-container uppercase">
+                                        <div className="min-w-0">
+                                            <div className="mb-1 text-xs font-bold tracking-widest text-secondary-container uppercase">
                                                 Office Hours
                                             </div>
-                                            <p className="text-base text-white/85">
+                                            <p className="text-sm text-white/85 sm:text-base">
                                                 {settings.office_hours}
                                             </p>
                                         </div>
@@ -142,9 +139,9 @@ export default function Contact({ ventures = [] }) {
                                         href={`https://wa.me/${settings.whatsapp_number || '919507488833'}`}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="inline-flex items-center gap-2 rounded bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700"
+                                        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
                                     >
-                                        <MessageCircle size={18} />
+                                        <MessageCircle size={17} />
                                         Message Directly on WhatsApp
                                     </a>
                                 </div>
@@ -154,12 +151,12 @@ export default function Contact({ ventures = [] }) {
                         <motion.div
                             {...fadeUp}
                             transition={{ delay: 0.1, duration: 0.5 }}
-                            className="p-8 md:p-12 lg:col-span-7"
+                            className="p-6 sm:p-8 md:p-10 lg:col-span-7"
                         >
-                            <h2 className="mb-2 font-serif text-3xl font-bold text-primary">
+                            <h2 className="mb-2 font-serif text-2xl font-bold text-primary sm:text-3xl">
                                 {headers.form_title || 'Send us a Message'}
                             </h2>
-                            <p className="mb-8 text-base text-on-surface-variant">
+                            <p className="mb-7 text-sm text-on-surface-variant sm:text-base">
                                 {headers.form_subtitle ||
                                     'Captured directly in our lead tracker, emailed to our division heads, and ready for instant WhatsApp handoff.'}
                             </p>

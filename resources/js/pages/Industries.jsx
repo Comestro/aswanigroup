@@ -1,9 +1,10 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
-    CheckCircle2,
+    Check,
     Download,
     ExternalLink,
+    FileText,
     Mail,
     MapPin,
     MessageCircle,
@@ -35,8 +36,8 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                 imageAlt={headers.title || 'Ashwin Group Ventures'}
             />
 
-            <section className="bg-surface-container-low px-gutter py-16">
-                <div className="mx-auto max-w-container-max space-y-12">
+            <section className="bg-white py-14 md:py-20">
+                <div className="mx-auto w-full max-w-container-max space-y-8 px-4 sm:px-6 md:space-y-10 lg:px-8">
                     {ventures.map((venture, index) => {
                         const IconComponent = getVentureIcon(venture.icon_name);
                         const isReversed = index % 2 === 1;
@@ -45,12 +46,14 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                         return (
                             <article
                                 key={venture.id}
-                                className="overflow-hidden rounded-2xl border border-outline-variant bg-white shadow-sm"
+                                className="overflow-hidden rounded-xl border border-outline-variant bg-white transition-colors hover:border-primary/40"
                             >
                                 <div className="grid items-stretch lg:grid-cols-12">
                                     <div
-                                        className={`relative min-h-[260px] bg-surface-container-high lg:col-span-5 ${
-                                            isReversed ? 'lg:order-2' : ''
+                                        className={`aspect-[16/10] overflow-hidden border-b border-outline-variant bg-surface-container-low lg:col-span-5 lg:aspect-auto lg:min-h-[300px] lg:border-b-0 ${
+                                            isReversed
+                                                ? 'lg:order-2 lg:border-l lg:border-outline-variant'
+                                                : 'lg:border-r lg:border-outline-variant'
                                         }`}
                                     >
                                         <img
@@ -63,35 +66,31 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                                             onError={handleImageError}
                                             className="h-full w-full object-cover"
                                         />
-                                        <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded bg-primary/90 px-3 py-1 text-[10px] font-bold tracking-wider text-secondary-container uppercase backdrop-blur-sm">
-                                            <IconComponent size={13} />
-                                            {venture.badge ||
-                                                venture.short_label ||
-                                                venture.name}
-                                        </span>
                                     </div>
 
                                     <div
-                                        className={`flex flex-col justify-between p-7 sm:p-10 lg:col-span-7 ${
+                                        className={`flex flex-col justify-between p-5 sm:p-8 lg:col-span-7 lg:p-10 ${
                                             isReversed ? 'lg:order-1' : ''
                                         }`}
                                     >
                                         <div>
+                                            <div className="mb-2 flex items-center gap-2 text-xs font-bold tracking-wider text-secondary uppercase">
+                                                <IconComponent size={14} />
+                                                <span>
+                                                    {venture.badge ||
+                                                        venture.short_label}
+                                                </span>
+                                            </div>
+
                                             <h2 className="font-serif text-2xl font-bold text-primary sm:text-3xl">
                                                 {venture.name}
                                             </h2>
 
-                                            {venture.subtitle && (
-                                                <p className="mt-1 text-sm font-semibold text-secondary">
-                                                    {venture.subtitle}
-                                                </p>
-                                            )}
-
                                             {venture.location_details && (
-                                                <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-surface-container-low px-3 py-1 text-xs font-medium text-on-surface-variant">
+                                                <p className="mt-2.5 flex items-center gap-1.5 text-xs font-medium text-on-surface-variant">
                                                     <MapPin
                                                         size={13}
-                                                        className="text-secondary"
+                                                        className="shrink-0 text-secondary"
                                                     />
                                                     {venture.location_details}
                                                 </p>
@@ -108,10 +107,10 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                                                         .map((item, idx) => (
                                                             <li
                                                                 key={idx}
-                                                                className="flex items-start gap-2 text-xs font-medium text-on-surface sm:text-sm"
+                                                                className="flex items-start gap-2 rounded-lg border border-outline-variant bg-surface-container-low p-2.5 text-xs font-medium text-on-surface"
                                                             >
-                                                                <CheckCircle2
-                                                                    size={15}
+                                                                <Check
+                                                                    size={14}
                                                                     className="mt-0.5 shrink-0 text-secondary"
                                                                 />
                                                                 <span>
@@ -123,18 +122,18 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                                             )}
                                         </div>
 
-                                        <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-outline-variant pt-5">
+                                        <div className="mt-6 flex flex-col gap-3 border-t border-outline-variant pt-5 sm:mt-7 sm:flex-row sm:flex-wrap sm:items-center">
                                             <Link
                                                 href={route(
                                                     'ventures.show',
                                                     venture.slug,
                                                 )}
-                                                className="inline-flex items-center gap-2 rounded bg-primary px-6 py-2.5 text-sm font-bold text-white transition hover:bg-secondary"
+                                                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-secondary"
                                             >
                                                 Explore{' '}
                                                 {venture.short_label ||
                                                     venture.name}
-                                                <ArrowRight size={16} />
+                                                <ArrowRight size={15} />
                                             </Link>
 
                                             {venture.external_url && (
@@ -142,7 +141,7 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                                                     href={venture.external_url}
                                                     target="_blank"
                                                     rel="noreferrer"
-                                                    className="inline-flex items-center gap-1.5 rounded border border-outline-variant px-4 py-2.5 text-sm font-semibold text-primary transition hover:border-secondary hover:text-secondary"
+                                                    className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-outline-variant bg-white px-4 py-2.5 text-sm font-semibold text-primary transition-colors hover:border-primary"
                                                 >
                                                     {venture.external_cta_label ||
                                                         'Visit Website'}
@@ -159,18 +158,18 @@ export default function Industries({ ventures = [], catalogs = [] }) {
             </section>
 
             {catalogs.length > 0 && (
-                <section className="border-t border-outline-variant bg-surface-container-high px-gutter py-14">
-                    <div className="mx-auto max-w-container-max">
-                        <div className="mb-6">
-                            <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+                <section className="border-t border-outline-variant bg-surface-container-low py-14 md:py-16">
+                    <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
+                        <div className="mb-8">
+                            <p className="text-xs font-bold tracking-[0.16em] text-secondary uppercase">
                                 Group Documentation
-                            </span>
+                            </p>
                             <h2 className="mt-1 font-serif text-2xl font-bold text-primary md:text-3xl">
                                 Downloadable Venture Catalogs
                             </h2>
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-4 md:grid-cols-2">
                             {catalogs.map((catalog) => (
                                 <a
                                     key={catalog.id}
@@ -178,24 +177,29 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                                         'catalogs.download',
                                         catalog.id,
                                     )}
-                                    className="flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-white p-5 shadow-sm transition hover:border-secondary"
+                                    className="group flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-white p-5 transition-colors hover:border-primary"
                                 >
-                                    <div className="min-w-0">
-                                        <div className="truncate font-serif text-base font-bold text-primary">
-                                            {catalog.title}
+                                    <div className="flex min-w-0 items-start gap-3">
+                                        <div className="rounded-lg border border-outline-variant bg-surface-container-low p-2.5 text-secondary">
+                                            <FileText size={17} />
                                         </div>
-                                        {catalog.description && (
-                                            <p className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
-                                                {catalog.description}
-                                            </p>
-                                        )}
-                                        <span className="mt-2 inline-block text-[11px] font-bold text-secondary">
-                                            {catalog.file_size_label ||
-                                                'PDF Brochure'}
-                                        </span>
+                                        <div className="min-w-0">
+                                            <div className="truncate font-serif text-base font-bold text-primary">
+                                                {catalog.title}
+                                            </div>
+                                            {catalog.description && (
+                                                <p className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
+                                                    {catalog.description}
+                                                </p>
+                                            )}
+                                            <span className="mt-1.5 inline-block text-[11px] font-semibold text-secondary">
+                                                {catalog.file_size_label ||
+                                                    'PDF Brochure'}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span className="shrink-0 rounded bg-primary p-2.5 text-white">
-                                        <Download size={16} />
+                                    <span className="shrink-0 rounded-lg bg-primary p-2.5 text-white transition-colors group-hover:bg-secondary">
+                                        <Download size={15} />
                                     </span>
                                 </a>
                             ))}
@@ -204,27 +208,26 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                 </section>
             )}
 
-            <section className="border-t border-outline-variant bg-white px-gutter py-14">
-                <div className="relative mx-auto max-w-4xl overflow-hidden rounded border border-outline-variant bg-surface-container-low p-8 text-center shadow-sm md:p-12">
-                    <div className="absolute top-0 left-0 h-1 w-full bg-secondary" />
-                    <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+            <section className="border-t border-outline-variant bg-primary py-14 text-white md:py-16">
+                <div className="mx-auto w-full max-w-container-max px-4 text-center sm:px-6 lg:px-8">
+                    <p className="text-xs font-bold tracking-[0.16em] text-secondary-container uppercase">
                         {headers.cta_eyebrow || 'Direct Partnership Desk'}
-                    </span>
-                    <h2 className="mt-3 mb-4 font-serif text-2xl font-bold text-primary md:text-3xl">
+                    </p>
+                    <h2 className="mt-3 mb-4 font-serif text-2xl font-bold text-white md:text-3xl">
                         {headers.cta_title ||
                             'Need Territory Pricing, Catalogs, or Custom Quotes?'}
                     </h2>
-                    <p className="mx-auto mb-8 max-w-2xl text-sm text-on-surface-variant md:text-base">
+                    <p className="mx-auto mb-8 max-w-2xl text-sm text-white/75 md:text-base">
                         {headers.cta_subtitle ||
                             'Reach our acquisition desk directly via hotline, email, or WhatsApp.'}
                     </p>
-                    <div className="flex flex-wrap items-center justify-center gap-4">
+                    <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3.5">
                         <a
                             href={`tel:${settings.primary_phone || '9507488833'}`}
-                            className="flex items-center gap-3 rounded border border-outline-variant bg-white px-5 py-3 shadow-sm"
+                            className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-primary"
                         >
-                            <Phone size={20} className="text-secondary" />
-                            <span className="font-serif font-bold text-primary">
+                            <Phone size={15} />
+                            <span>
                                 {settings.primary_phone}
                                 {settings.secondary_phone
                                     ? ` / ${settings.secondary_phone}`
@@ -233,10 +236,10 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                         </a>
                         <a
                             href={`mailto:${settings.distributor_email || settings.primary_email || 'distributors@ashwingroup.com'}`}
-                            className="flex items-center gap-3 rounded border border-outline-variant bg-white px-5 py-3 shadow-sm"
+                            className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-primary"
                         >
-                            <Mail size={20} className="text-secondary" />
-                            <span className="font-serif font-bold text-primary">
+                            <Mail size={15} />
+                            <span>
                                 {settings.distributor_email ||
                                     settings.primary_email ||
                                     'distributors@ashwingroup.com'}
@@ -246,9 +249,9 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                             href={`https://wa.me/${settings.whatsapp_number || '919507488833'}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-2 rounded bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700"
+                            className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
                         >
-                            <MessageCircle size={18} />
+                            <MessageCircle size={15} />
                             WhatsApp Desk
                         </a>
                     </div>

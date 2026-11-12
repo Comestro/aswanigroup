@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,500&family=Inter:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 
 @plugin "@tailwindcss/forms";
@@ -9,9 +9,8 @@
 @source '../js';
 
 @theme {
-    --font-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
-    --font-serif:
-        'Sora', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'DM Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
     /* Color mappings from CSS variables */
     --color-primary: var(--primary);
@@ -39,35 +38,35 @@
     --color-on-error: var(--on-error);
 
     /* Spacing */
-    --spacing-gutter: 24px;
-    --spacing-container-max: 1200px;
+    --spacing-gutter: clamp(1rem, 2.5vw, 2rem);
+    --spacing-container-max: 1240px;
 }
 
 @layer base {
     :root {
-        /* Institutional & Corporate — Light Only */
-        --primary: #002147;
+        /* Swiss Clean Flat Corporate Palette */
+        --primary: #0b1320;
         --on-primary: #ffffff;
-        --primary-container: #f1f5f9;
-        --on-primary-container: #001229;
+        --primary-container: #eef2f6;
+        --on-primary-container: #0b1320;
 
-        --secondary: #8c1515;
+        --secondary: #1d4ed8;
         --on-secondary: #ffffff;
-        --secondary-container: #fde8e8;
-        --on-secondary-container: #6b0e0e;
+        --secondary-container: #93c5fd;
+        --on-secondary-container: #1e3a8a;
 
         --background: #ffffff;
-        --on-background: #1e293b;
+        --on-background: #0f172a;
 
         --surface: #ffffff;
-        --on-surface: #1e293b;
+        --on-surface: #0f172a;
 
-        --surface-variant: #f8fafc;
-        --on-surface-variant: #64748b;
+        --surface-variant: #f6f7f9;
+        --on-surface-variant: #475569;
 
-        --surface-container: #f8fafc;
-        --surface-container-high: #f1f5f9;
-        --surface-container-low: #f8fafc;
+        --surface-container: #f6f7f9;
+        --surface-container-high: #eceef2;
+        --surface-container-low: #f6f7f9;
         --surface-container-lowest: #ffffff;
 
         --surface-tint: #1e293b;
@@ -79,8 +78,18 @@
         --on-error: #ffffff;
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         @apply bg-background font-sans text-on-surface antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+        letter-spacing: -0.025em;
     }
 }
 
@@ -92,8 +101,8 @@ dialog:modal {
 dialog::backdrop {
     overflow: hidden;
     overscroll-behavior: contain;
-    background-color: rgb(0 18 41 / 0.65);
-    backdrop-filter: blur(3px);
+    background-color: rgb(11 19 32 / 0.65);
+    backdrop-filter: blur(2px);
 }
 
 .visually-hidden:where(:not(:focus-within, :active)) {
@@ -108,25 +117,8 @@ dialog::backdrop {
     white-space: nowrap !important;
 }
 
-@keyframes vertical-scroll {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-50%);
-    }
-}
-
-.animate-vertical-scroll {
-    animation: vertical-scroll 24s linear infinite;
-}
-
-.animate-vertical-scroll:hover {
-    animation-play-state: paused;
-}
-
 @media (prefers-reduced-motion: reduce) {
-    .animate-vertical-scroll {
-        animation: none;
+    html {
+        scroll-behavior: auto;
     }
 }

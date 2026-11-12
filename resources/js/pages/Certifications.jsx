@@ -4,6 +4,7 @@ import { useState } from 'react';
 import LightboxDialog from '../components/LightboxDialog';
 import PageHero from '../components/PageHero';
 import MainLayout from '../layouts/MainLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../lib/utils';
 
 export default function Certifications({ certifications = [] }) {
     const { props } = usePage();
@@ -39,8 +40,8 @@ export default function Certifications({ certifications = [] }) {
                 imageAlt="Certifications & Agreements"
             />
 
-            <section className="bg-surface-container-low px-gutter py-12 md:py-16">
-                <div className="mx-auto max-w-container-max">
+            <section className="bg-white py-14 md:py-20">
+                <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
                     <div className="mb-8 flex flex-wrap gap-2">
                         {[
                             { key: 'all', label: 'All Credibility Records' },
@@ -55,10 +56,10 @@ export default function Certifications({ certifications = [] }) {
                                 key={tab.key}
                                 type="button"
                                 onClick={() => setFilter(tab.key)}
-                                className={`rounded border px-4 py-2 text-xs font-bold transition-colors md:text-sm ${
+                                className={`rounded-lg border px-4 py-2 text-xs font-semibold transition-colors md:text-sm ${
                                     filter === tab.key
                                         ? 'border-primary bg-primary text-white'
-                                        : 'border-outline-variant bg-white text-primary hover:bg-surface-variant'
+                                        : 'border-outline-variant bg-white text-primary hover:border-primary'
                                 }`}
                             >
                                 {tab.label}
@@ -70,41 +71,44 @@ export default function Certifications({ certifications = [] }) {
                         {filtered.map((item) => (
                             <div
                                 key={item.id}
-                                className="flex flex-col justify-between rounded border border-outline-variant bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+                                className="group flex h-full flex-col justify-between overflow-hidden rounded-xl border border-outline-variant bg-white p-5 transition-colors hover:border-primary/40"
                             >
                                 <div>
-                                    {item.image_path && (
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setLightboxItem({
-                                                    title: item.title,
-                                                    badge:
-                                                        typeLabels[item.type] ||
-                                                        item.type,
-                                                    image: item.image_path,
-                                                    issuer: item.issuer,
-                                                    reference:
-                                                        item.reference_number,
-                                                    date: item.issued_date,
-                                                    description:
-                                                        item.description,
-                                                    documentUrl:
-                                                        item.document_path,
-                                                })
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setLightboxItem({
+                                                title: item.title,
+                                                badge:
+                                                    typeLabels[item.type] ||
+                                                    item.type,
+                                                image:
+                                                    item.image_path ||
+                                                    DEMO_IMAGE_URL,
+                                                images: item.image_urls,
+                                                issuer: item.issuer,
+                                                reference:
+                                                    item.reference_number,
+                                                date: item.issued_date,
+                                                description: item.description,
+                                                documentUrl: item.document_path,
+                                            })
+                                        }
+                                        className="mb-4 block aspect-[16/10] w-full overflow-hidden rounded-lg border border-outline-variant bg-surface-container-low"
+                                    >
+                                        <img
+                                            src={
+                                                item.image_path ||
+                                                DEMO_IMAGE_URL
                                             }
-                                            className="mb-4 block aspect-[16/10] w-full overflow-hidden rounded border border-outline-variant bg-slate-100"
-                                        >
-                                            <img
-                                                src={item.image_path}
-                                                alt={item.title}
-                                                className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                                            />
-                                        </button>
-                                    )}
+                                            alt={item.title}
+                                            onError={handleImageError}
+                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                    </button>
 
                                     <div className="mb-2 flex items-center justify-between gap-2">
-                                        <span className="inline-flex items-center gap-1 rounded bg-secondary/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-secondary uppercase">
+                                        <span className="inline-flex items-center gap-1 rounded-md bg-secondary/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-secondary uppercase">
                                             <Award size={12} />
                                             {typeLabels[item.type] || item.type}
                                         </span>
@@ -135,7 +139,7 @@ export default function Certifications({ certifications = [] }) {
                                     )}
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-between gap-2 border-t border-outline-variant pt-3">
+                                <div className="mt-5 flex items-center justify-between gap-2 border-t border-outline-variant pt-4">
                                     <button
                                         type="button"
                                         onClick={() =>
@@ -144,7 +148,10 @@ export default function Certifications({ certifications = [] }) {
                                                 badge:
                                                     typeLabels[item.type] ||
                                                     item.type,
-                                                image: item.image_path,
+                                                image:
+                                                    item.image_path ||
+                                                    DEMO_IMAGE_URL,
+                                                images: item.image_urls,
                                                 issuer: item.issuer,
                                                 reference:
                                                     item.reference_number,
@@ -153,7 +160,7 @@ export default function Certifications({ certifications = [] }) {
                                                 documentUrl: item.document_path,
                                             })
                                         }
-                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-secondary"
+                                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-secondary"
                                     >
                                         <ExternalLink size={14} />
                                         View Preview
@@ -162,7 +169,7 @@ export default function Certifications({ certifications = [] }) {
                                         <a
                                             href={item.document_path}
                                             download
-                                            className="inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-secondary"
+                                            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-secondary"
                                         >
                                             <FileText size={13} />
                                             Download Copy

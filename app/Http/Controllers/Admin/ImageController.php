@@ -47,4 +47,3 @@ class ImageController extends Controller
         return back()->with('success', 'Image deleted from ImageKit, disk, and database.');
     }
 }
-

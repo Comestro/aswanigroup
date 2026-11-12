@@ -1,8 +1,9 @@
 import { Link, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Menu, Shield, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, Menu, Shield, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { route } from 'ziggy-js';
+import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
 
 export default function TopNavBar() {
     const { url, props } = usePage();
@@ -75,55 +76,51 @@ export default function TopNavBar() {
         },
     ];
 
-    const navClass = scrolled
-        ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-outline-variant text-primary'
-        : 'bg-primary/90 backdrop-blur-md border-b border-white/10 text-white';
-
-    const logoClass = scrolled ? 'text-primary' : 'text-white';
     const companyName = siteSettings.company_name || 'Ashwin Group';
-    const logoPath = siteSettings.logo_path || '/images/demo-image.svg';
+    const logoPath = siteSettings.logo_path || DEMO_IMAGE_URL;
 
-    const getLinkClasses = (active) => {
-        const color = scrolled
-            ? active
-                ? 'text-secondary after:bg-secondary'
-                : 'text-on-surface-variant hover:text-primary after:bg-primary'
-            : active
-              ? 'text-white after:bg-white'
-              : 'text-white/80 hover:text-white after:bg-white';
-
-        return `relative py-2 text-sm font-semibold transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:transition-all after:duration-300 ${
-            active ? 'after:w-full' : 'after:w-0 hover:after:w-full'
-        } ${color}`;
-    };
+    const getLinkClasses = (active) =>
+        `relative py-2 text-sm font-medium transition-colors ${
+            active
+                ? 'font-semibold text-secondary'
+                : 'text-on-surface-variant hover:text-primary'
+        }`;
 
     return (
         <>
             <header
-                className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${navClass}`}
+                className={`fixed inset-x-0 top-0 z-50 border-b border-outline-variant bg-white/95 text-primary backdrop-blur-sm transition-shadow duration-200 ${
+                    scrolled ? 'shadow-sm' : ''
+                }`}
             >
-                <div className="mx-auto flex h-20 max-w-container-max items-center justify-between gap-4 px-gutter">
+                <div className="mx-auto flex h-16 max-w-container-max items-center justify-between gap-4 px-4 sm:px-6 md:h-18 lg:px-8">
                     <Link
                         href={route('home')}
                         onClick={() => {
                             setOpen(false);
                             setVenturesOpen(false);
                         }}
-                        className={`group flex shrink-0 items-center gap-3 ${logoClass}`}
+                        className="group flex shrink-0 items-center gap-3 text-primary"
                     >
                         <img
                             src={logoPath}
                             alt={`${companyName} Logo`}
-                            className="h-10 w-10 object-contain transition-transform group-hover:scale-105"
+                            onError={handleImageError}
+                            className="h-9 w-9 rounded object-contain"
                         />
-                        <span className="font-serif text-xl font-bold tracking-tight">
-                            {companyName}
-                        </span>
+                        <div>
+                            <span className="block font-serif text-lg leading-none font-bold tracking-tight">
+                                {companyName}
+                            </span>
+                            <span className="mt-0.5 block text-[10px] font-medium tracking-widest text-on-surface-variant uppercase">
+                                Est. {siteSettings.est_year || '1995'}
+                            </span>
+                        </div>
                     </Link>
 
                     <nav
                         aria-label="Primary"
-                        className="hidden items-center gap-6 lg:flex"
+                        className="hidden items-center gap-7 lg:flex"
                     >
                         <Link
                             href={links[0].href}
@@ -158,7 +155,7 @@ export default function TopNavBar() {
                                 <ChevronDown
                                     size={14}
                                     aria-hidden="true"
-                                    className={`transition-transform duration-200 ${
+                                    className={`transition-transform duration-150 ${
                                         venturesOpen ? 'rotate-180' : ''
                                     }`}
                                 />
@@ -168,7 +165,7 @@ export default function TopNavBar() {
                                 <div className="pt-2">
                                     <ul
                                         id="desktop-ventures-submenu"
-                                        className="absolute top-full left-0 z-50 w-64 rounded-md border border-outline-variant bg-white py-2 text-left shadow-xl"
+                                        className="absolute top-full left-0 z-50 w-72 overflow-hidden rounded-lg border border-outline-variant bg-white py-1.5 text-left shadow-lg"
                                     >
                                         <li>
                                             <Link
@@ -186,9 +183,12 @@ export default function TopNavBar() {
                                                         ? 'page'
                                                         : undefined
                                                 }
-                                                className="block border-b border-slate-100 px-4 py-2.5 text-xs font-bold tracking-wider text-primary uppercase hover:bg-surface-container-high hover:text-secondary"
+                                                className="flex items-center justify-between border-b border-outline-variant px-4 py-2.5 text-xs font-semibold tracking-wider text-primary uppercase transition-colors hover:bg-surface-container-low hover:text-secondary"
                                             >
-                                                All Ventures Overview
+                                                <span>
+                                                    All Ventures Overview
+                                                </span>
+                                                <ArrowRight size={13} />
                                             </Link>
                                         </li>
                                         {ventures.map((venture) => {
@@ -213,13 +213,19 @@ export default function TopNavBar() {
                                                                 ? 'page'
                                                                 : undefined
                                                         }
-                                                        className={`block px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-surface-container-low ${
+                                                        className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors hover:bg-surface-container-low ${
                                                             activeItem
-                                                                ? 'bg-surface-container-low text-secondary'
-                                                                : 'text-primary hover:text-secondary'
+                                                                ? 'bg-surface-container-low font-semibold text-secondary'
+                                                                : 'text-on-surface hover:text-primary'
                                                         }`}
                                                     >
-                                                        {venture.name}
+                                                        <span>
+                                                            {venture.name}
+                                                        </span>
+                                                        <ArrowRight
+                                                            size={13}
+                                                            className="opacity-40"
+                                                        />
                                                     </Link>
                                                 </li>
                                             );
@@ -243,24 +249,16 @@ export default function TopNavBar() {
                         {authUser?.is_admin && (
                             <Link
                                 href={route('admin.dashboard')}
-                                className={`inline-flex items-center gap-1.5 rounded px-3 py-2 text-xs font-bold transition-colors ${
-                                    scrolled
-                                        ? 'bg-surface-container-high text-primary hover:bg-primary hover:text-white'
-                                        : 'bg-white/10 text-white hover:bg-white/20'
-                                }`}
+                                className="inline-flex items-center gap-1.5 rounded-md border border-outline-variant bg-surface-container-low px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:border-primary"
                             >
-                                <Shield size={14} />
+                                <Shield size={13} />
                                 CMS
                             </Link>
                         )}
 
                         <Link
                             href={route('contact')}
-                            className={`ml-1 rounded px-5 py-2.5 text-sm font-semibold shadow-sm transition-all ${
-                                scrolled
-                                    ? 'bg-primary text-white hover:bg-secondary'
-                                    : 'bg-white text-primary hover:bg-white/90'
-                            }`}
+                            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-secondary"
                         >
                             Enquire Now
                         </Link>
@@ -269,15 +267,11 @@ export default function TopNavBar() {
                     <button
                         type="button"
                         onClick={() => setOpen(true)}
-                        className={`rounded p-2 transition-colors lg:hidden ${
-                            scrolled
-                                ? 'text-primary hover:bg-surface-variant'
-                                : 'text-white hover:bg-white/10'
-                        }`}
+                        className="rounded-md p-2 text-primary transition-colors hover:bg-surface-variant lg:hidden"
                         aria-label="Open menu"
                         aria-expanded={open}
                     >
-                        <Menu size={24} />
+                        <Menu size={22} />
                     </button>
                 </div>
             </header>
@@ -303,8 +297,8 @@ export default function TopNavBar() {
                         exit={{ y: '-100%' }}
                         transition={{
                             type: 'spring',
-                            damping: 25,
-                            stiffness: 200,
+                            damping: 26,
+                            stiffness: 220,
                         }}
                         className="fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-white text-primary lg:hidden"
                     >
@@ -313,19 +307,20 @@ export default function TopNavBar() {
                                 <img
                                     src={logoPath}
                                     alt={`${companyName} Logo`}
-                                    className="h-10 w-10 object-contain"
+                                    onError={handleImageError}
+                                    className="h-9 w-9 object-contain"
                                 />
-                                <span className="font-serif text-xl font-bold tracking-tight">
+                                <span className="font-serif text-lg font-bold tracking-tight">
                                     {companyName}
                                 </span>
                             </div>
                             <button
                                 type="button"
                                 onClick={() => setOpen(false)}
-                                className="rounded p-2 text-on-surface-variant transition-colors hover:bg-surface-variant hover:text-primary"
+                                className="rounded-md p-2 text-on-surface-variant transition-colors hover:bg-surface-variant hover:text-primary"
                                 aria-label="Close menu"
                             >
-                                <X size={28} />
+                                <X size={24} />
                             </button>
                         </div>
 
@@ -350,7 +345,7 @@ export default function TopNavBar() {
                                     </Link>
                                 ))}
 
-                            <div className="w-full max-w-xs rounded-md border border-outline-variant bg-surface-container-low p-4">
+                            <div className="w-full max-w-xs rounded-lg border border-outline-variant bg-surface-container-low p-4">
                                 <Link
                                     href={route('industries')}
                                     onClick={() => setOpen(false)}
@@ -367,7 +362,7 @@ export default function TopNavBar() {
                                                     venture.slug,
                                                 )}
                                                 onClick={() => setOpen(false)}
-                                                className="block text-sm font-semibold text-primary hover:text-secondary"
+                                                className="block text-sm font-medium text-primary hover:text-secondary"
                                             >
                                                 {venture.name}
                                             </Link>
@@ -396,7 +391,7 @@ export default function TopNavBar() {
                                 <Link
                                     href={route('admin.dashboard')}
                                     onClick={() => setOpen(false)}
-                                    className="inline-flex items-center gap-2 rounded bg-surface-container-high px-4 py-2 text-sm font-bold text-primary"
+                                    className="inline-flex items-center gap-2 rounded-md border border-outline-variant bg-surface-container-low px-4 py-2 text-sm font-semibold text-primary"
                                 >
                                     <Shield size={16} />
                                     Admin CMS
@@ -408,7 +403,7 @@ export default function TopNavBar() {
                             <Link
                                 href={route('contact')}
                                 onClick={() => setOpen(false)}
-                                className="inline-block w-full max-w-xs rounded bg-primary px-6 py-4 text-center text-lg font-bold text-white shadow-sm transition-all hover:bg-secondary"
+                                className="inline-block w-full max-w-xs rounded-md bg-primary px-6 py-3.5 text-center text-base font-semibold text-white transition-colors hover:bg-secondary"
                             >
                                 Enquire Now
                             </Link>

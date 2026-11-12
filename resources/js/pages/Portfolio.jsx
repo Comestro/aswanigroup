@@ -1,6 +1,6 @@
 import { Head, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Calendar, Download, MapPin } from 'lucide-react';
+import { Calendar, Download, Images, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
 import LightboxDialog from '../components/LightboxDialog';
@@ -48,16 +48,16 @@ export default function Portfolio({
                 heroImage={headers.hero_image || DEMO_IMAGE_URL}
                 imageAlt="Portfolio Hub"
             >
-                <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
+                <div className="flex flex-wrap gap-2.5">
                     {dynamicCategories.map((cat) => (
                         <button
                             key={cat}
                             type="button"
                             onClick={() => setFilter(cat)}
-                            className={`rounded border px-5 py-2.5 text-sm font-bold tracking-wide transition-all ${
+                            className={`rounded-lg border px-4 py-2 text-xs font-semibold transition-colors md:text-sm ${
                                 filter === cat
-                                    ? 'border-secondary bg-secondary text-white'
-                                    : 'border-white/30 bg-white/10 text-white hover:bg-white/20'
+                                    ? 'border-primary bg-primary text-white'
+                                    : 'border-outline-variant bg-white text-primary hover:border-primary'
                             }`}
                         >
                             {cat}
@@ -66,14 +66,17 @@ export default function Portfolio({
                 </div>
 
                 {ventures.length > 0 && catalogs.length > 0 && (
-                    <div className="mt-4 flex flex-wrap justify-center gap-3 md:justify-start">
+                    <div className="mt-4 flex flex-wrap gap-2.5">
                         {catalogs.slice(0, 2).map((catalog) => (
                             <a
                                 key={catalog.id}
                                 href={route('catalogs.download', catalog.id)}
-                                className="inline-flex items-center gap-2 rounded border border-outline-variant bg-white px-5 py-2.5 text-xs font-bold text-primary transition-colors hover:bg-surface-variant md:text-sm"
+                                className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-white px-4 py-2 text-xs font-semibold text-primary transition-colors hover:border-primary"
                             >
-                                <Download size={16} />
+                                <Download
+                                    size={14}
+                                    className="text-secondary"
+                                />
                                 {catalog.title}
                             </a>
                         ))}
@@ -81,11 +84,11 @@ export default function Portfolio({
                 )}
             </PageHero>
 
-            <section className="bg-surface-container-low px-gutter py-12 md:py-16">
-                <div className="mx-auto max-w-container-max">
+            <section className="bg-white py-14 md:py-20">
+                <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
                     <motion.div
                         layout
-                        className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3"
+                        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
                     >
                         <AnimatePresence mode="popLayout">
                             {filtered.map((project) => (
@@ -96,7 +99,7 @@ export default function Portfolio({
                                     initial={{ opacity: 0, scale: 0.98 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.98 }}
-                                    transition={{ duration: 0.3 }}
+                                    transition={{ duration: 0.25 }}
                                     onClick={() =>
                                         setLightboxItem({
                                             title: project.title,
@@ -110,9 +113,9 @@ export default function Portfolio({
                                             description: project.summary,
                                         })
                                     }
-                                    className="group rounded border border-outline-variant bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md"
+                                    className="group flex flex-col overflow-hidden rounded-xl border border-outline-variant bg-white text-left transition-colors hover:border-primary/40"
                                 >
-                                    <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-outline-variant">
+                                    <div className="aspect-[16/10] w-full overflow-hidden border-b border-outline-variant bg-surface-container-low">
                                         <img
                                             src={
                                                 project.image_path ||
@@ -120,17 +123,30 @@ export default function Portfolio({
                                             }
                                             alt={project.title}
                                             onError={handleImageError}
-                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                                         />
-                                        <div className="absolute top-3 left-3">
-                                            <span className="rounded bg-primary px-3 py-1.5 text-xs font-bold tracking-widest text-white uppercase">
-                                                {project.category_label}
-                                            </span>
-                                        </div>
                                     </div>
 
-                                    <div className="px-1 pb-1">
-                                        <h3 className="mb-2 font-serif text-xl leading-tight font-bold text-primary">
+                                    <div className="flex flex-1 flex-col p-5">
+                                        <div className="mb-2 flex items-center justify-between gap-2 text-xs">
+                                            <span className="font-bold tracking-wider text-secondary uppercase">
+                                                {project.category_label}
+                                            </span>
+                                            {Array.isArray(
+                                                project.image_urls,
+                                            ) &&
+                                                project.image_urls.length >
+                                                    1 && (
+                                                    <span className="inline-flex items-center gap-1 font-semibold text-primary">
+                                                        <Images size={12} />
+                                                        {
+                                                            project.image_urls
+                                                                .length
+                                                        }
+                                                    </span>
+                                                )}
+                                        </div>
+                                        <h3 className="mb-2 font-serif text-lg leading-snug font-bold text-primary">
                                             {project.title}
                                         </h3>
                                         {project.summary && (
@@ -138,7 +154,7 @@ export default function Portfolio({
                                                 {project.summary}
                                             </p>
                                         )}
-                                        <div className="flex flex-wrap items-center gap-4 text-sm font-semibold text-on-surface-variant">
+                                        <div className="mt-auto flex flex-wrap items-center gap-4 border-t border-outline-variant pt-3 text-xs font-medium text-on-surface-variant">
                                             <span className="flex items-center gap-1.5">
                                                 <MapPin
                                                     size={15}
@@ -171,8 +187,8 @@ export default function Portfolio({
             </section>
 
             {promoVideos.length > 0 && (
-                <section className="border-t border-outline-variant bg-white px-gutter py-14">
-                    <div className="mx-auto max-w-container-max">
+                <section className="border-t border-outline-variant bg-surface-container-low py-14 md:py-16">
+                    <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
                         <h2 className="mb-6 font-serif text-2xl font-bold text-primary md:text-3xl">
                             Video Gallery &amp; Commercials
                         </h2>

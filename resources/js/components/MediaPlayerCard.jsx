@@ -28,8 +28,8 @@ export default function MediaPlayerCard({ video, autoPlayPreferred = false }) {
     const isYoutube = video.source_type === 'youtube' && video.youtube_id;
 
     return (
-        <div className="overflow-hidden rounded border border-outline-variant bg-white shadow-sm">
-            <div className="relative aspect-video w-full bg-black">
+        <div className="flex h-full flex-col overflow-hidden rounded-xl border border-outline-variant bg-white">
+            <div className="relative aspect-video w-full border-b border-outline-variant bg-black">
                 {isYoutube ? (
                     <iframe
                         src={`https://www.youtube-nocookie.com/embed/${video.youtube_id}?rel=0`}

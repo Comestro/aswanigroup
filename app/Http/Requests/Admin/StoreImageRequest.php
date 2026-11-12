@@ -24,4 +24,3 @@ class StoreImageRequest extends FormRequest
         ];
     }
 }
-
