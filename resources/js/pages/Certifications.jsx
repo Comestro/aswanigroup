@@ -1,13 +1,15 @@
 import { Head, usePage } from '@inertiajs/react';
-import { Award, ExternalLink, FileText, ShieldCheck } from 'lucide-react';
+import { Award, ExternalLink, FileText } from 'lucide-react';
 import { useState } from 'react';
 import LightboxDialog from '../components/LightboxDialog';
+import PageHero from '../components/PageHero';
 import MainLayout from '../layouts/MainLayout';
 
 export default function Certifications({ certifications = [] }) {
     const { props } = usePage();
     const settings = props.siteSettings || {};
     const companyName = settings.company_name || 'Ashwin Group';
+    const headers = settings.page_headers?.certifications || {};
 
     const [filter, setFilter] = useState('all');
     const [lightboxItem, setLightboxItem] = useState(null);
@@ -26,25 +28,16 @@ export default function Certifications({ certifications = [] }) {
         <MainLayout>
             <Head title={`Certifications & Agreements - ${companyName}`} />
 
-            <section className="relative border-b border-outline-variant bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
-                <div className="mx-auto max-w-container-max text-center md:text-left">
-                    <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-semibold tracking-wider text-secondary-container uppercase md:mx-0">
-                        <ShieldCheck size={14} />
-                        Verified Credibility
-                    </div>
-                    <h1 className="mb-4 font-serif text-3xl leading-tight font-bold text-white sm:text-5xl md:text-6xl">
-                        Certifications &amp;{' '}
-                        <span className="text-secondary-container">
-                            Agreements.
-                        </span>
-                    </h1>
-                    <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 md:mx-0 md:text-xl">
-                        Official documentation, partnership photos, BIS/FSSAI
-                        standards, and the first-copy verification of our
-                        flagship brand agreements.
-                    </p>
-                </div>
-            </section>
+            <PageHero
+                badge={headers.badge || 'Verified Credibility'}
+                title={headers.title || 'Certifications & Agreements.'}
+                subtitle={
+                    headers.subtitle ||
+                    'Official documentation, partnership photos, BIS/FSSAI standards, and the first-copy verification of our flagship brand agreements.'
+                }
+                heroImage={headers.hero_image || '/images/about-hero-bg.png'}
+                imageAlt="Certifications & Agreements"
+            />
 
             <section className="bg-surface-container-low px-gutter py-12 md:py-16">
                 <div className="mx-auto max-w-container-max">

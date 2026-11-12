@@ -23,7 +23,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/about', AboutController::class)->name('about');
 Route::get('/industries', [VentureHubController::class, 'index'])->name('industries');
 Route::get('/ventures', [VentureHubController::class, 'index'])->name('ventures.index');
-Route::get('/ventures/{venture:slug}', [VentureHubController::class, 'index'])->name('ventures.show');
+Route::get('/ventures/{venture:slug}', [VentureHubController::class, 'show'])->name('ventures.show');
 Route::get('/portfolio', PortfolioController::class)->name('portfolio');
 Route::get('/certifications', CertificationController::class)->name('certifications');
 
@@ -82,8 +82,6 @@ Route::prefix('admin')
         Route::patch('/inquiries/{inquiry}', [AdminInquiryController::class, 'update'])->name('inquiries.update');
         Route::delete('/inquiries/{inquiry}', [AdminInquiryController::class, 'destroy'])->name('inquiries.destroy');
     });
-
-
 
 Route::prefix('artisan')->group(function () {
     Route::get('/', function () {

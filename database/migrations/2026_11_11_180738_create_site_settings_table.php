@@ -42,6 +42,7 @@ return new class extends Migration
             $table->string('footer_regions')->nullable();
             $table->text('footer_summary')->nullable();
             $table->json('social_links')->nullable();
+            $table->json('page_headers')->nullable();
             $table->timestamps();
         });
     }

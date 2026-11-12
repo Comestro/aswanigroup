@@ -63,9 +63,21 @@ export default function Ventures({ ventures = [] }) {
         },
         {
             name: 'division_image_file',
-            label: 'Upload Venture Image',
+            label: 'Upload Venture Card Image',
             type: 'file',
             accept: 'image/*',
+        },
+        {
+            name: 'hero_image_file',
+            label: 'Upload Venture Page Hero Banner',
+            type: 'file',
+            accept: 'image/*',
+        },
+        {
+            name: 'hero_image',
+            label: 'Hero Banner Image Path / URL (optional)',
+            type: 'text',
+            placeholder: '/images/industries-hero-bg.png',
         },
         {
             name: 'sort_order',

@@ -30,13 +30,14 @@ test('all public routes render successfully with dynamic inertia props', functio
     'login' => ['login', 'Auth/Login'],
 ]);
 
-test('venture detail route opens the requested venture tab', function (): void {
+test('venture detail route renders dedicated dynamic venture page', function (): void {
     $this->get(route('ventures.show', 'jewelry'))
         ->assertSuccessful()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Industries')
-            ->where('initialTab', 'jewelry')
-            ->has('ventures', 4)
+            ->component('VentureShow')
+            ->where('venture.slug', 'jewelry')
+            ->has('otherVentures', 3)
+            ->has('siteSettings.page_headers')
         );
 });
 

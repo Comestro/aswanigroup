@@ -43,6 +43,8 @@ class SaveVentureRequest extends FormRequest
             'highlights.*' => ['required', 'string', 'max:255'],
             'division_image_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'division_image' => ['nullable', 'string', 'max:255'],
+            'hero_image_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'hero_image' => ['nullable', 'string', 'max:255'],
             'is_featured' => ['boolean'],
             'is_active' => ['boolean'],
             'sort_order' => ['integer', 'min:0', 'max:9999'],

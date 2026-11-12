@@ -25,9 +25,16 @@ const paddingAroundControl = [
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-    js.configs.recommended,
-    reactHooks.configs.flat['recommended-latest'],
     {
+        ...js.configs.recommended,
+        files: ['**/*.{js,jsx}'],
+    },
+    {
+        ...reactHooks.configs.flat['recommended-latest'],
+        files: ['**/*.{js,jsx}'],
+    },
+    {
+        files: ['**/*.{js,jsx}'],
         ...react.configs.flat.recommended,
         ...react.configs.flat['jsx-runtime'],
         languageOptions: {
@@ -44,9 +51,12 @@ export default [
             },
         },
         rules: {
+            ...react.configs.flat.recommended.rules,
+            ...react.configs.flat['jsx-runtime'].rules,
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off',
             'react/no-unescaped-entities': 'off',
+            'react/no-unknown-property': ['error', { ignore: ['closedby'] }],
             'no-unused-vars': [
                 'error',
                 {
@@ -62,6 +72,7 @@ export default [
         },
     },
     {
+        files: ['**/*.{js,jsx}'],
         plugins: {
             import: importPlugin,
         },
@@ -93,6 +104,7 @@ export default [
         },
     },
     {
+        files: ['**/*.{js,jsx}'],
         plugins: {
             '@stylistic': stylistic,
         },
@@ -116,6 +128,7 @@ export default [
     },
     prettier,
     {
+        files: ['**/*.{js,jsx}'],
         plugins: {
             '@stylistic': stylistic,
         },

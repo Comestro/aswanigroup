@@ -38,7 +38,7 @@ export default function AdminLayout({ title = 'Admin CMS', children }) {
             icon: Settings,
         },
         {
-            label: 'Ventures / Tabs',
+            label: 'Business Ventures',
             href: route('admin.ventures.index'),
             active: route().current('admin.ventures.*'),
             icon: Building2,

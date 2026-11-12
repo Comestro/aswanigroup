@@ -1,101 +1,232 @@
-import { Head, usePage } from '@inertiajs/react';
-import { motion } from 'framer-motion';
-import { Mail, MessageCircle, Phone } from 'lucide-react';
-import VentureTabsHub from '../components/VentureTabsHub';
-import MainLayout from '../layouts/MainLayout';
+import { Head, Link, usePage } from '@inertiajs/react';
+import {
+    ArrowRight,
+    CheckCircle2,
+    Download,
+    ExternalLink,
+    Mail,
+    MapPin,
+    MessageCircle,
+    Phone,
+} from 'lucide-react';
+import { route } from 'ziggy-js';
+import PageHero from '@/components/PageHero';
+import MainLayout from '@/layouts/MainLayout';
+import { getVentureIcon } from '@/lib/utils';
 
-const stagger = {
-    animate: { transition: { staggerChildren: 0.1 } },
-};
-
-const fadeIn = {
-    initial: { opacity: 0, y: 16 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
-export default function Industries({
-    ventures = [],
-    certifications = [],
-    catalogs = [],
-    promoVideos = [],
-    initialTab = '',
-}) {
+export default function Industries({ ventures = [], catalogs = [] }) {
     const { props } = usePage();
     const settings = props.siteSettings || {};
     const companyName = settings.company_name || 'Ashwin Group';
+    const headers = settings.page_headers?.industries || {};
 
     return (
         <MainLayout>
-            <Head title={`Ventures & Certifications Hub - ${companyName}`} />
+            <Head title={`Business Ventures | ${companyName}`} />
 
-            <section className="relative flex items-center border-b border-outline-variant bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src="/images/industries-hero-bg.png"
-                        alt="Ventures Hub"
-                        className="h-full w-full object-cover opacity-20"
-                    />
-                    <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
+            <PageHero
+                badge={headers.badge || 'Group Portfolio'}
+                title={headers.title || 'Our Business Ventures.'}
+                subtitle={
+                    headers.subtitle ||
+                    'Dedicated operating companies across packaged drinking water, green energy & hospitality, fine jewelry, and commercial distribution.'
+                }
+                heroImage={
+                    headers.hero_image || '/images/industries-hero-bg.png'
+                }
+                imageAlt={headers.title || 'Ashwin Group Ventures'}
+            />
+
+            <section className="bg-surface-container-low px-gutter py-16">
+                <div className="mx-auto max-w-container-max space-y-12">
+                    {ventures.map((venture, index) => {
+                        const IconComponent = getVentureIcon(venture.icon_name);
+                        const isReversed = index % 2 === 1;
+                        const highlights = venture.highlights || [];
+
+                        return (
+                            <article
+                                key={venture.id}
+                                className="overflow-hidden rounded-2xl border border-outline-variant bg-white shadow-sm"
+                            >
+                                <div className="grid items-stretch lg:grid-cols-12">
+                                    <div
+                                        className={`relative min-h-[260px] bg-surface-container-high lg:col-span-5 ${
+                                            isReversed ? 'lg:order-2' : ''
+                                        }`}
+                                    >
+                                        {venture.division_image ||
+                                        venture.hero_image ? (
+                                            <img
+                                                src={
+                                                    venture.division_image ||
+                                                    venture.hero_image
+                                                }
+                                                alt={venture.name}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full min-h-[260px] w-full flex-col items-center justify-center bg-primary p-8 text-white">
+                                                <IconComponent className="mb-3 h-12 w-12 text-secondary-container" />
+                                                <span className="font-serif text-xl font-bold">
+                                                    {venture.name}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded bg-primary/90 px-3 py-1 text-[10px] font-bold tracking-wider text-secondary-container uppercase backdrop-blur-sm">
+                                            <IconComponent size={13} />
+                                            {venture.badge ||
+                                                venture.short_label ||
+                                                venture.name}
+                                        </span>
+                                    </div>
+
+                                    <div
+                                        className={`flex flex-col justify-between p-7 sm:p-10 lg:col-span-7 ${
+                                            isReversed ? 'lg:order-1' : ''
+                                        }`}
+                                    >
+                                        <div>
+                                            <h2 className="font-serif text-2xl font-bold text-primary sm:text-3xl">
+                                                {venture.name}
+                                            </h2>
+
+                                            {venture.subtitle && (
+                                                <p className="mt-1 text-sm font-semibold text-secondary">
+                                                    {venture.subtitle}
+                                                </p>
+                                            )}
+
+                                            {venture.location_details && (
+                                                <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-surface-container-low px-3 py-1 text-xs font-medium text-on-surface-variant">
+                                                    <MapPin
+                                                        size={13}
+                                                        className="text-secondary"
+                                                    />
+                                                    {venture.location_details}
+                                                </p>
+                                            )}
+
+                                            <p className="mt-4 text-sm leading-relaxed text-on-surface-variant sm:text-base">
+                                                {venture.summary}
+                                            </p>
+
+                                            {highlights.length > 0 && (
+                                                <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+                                                    {highlights
+                                                        .slice(0, 4)
+                                                        .map((item, idx) => (
+                                                            <li
+                                                                key={idx}
+                                                                className="flex items-start gap-2 text-xs font-medium text-on-surface sm:text-sm"
+                                                            >
+                                                                <CheckCircle2
+                                                                    size={15}
+                                                                    className="mt-0.5 shrink-0 text-secondary"
+                                                                />
+                                                                <span>
+                                                                    {item}
+                                                                </span>
+                                                            </li>
+                                                        ))}
+                                                </ul>
+                                            )}
+                                        </div>
+
+                                        <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-outline-variant pt-5">
+                                            <Link
+                                                href={route(
+                                                    'ventures.show',
+                                                    venture.slug,
+                                                )}
+                                                className="inline-flex items-center gap-2 rounded bg-primary px-6 py-2.5 text-sm font-bold text-white transition hover:bg-secondary"
+                                            >
+                                                Explore{' '}
+                                                {venture.short_label ||
+                                                    venture.name}
+                                                <ArrowRight size={16} />
+                                            </Link>
+
+                                            {venture.external_url && (
+                                                <a
+                                                    href={venture.external_url}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="inline-flex items-center gap-1.5 rounded border border-outline-variant px-4 py-2.5 text-sm font-semibold text-primary transition hover:border-secondary hover:text-secondary"
+                                                >
+                                                    {venture.external_cta_label ||
+                                                        'Visit Website'}
+                                                    <ExternalLink size={14} />
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        );
+                    })}
                 </div>
+            </section>
 
-                <div className="relative z-10 mx-auto w-full max-w-container-max text-center md:text-left">
-                    <motion.div
-                        initial="initial"
-                        animate="animate"
-                        variants={stagger}
-                        className="max-w-3xl"
-                    >
-                        <motion.div
-                            variants={fadeIn}
-                            className="mx-auto mb-5 inline-flex items-center gap-2 rounded border border-secondary/30 bg-secondary/10 px-3 py-1 text-[10px] font-semibold tracking-wider text-secondary-container uppercase md:mx-0 md:text-xs"
-                        >
-                            Parent Company Showcase Hub
-                        </motion.div>
-                        <motion.h1
-                            variants={fadeIn}
-                            className="mb-4 font-serif text-3xl leading-tight font-bold text-white sm:text-5xl md:text-6xl"
-                        >
-                            Our Business{' '}
-                            <span className="text-secondary-container">
-                                Ventures &amp; Proof.
+            {catalogs.length > 0 && (
+                <section className="border-t border-outline-variant bg-surface-container-high px-gutter py-14">
+                    <div className="mx-auto max-w-container-max">
+                        <div className="mb-6">
+                            <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+                                Group Documentation
                             </span>
-                        </motion.h1>
-                        <motion.p
-                            variants={fadeIn}
-                            className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 md:mx-0 md:text-xl"
-                        >
-                            Explore Water Industries, Green Energy &amp;
-                            Eco-Resort, Enaure Fine Jewelry, Traders, and
-                            official Certifications from one unified hub.
-                        </motion.p>
-                    </motion.div>
-                </div>
-            </section>
+                            <h2 className="mt-1 font-serif text-2xl font-bold text-primary md:text-3xl">
+                                Downloadable Venture Catalogs
+                            </h2>
+                        </div>
 
-            <section className="bg-surface-container-low px-gutter py-12 md:py-16">
-                <div className="mx-auto max-w-container-max">
-                    <VentureTabsHub
-                        ventures={ventures}
-                        certifications={certifications}
-                        catalogs={catalogs}
-                        promoVideos={promoVideos}
-                        initialTab={initialTab}
-                    />
-                </div>
-            </section>
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {catalogs.map((catalog) => (
+                                <a
+                                    key={catalog.id}
+                                    href={route(
+                                        'catalogs.download',
+                                        catalog.id,
+                                    )}
+                                    className="flex items-center justify-between gap-4 rounded-xl border border-outline-variant bg-white p-5 shadow-sm transition hover:border-secondary"
+                                >
+                                    <div className="min-w-0">
+                                        <div className="truncate font-serif text-base font-bold text-primary">
+                                            {catalog.title}
+                                        </div>
+                                        {catalog.description && (
+                                            <p className="mt-1 line-clamp-2 text-xs text-on-surface-variant">
+                                                {catalog.description}
+                                            </p>
+                                        )}
+                                        <span className="mt-2 inline-block text-[11px] font-bold text-secondary">
+                                            {catalog.file_size_label ||
+                                                'PDF Brochure'}
+                                        </span>
+                                    </div>
+                                    <span className="shrink-0 rounded bg-primary p-2.5 text-white">
+                                        <Download size={16} />
+                                    </span>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             <section className="border-t border-outline-variant bg-white px-gutter py-14">
                 <div className="relative mx-auto max-w-4xl overflow-hidden rounded border border-outline-variant bg-surface-container-low p-8 text-center shadow-sm md:p-12">
                     <div className="absolute top-0 left-0 h-1 w-full bg-secondary" />
                     <span className="text-xs font-bold tracking-widest text-secondary uppercase">
-                        Direct Partnership Desk
+                        {headers.cta_eyebrow || 'Direct Partnership Desk'}
                     </span>
                     <h2 className="mt-3 mb-4 font-serif text-2xl font-bold text-primary md:text-3xl">
-                        Need Territory Pricing, Catalogs, or Custom Quotes?
+                        {headers.cta_title ||
+                            'Need Territory Pricing, Catalogs, or Custom Quotes?'}
                     </h2>
                     <p className="mx-auto mb-8 max-w-2xl text-sm text-on-surface-variant md:text-base">
-                        Reach our acquisition desk directly via hotline, email,
-                        or WhatsApp.
+                        {headers.cta_subtitle ||
+                            'Reach our acquisition desk directly via hotline, email, or WhatsApp.'}
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-4">
                         <a

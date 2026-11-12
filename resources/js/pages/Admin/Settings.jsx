@@ -1,7 +1,106 @@
 import { Head, router } from '@inertiajs/react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
 import AdminLayout from '../../layouts/AdminLayout';
+
+const PAGE_HEADER_SECTIONS = [
+    {
+        page: 'home',
+        title: 'Home Page Section Copy',
+        fields: [
+            { key: 'ventures_eyebrow', label: 'Ventures Eyebrow' },
+            { key: 'ventures_title', label: 'Ventures Section Title' },
+            {
+                key: 'ventures_subtitle',
+                label: 'Ventures Section Subtitle',
+                textarea: true,
+            },
+            { key: 'certifications_eyebrow', label: 'Certifications Eyebrow' },
+            {
+                key: 'certifications_title',
+                label: 'Certifications Section Title',
+            },
+            {
+                key: 'certifications_subtitle',
+                label: 'Certifications Subtitle',
+                textarea: true,
+            },
+            { key: 'media_eyebrow', label: 'Media Eyebrow' },
+            { key: 'media_title', label: 'Media Section Title' },
+            { key: 'catalogs_eyebrow', label: 'Catalogs Eyebrow' },
+            { key: 'catalogs_title', label: 'Catalogs Section Title' },
+            { key: 'cta_eyebrow', label: 'Partner CTA Eyebrow' },
+            { key: 'cta_title', label: 'Partner CTA Title' },
+            {
+                key: 'cta_subtitle',
+                label: 'Partner CTA Subtitle',
+                textarea: true,
+            },
+        ],
+    },
+    {
+        page: 'about',
+        title: 'About Us Page Header',
+        fields: [
+            { key: 'badge', label: 'Hero Badge' },
+            { key: 'title', label: 'Hero Heading' },
+            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
+            { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
+        ],
+    },
+    {
+        page: 'industries',
+        title: 'All Ventures (/industries) Page Header & CTA',
+        fields: [
+            { key: 'badge', label: 'Hero Badge' },
+            { key: 'title', label: 'Hero Heading' },
+            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
+            { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
+            { key: 'cta_eyebrow', label: 'Bottom CTA Eyebrow' },
+            { key: 'cta_title', label: 'Bottom CTA Heading' },
+            {
+                key: 'cta_subtitle',
+                label: 'Bottom CTA Subtitle',
+                textarea: true,
+            },
+        ],
+    },
+    {
+        page: 'portfolio',
+        title: 'Portfolio Page Header',
+        fields: [
+            { key: 'badge', label: 'Hero Badge' },
+            { key: 'title', label: 'Hero Heading' },
+            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
+            { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
+        ],
+    },
+    {
+        page: 'certifications',
+        title: 'Certifications Page Header',
+        fields: [
+            { key: 'badge', label: 'Hero Badge' },
+            { key: 'title', label: 'Hero Heading' },
+            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
+            { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
+        ],
+    },
+    {
+        page: 'contact',
+        title: 'Contact Page Header & Panels',
+        fields: [
+            { key: 'badge', label: 'Hero Badge' },
+            { key: 'title', label: 'Hero Heading' },
+            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
+            { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
+            { key: 'sidebar_title', label: 'Sidebar Title' },
+            { key: 'sidebar_subtitle', label: 'Sidebar Subtitle' },
+            { key: 'form_title', label: 'Form Heading' },
+            { key: 'form_subtitle', label: 'Form Subtitle', textarea: true },
+        ],
+    },
+];
 
 export default function Settings({ setting = {} }) {
     const [form, setForm] = useState({
@@ -30,6 +129,7 @@ export default function Settings({ setting = {} }) {
         footer_regions: setting.footer_regions || '',
         footer_summary: setting.footer_summary || '',
         social_links: setting.social_links || {},
+        page_headers: setting.page_headers || {},
         logo_file: null,
         chairman_image_file: null,
     });
@@ -37,12 +137,67 @@ export default function Settings({ setting = {} }) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState({});
 
+    const updatePageHeader = (page, field, value) => {
+        setForm((prev) => ({
+            ...prev,
+            page_headers: {
+                ...prev.page_headers,
+                [page]: {
+                    ...(prev.page_headers?.[page] || {}),
+                    [field]: value,
+                },
+            },
+        }));
+    };
+
+    const updateSocialLink = (network, value) => {
+        setForm((prev) => ({
+            ...prev,
+            social_links: {
+                ...prev.social_links,
+                [network]: value,
+            },
+        }));
+    };
+
+    const updateArrayItem = (key, index, field, value) => {
+        setForm((prev) => {
+            const list = [...(prev[key] || [])];
+            list[index] =
+                field === null
+                    ? value
+                    : { ...(list[index] || {}), [field]: value };
+
+            return { ...prev, [key]: list };
+        });
+    };
+
+    const addArrayItem = (key, template) => {
+        setForm((prev) => ({
+            ...prev,
+            [key]: [...(prev[key] || []), template],
+        }));
+    };
+
+    const removeArrayItem = (key, index) => {
+        setForm((prev) => ({
+            ...prev,
+            [key]: (prev[key] || []).filter((_, i) => i !== index),
+        }));
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         setProcessing(true);
         setErrors({});
 
-        const payload = { ...form, _method: 'put' };
+        const payload = {
+            ...form,
+            core_values: (form.core_values || []).filter(
+                (v) => String(v || '').trim() !== '',
+            ),
+            _method: 'put',
+        };
 
         if (!(payload.logo_file instanceof File)) {
             delete payload.logo_file;
@@ -426,13 +581,355 @@ export default function Settings({ setting = {} }) {
                                 className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-2 text-sm"
                             />
                         </div>
+                        <div>
+                            <label className="mb-1 block text-xs font-bold text-primary">
+                                Chairman Portrait Photo (JPG/PNG/WebP)
+                            </label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        chairman_image_file:
+                                            e.target.files?.[0] || null,
+                                    })
+                                }
+                                className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-1.5 text-xs"
+                            />
+                        </div>
+                        <div>
+                            <label className="mb-1 block text-xs font-bold text-primary">
+                                Footer Brand Summary
+                            </label>
+                            <textarea
+                                rows={2}
+                                value={form.footer_summary}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        footer_summary: e.target.value,
+                                    })
+                                }
+                                className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-2 text-sm"
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                <section className="space-y-4 rounded-lg border border-outline-variant bg-white p-6 shadow-sm">
+                    <div className="flex items-center justify-between gap-4">
+                        <h2 className="font-serif text-lg font-bold text-primary">
+                            Homepage Stats Strip
+                        </h2>
+                        <button
+                            type="button"
+                            onClick={() =>
+                                addArrayItem('hero_stats', {
+                                    value: '',
+                                    label: '',
+                                    icon: 'Building2',
+                                })
+                            }
+                            className="inline-flex items-center gap-1 rounded border border-outline-variant px-3 py-1.5 text-xs font-bold text-primary hover:bg-surface-container-low"
+                        >
+                            <Plus size={14} /> Add Stat
+                        </button>
+                    </div>
+                    <div className="space-y-3">
+                        {(form.hero_stats || []).map((stat, idx) => (
+                            <div
+                                key={idx}
+                                className="grid grid-cols-1 gap-3 rounded border border-outline-variant bg-surface-container-low p-3 sm:grid-cols-12"
+                            >
+                                <input
+                                    type="text"
+                                    placeholder="Value (e.g. 25+ Yrs)"
+                                    value={stat.value || ''}
+                                    onChange={(e) =>
+                                        updateArrayItem(
+                                            'hero_stats',
+                                            idx,
+                                            'value',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="rounded border border-outline-variant bg-white px-3 py-1.5 text-sm sm:col-span-3"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Label"
+                                    value={stat.label || ''}
+                                    onChange={(e) =>
+                                        updateArrayItem(
+                                            'hero_stats',
+                                            idx,
+                                            'label',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="rounded border border-outline-variant bg-white px-3 py-1.5 text-sm sm:col-span-5"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Icon Name (e.g. Droplets)"
+                                    value={stat.icon || ''}
+                                    onChange={(e) =>
+                                        updateArrayItem(
+                                            'hero_stats',
+                                            idx,
+                                            'icon',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="rounded border border-outline-variant bg-white px-3 py-1.5 text-sm sm:col-span-3"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        removeArrayItem('hero_stats', idx)
+                                    }
+                                    aria-label="Remove stat"
+                                    className="inline-flex items-center justify-center rounded border border-red-200 bg-white p-1.5 text-red-600 hover:bg-red-50 sm:col-span-1"
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="space-y-4 rounded-lg border border-outline-variant bg-white p-6 shadow-sm">
+                    <div className="flex items-center justify-between gap-4">
+                        <h2 className="font-serif text-lg font-bold text-primary">
+                            Core Values &amp; Corporate Timeline
+                        </h2>
+                        <div className="flex gap-2">
+                            <button
+                                type="button"
+                                onClick={() => addArrayItem('core_values', '')}
+                                className="inline-flex items-center gap-1 rounded border border-outline-variant px-3 py-1.5 text-xs font-bold text-primary hover:bg-surface-container-low"
+                            >
+                                <Plus size={14} /> Add Value
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    addArrayItem('timeline_items', {
+                                        year: '',
+                                        title: '',
+                                        description: '',
+                                    })
+                                }
+                                className="inline-flex items-center gap-1 rounded border border-outline-variant px-3 py-1.5 text-xs font-bold text-primary hover:bg-surface-container-low"
+                            >
+                                <Plus size={14} /> Add Milestone
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        {(form.core_values || []).map((val, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    placeholder="Core value statement"
+                                    value={val || ''}
+                                    onChange={(e) =>
+                                        updateArrayItem(
+                                            'core_values',
+                                            idx,
+                                            null,
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-1.5 text-sm"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        removeArrayItem('core_values', idx)
+                                    }
+                                    aria-label="Remove core value"
+                                    className="rounded border border-red-200 bg-white p-2 text-red-600 hover:bg-red-50"
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="space-y-3 pt-2">
+                        {(form.timeline_items || []).map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="grid grid-cols-1 gap-3 rounded border border-outline-variant bg-surface-container-low p-3 sm:grid-cols-12"
+                            >
+                                <input
+                                    type="text"
+                                    placeholder="Year"
+                                    value={item.year || ''}
+                                    onChange={(e) =>
+                                        updateArrayItem(
+                                            'timeline_items',
+                                            idx,
+                                            'year',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="rounded border border-outline-variant bg-white px-3 py-1.5 text-sm sm:col-span-2"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Milestone Title"
+                                    value={item.title || ''}
+                                    onChange={(e) =>
+                                        updateArrayItem(
+                                            'timeline_items',
+                                            idx,
+                                            'title',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="rounded border border-outline-variant bg-white px-3 py-1.5 text-sm sm:col-span-4"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Description"
+                                    value={item.description || ''}
+                                    onChange={(e) =>
+                                        updateArrayItem(
+                                            'timeline_items',
+                                            idx,
+                                            'description',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="rounded border border-outline-variant bg-white px-3 py-1.5 text-sm sm:col-span-5"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        removeArrayItem('timeline_items', idx)
+                                    }
+                                    aria-label="Remove milestone"
+                                    className="inline-flex items-center justify-center rounded border border-red-200 bg-white p-1.5 text-red-600 hover:bg-red-50 sm:col-span-1"
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="space-y-4 rounded-lg border border-outline-variant bg-white p-6 shadow-sm">
+                    <h2 className="font-serif text-lg font-bold text-primary">
+                        Social Links
+                    </h2>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                        {['linkedin', 'instagram', 'youtube'].map((network) => (
+                            <div key={network}>
+                                <label className="mb-1 block text-xs font-bold text-primary capitalize">
+                                    {network} URL
+                                </label>
+                                <input
+                                    type="url"
+                                    placeholder={`https://${network}.com/...`}
+                                    value={form.social_links?.[network] || ''}
+                                    onChange={(e) =>
+                                        updateSocialLink(
+                                            network,
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-2 text-sm"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="space-y-6 rounded-lg border border-outline-variant bg-white p-6 shadow-sm">
+                    <div>
+                        <h2 className="font-serif text-lg font-bold text-primary">
+                            Dynamic Page Headers &amp; Section Copy
+                        </h2>
+                        <p className="mt-1 text-xs text-on-surface-variant">
+                            Customize hero banners, headings, subtitles, and CTA
+                            text across every public page without touching code.
+                        </p>
+                    </div>
+
+                    <div className="space-y-6">
+                        {PAGE_HEADER_SECTIONS.map((section) => (
+                            <div
+                                key={section.page}
+                                className="space-y-3 rounded border border-outline-variant bg-surface-container-low p-4"
+                            >
+                                <h3 className="font-serif text-sm font-bold text-primary">
+                                    {section.title}
+                                </h3>
+                                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                    {section.fields.map((field) => {
+                                        const val =
+                                            form.page_headers?.[section.page]?.[
+                                                field.key
+                                            ] || '';
+
+                                        return (
+                                            <div
+                                                key={field.key}
+                                                className={
+                                                    field.textarea
+                                                        ? 'md:col-span-2'
+                                                        : ''
+                                                }
+                                            >
+                                                <label className="mb-1 block text-[11px] font-bold text-primary">
+                                                    {field.label}
+                                                </label>
+                                                {field.textarea ? (
+                                                    <textarea
+                                                        rows={2}
+                                                        value={val}
+                                                        onChange={(e) =>
+                                                            updatePageHeader(
+                                                                section.page,
+                                                                field.key,
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className="w-full rounded border border-outline-variant bg-white px-3 py-1.5 text-sm"
+                                                    />
+                                                ) : (
+                                                    <input
+                                                        type="text"
+                                                        value={val}
+                                                        onChange={(e) =>
+                                                            updatePageHeader(
+                                                                section.page,
+                                                                field.key,
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className="w-full rounded border border-outline-variant bg-white px-3 py-1.5 text-sm"
+                                                    />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </section>
 
                 {Object.keys(errors).length > 0 && (
                     <div className="rounded border border-red-200 bg-red-50 p-4 text-xs text-red-700">
                         {Object.values(errors).map((err, i) => (
-                            <p key={i}>{err}</p>
+                            <p key={i}>
+                                {Array.isArray(err) ? err.join(', ') : err}
+                            </p>
                         ))}
                     </div>
                 )}

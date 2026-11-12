@@ -2,13 +2,18 @@ import { PlayCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function MediaPlayerCard({ video, autoPlayPreferred = false }) {
-    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+        if (typeof window === 'undefined') {
+            return false;
+        }
+
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    });
 
     useEffect(() => {
         const mediaQuery = window.matchMedia(
             '(prefers-reduced-motion: reduce)',
         );
-        setPrefersReducedMotion(mediaQuery.matches);
 
         const onChange = (event) => setPrefersReducedMotion(event.matches);
         mediaQuery.addEventListener('change', onChange);

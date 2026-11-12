@@ -9,6 +9,7 @@ import {
     Truck,
     Users,
 } from 'lucide-react';
+import { createElement } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs) {
@@ -28,4 +29,8 @@ const iconMap = {
 
 export function getVentureIcon(name) {
     return iconMap[name] || Building2;
+}
+
+export function VentureIcon({ name, ...props }) {
+    return createElement(iconMap[name] || Building2, props);
 }

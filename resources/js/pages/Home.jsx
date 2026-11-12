@@ -1,12 +1,21 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, MessageCircle, Phone } from 'lucide-react';
+import {
+    ArrowRight,
+    Download,
+    ExternalLink,
+    MapPin,
+    MessageCircle,
+    Phone,
+    ShieldCheck,
+} from 'lucide-react';
+import { useState } from 'react';
 import { route } from 'ziggy-js';
-import InquiryForm from '../components/InquiryForm';
-import MediaPlayerCard from '../components/MediaPlayerCard';
-import VentureTabsHub from '../components/VentureTabsHub';
-import MainLayout from '../layouts/MainLayout';
-import { getVentureIcon } from '../lib/utils';
+import InquiryForm from '@/components/InquiryForm';
+import LightboxDialog from '@/components/LightboxDialog';
+import MediaPlayerCard from '@/components/MediaPlayerCard';
+import MainLayout from '@/layouts/MainLayout';
+import { getVentureIcon } from '@/lib/utils';
 
 const fadeIn = {
     initial: { opacity: 0, y: 16 },
@@ -24,13 +33,14 @@ export default function Home({
     certifications = [],
     catalogs = [],
     promoVideos = [],
-    initialTab = '',
 }) {
     const { props } = usePage();
     const settings = props.siteSettings || {};
+    const homeHeaders = settings.page_headers?.home || {};
     const stats = settings.hero_stats || [];
     const marqueeProjects =
         heroProjects.length > 0 ? [...heroProjects, ...heroProjects] : [];
+    const [lightboxItem, setLightboxItem] = useState(null);
 
     return (
         <MainLayout>
@@ -166,46 +176,210 @@ export default function Home({
                     <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                         <div>
                             <span className="text-xs font-bold tracking-widest text-secondary uppercase">
-                                Centralized Group Showcase
+                                {homeHeaders.ventures_eyebrow ||
+                                    'Group Business Verticals'}
                             </span>
                             <h2 className="mt-1 font-serif text-3xl font-bold tracking-tight text-primary md:text-4xl">
-                                Ventures, Showcases &amp; Official
-                                Certifications
+                                {homeHeaders.ventures_title ||
+                                    'Our Ventures & Operating Companies'}
                             </h2>
                             <p className="mt-2 max-w-2xl text-sm text-on-surface-variant md:text-base">
-                                Switch between tabs to explore our business
-                                verticals, customized project locations,
-                                downloadable catalogs, YouTube promos, and
-                                verified agreements.
+                                {homeHeaders.ventures_subtitle ||
+                                    'Explore dedicated pages for each business vertical—complete with project galleries, regional coverage, downloadable catalogs, and direct inquiry desks.'}
                             </p>
                         </div>
                         <Link
-                            href={route('portfolio')}
+                            href={route('industries')}
                             className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-secondary hover:underline"
                         >
-                            Full Project Gallery <ArrowRight size={16} />
+                            All Business Ventures <ArrowRight size={16} />
                         </Link>
                     </div>
 
-                    <VentureTabsHub
-                        ventures={ventures}
-                        certifications={certifications}
-                        catalogs={catalogs}
-                        promoVideos={promoVideos}
-                        initialTab={initialTab}
-                    />
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {ventures.map((venture) => {
+                            const IconComponent = getVentureIcon(
+                                venture.icon_name,
+                            );
+
+                            return (
+                                <article
+                                    key={venture.id}
+                                    className="group flex flex-col overflow-hidden rounded-xl border border-outline-variant bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-secondary hover:shadow-md"
+                                >
+                                    <Link
+                                        href={route(
+                                            'ventures.show',
+                                            venture.slug,
+                                        )}
+                                        className="relative aspect-[16/10] w-full overflow-hidden bg-surface-container-low"
+                                    >
+                                        {venture.division_image ||
+                                        venture.hero_image ? (
+                                            <img
+                                                src={
+                                                    venture.division_image ||
+                                                    venture.hero_image
+                                                }
+                                                alt={venture.name}
+                                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center bg-primary/90 text-white">
+                                                <IconComponent className="h-12 w-12 text-secondary-container" />
+                                            </div>
+                                        )}
+                                        <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded bg-primary/90 px-2.5 py-1 text-[10px] font-bold tracking-wider text-secondary-container uppercase backdrop-blur-sm">
+                                            <IconComponent size={12} />
+                                            {venture.badge ||
+                                                venture.short_label ||
+                                                venture.name}
+                                        </span>
+                                    </Link>
+
+                                    <div className="flex flex-1 flex-col p-6">
+                                        <Link
+                                            href={route(
+                                                'ventures.show',
+                                                venture.slug,
+                                            )}
+                                        >
+                                            <h3 className="font-serif text-xl font-bold text-primary transition-colors group-hover:text-secondary">
+                                                {venture.name}
+                                            </h3>
+                                        </Link>
+
+                                        {venture.location_details && (
+                                            <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-on-surface-variant">
+                                                <MapPin
+                                                    size={13}
+                                                    className="shrink-0 text-secondary"
+                                                />
+                                                {venture.location_details}
+                                            </p>
+                                        )}
+
+                                        <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-on-surface-variant">
+                                            {venture.summary}
+                                        </p>
+
+                                        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-outline-variant pt-4">
+                                            <Link
+                                                href={route(
+                                                    'ventures.show',
+                                                    venture.slug,
+                                                )}
+                                                className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-primary uppercase transition-colors hover:text-secondary"
+                                            >
+                                                View Venture Page{' '}
+                                                <ArrowRight size={14} />
+                                            </Link>
+
+                                            {venture.external_url && (
+                                                <a
+                                                    href={venture.external_url}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="inline-flex items-center gap-1 text-xs font-semibold text-secondary hover:underline"
+                                                >
+                                                    {venture.external_cta_label ||
+                                                        'Official Site'}
+                                                    <ExternalLink size={12} />
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+                                </article>
+                            );
+                        })}
+                    </div>
                 </div>
             </section>
+
+            {certifications.length > 0 && (
+                <section className="border-b border-outline-variant bg-surface-container-low px-gutter py-16">
+                    <div className="mx-auto max-w-container-max">
+                        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                            <div>
+                                <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+                                    {homeHeaders.certifications_eyebrow ||
+                                        'Verified Credibility'}
+                                </span>
+                                <h2 className="mt-1 font-serif text-2xl font-bold text-primary md:text-3xl">
+                                    {homeHeaders.certifications_title ||
+                                        'Official Agreements & Certifications'}
+                                </h2>
+                                <p className="mt-2 max-w-2xl text-sm text-on-surface-variant">
+                                    {homeHeaders.certifications_subtitle ||
+                                        'Official partnership authorizations, quality compliance records, and milestone documentation.'}
+                                </p>
+                            </div>
+                            <Link
+                                href={route('certifications')}
+                                className="inline-flex shrink-0 items-center gap-1.5 text-sm font-bold text-secondary hover:underline"
+                            >
+                                All Certifications &amp; Agreements{' '}
+                                <ArrowRight size={16} />
+                            </Link>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                            {certifications.map((cert) => (
+                                <button
+                                    key={cert.id}
+                                    type="button"
+                                    onClick={() =>
+                                        setLightboxItem({
+                                            title: cert.title,
+                                            badge: cert.type,
+                                            image: cert.image_path,
+                                            issuer: cert.issuer,
+                                            date: cert.issued_date,
+                                            reference: cert.reference_number,
+                                            description: cert.description,
+                                            documentUrl:
+                                                cert.document_path || null,
+                                        })
+                                    }
+                                    className="flex flex-col rounded-xl border border-outline-variant bg-white p-6 text-left shadow-sm transition hover:border-secondary hover:shadow-md"
+                                >
+                                    <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-secondary uppercase">
+                                        <ShieldCheck size={15} />
+                                        <span>
+                                            {cert.type || 'Certificate'}
+                                        </span>
+                                    </div>
+                                    <h3 className="mt-3 font-serif text-lg font-bold text-primary">
+                                        {cert.title}
+                                    </h3>
+                                    {cert.issuer && (
+                                        <p className="mt-1 text-xs font-medium text-on-surface-variant">
+                                            {cert.issuer}
+                                        </p>
+                                    )}
+                                    {cert.description && (
+                                        <p className="mt-2 line-clamp-2 text-sm text-on-surface-variant">
+                                            {cert.description}
+                                        </p>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {(promoVideos.length > 0 || catalogs.length > 0) && (
                 <section className="border-b border-outline-variant bg-white px-gutter py-16">
                     <div className="mx-auto grid max-w-container-max grid-cols-1 gap-10 lg:grid-cols-12">
                         <div className="space-y-4 lg:col-span-7">
                             <span className="text-xs font-bold tracking-widest text-secondary uppercase">
-                                Media &amp; Commercials
+                                {homeHeaders.media_eyebrow ||
+                                    'Media & Commercials'}
                             </span>
                             <h2 className="font-serif text-2xl font-bold text-primary md:text-3xl">
-                                Promotional Films &amp; YouTube Spotlights
+                                {homeHeaders.media_title ||
+                                    'Promotional Films & YouTube Spotlights'}
                             </h2>
                             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                                 {promoVideos.slice(0, 2).map((video) => (
@@ -219,10 +393,12 @@ export default function Home({
 
                         <div className="space-y-4 lg:col-span-5">
                             <span className="text-xs font-bold tracking-widest text-secondary uppercase">
-                                Direct Sales Tools
+                                {homeHeaders.catalogs_eyebrow ||
+                                    'Direct Sales Tools'}
                             </span>
                             <h2 className="font-serif text-2xl font-bold text-primary md:text-3xl">
-                                Downloadable Catalogs
+                                {homeHeaders.catalogs_title ||
+                                    'Downloadable Catalogs'}
                             </h2>
                             <div className="space-y-3">
                                 {catalogs.map((catalog) => (
@@ -263,18 +439,15 @@ export default function Home({
                 <div className="mx-auto grid max-w-container-max grid-cols-1 items-start gap-12 lg:grid-cols-12">
                     <div className="lg:col-span-5">
                         <span className="text-xs font-bold tracking-widest text-secondary uppercase">
-                            Instant Lead Desk
+                            {homeHeaders.cta_eyebrow || 'Instant Lead Desk'}
                         </span>
                         <h2 className="mt-2 mb-4 font-serif text-3xl font-bold text-primary md:text-4xl">
-                            Partner with{' '}
-                            {settings.company_name || 'Ashwin Group'}
+                            {homeHeaders.cta_title ||
+                                `Partner with ${settings.company_name || 'Ashwin Group'}`}
                         </h2>
                         <p className="mb-6 text-sm leading-relaxed text-on-surface-variant md:text-base">
-                            Interested in Signature &amp; Royal Challenge Water
-                            distributorship, green energy &amp; Eco-Resort
-                            development, brand collaborations, or retail
-                            franchises? Submit once to notify our email desk and
-                            connect instantly on WhatsApp.
+                            {homeHeaders.cta_subtitle ||
+                                'Interested in Water Industries distributorship, Green Energy & Eco-Resort development, brand collaborations, or retail franchises? Submit once to notify our email desk and connect instantly on WhatsApp.'}
                         </p>
 
                         <div className="space-y-4 rounded border border-outline-variant bg-white p-6 shadow-sm">
@@ -315,6 +488,11 @@ export default function Home({
                     </div>
                 </div>
             </section>
+
+            <LightboxDialog
+                item={lightboxItem}
+                onClose={() => setLightboxItem(null)}
+            />
         </MainLayout>
     );
 }

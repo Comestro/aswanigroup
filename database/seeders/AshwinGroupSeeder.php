@@ -93,6 +93,7 @@ class AshwinGroupSeeder extends Seeder
                     'instagram' => 'https://www.instagram.com',
                     'youtube' => 'https://www.youtube.com',
                 ],
+                'page_headers' => SiteSetting::defaultPageHeaders(),
             ],
         );
 

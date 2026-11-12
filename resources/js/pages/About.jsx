@@ -2,6 +2,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Eye, Quote, Target, Trophy } from 'lucide-react';
 import { route } from 'ziggy-js';
+import PageHero from '../components/PageHero';
 import MainLayout from '../layouts/MainLayout';
 
 const fadeUp = {
@@ -24,6 +25,7 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
     const { props } = usePage();
     const settings = props.siteSettings || {};
     const companyName = settings.company_name || 'Ashwin Group';
+    const headers = settings.page_headers?.about || {};
     const messageParagraphs = String(settings.chairman_message || '')
         .split(/\n\s*\n/)
         .filter(Boolean);
@@ -34,48 +36,16 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
         <MainLayout>
             <Head title={`About Us - ${companyName}`} />
 
-            <section className="relative flex items-center border-b border-outline-variant bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src="/images/about-hero-bg.png"
-                        alt="Corporate Background"
-                        className="h-full w-full object-cover opacity-20"
-                    />
-                    <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
-                </div>
-
-                <div className="relative z-10 mx-auto w-full max-w-container-max text-center md:text-left">
-                    <motion.div
-                        initial="initial"
-                        animate="animate"
-                        variants={stagger}
-                        className="max-w-3xl"
-                    >
-                        <motion.div
-                            variants={fadeIn}
-                            className="mx-auto mb-5 inline-flex items-center gap-2 rounded border border-secondary/30 bg-secondary/10 px-3 py-1 text-[10px] font-semibold tracking-wider text-secondary-container uppercase md:mx-0 md:text-xs"
-                        >
-                            Est. {settings.est_year || '1995'} · {venturesCount}{' '}
-                            Ventures · {certificationsCount} Verified Records
-                        </motion.div>
-                        <motion.h1
-                            variants={fadeIn}
-                            className="mb-4 font-serif text-3xl leading-tight font-bold text-white sm:text-5xl md:text-6xl"
-                        >
-                            Our{' '}
-                            <span className="text-secondary-container">
-                                Legacy.
-                            </span>
-                        </motion.h1>
-                        <motion.p
-                            variants={fadeIn}
-                            className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 md:mx-0 md:text-xl"
-                        >
-                            {settings.hero_description}
-                        </motion.p>
-                    </motion.div>
-                </div>
-            </section>
+            <PageHero
+                badge={
+                    headers.badge ||
+                    `Est. ${settings.est_year || '1995'} · ${venturesCount} Ventures · ${certificationsCount} Verified Records`
+                }
+                title={headers.title || 'Our Legacy.'}
+                subtitle={headers.subtitle || settings.hero_description}
+                heroImage={headers.hero_image || '/images/about-hero-bg.png'}
+                imageAlt="Corporate Background"
+            />
 
             {/* Chairman's Message */}
             <section className="bg-white px-gutter py-16 md:py-20">

@@ -1,15 +1,19 @@
 import { Link, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, Shield, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ChevronDown, Menu, Shield, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { route } from 'ziggy-js';
 
 export default function TopNavBar() {
     const { url, props } = usePage();
     const siteSettings = props.siteSettings || {};
     const authUser = props.auth?.user || null;
+    const ventures = props.navVentures || [];
+
     const [scrolled, setScrolled] = useState(false);
     const [open, setOpen] = useState(false);
+    const [venturesOpen, setVenturesOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 10);
@@ -19,18 +23,40 @@ export default function TopNavBar() {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setVenturesOpen(false);
+            }
+        };
+
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                setVenturesOpen(false);
+            }
+        };
+
+        document.addEventListener('pointerdown', handleOutsideClick);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('pointerdown', handleOutsideClick);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, []);
+
+    const venturesActive =
+        route().current('industries') || route().current('ventures.*');
+
     const links = [
         { label: 'Home', href: route('home'), active: route().current('home') },
         {
             label: 'About',
             href: route('about'),
             active: route().current('about'),
-        },
-        {
-            label: 'Ventures',
-            href: route('industries'),
-            active:
-                route().current('industries') || route().current('ventures.*'),
         },
         {
             label: 'Portfolio',
@@ -50,12 +76,26 @@ export default function TopNavBar() {
     ];
 
     const navClass = scrolled
-        ? 'bg-white shadow-sm border-b border-outline-variant text-primary'
+        ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-outline-variant text-primary'
         : 'bg-primary/90 backdrop-blur-md border-b border-white/10 text-white';
 
     const logoClass = scrolled ? 'text-primary' : 'text-white';
     const companyName = siteSettings.company_name || 'Ashwin Group';
     const logoPath = siteSettings.logo_path || '/images/logo.png';
+
+    const getLinkClasses = (active) => {
+        const color = scrolled
+            ? active
+                ? 'text-secondary after:bg-secondary'
+                : 'text-on-surface-variant hover:text-primary after:bg-primary'
+            : active
+              ? 'text-white after:bg-white'
+              : 'text-white/80 hover:text-white after:bg-white';
+
+        return `relative py-2 text-sm font-semibold transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:transition-all after:duration-300 ${
+            active ? 'after:w-full' : 'after:w-0 hover:after:w-full'
+        } ${color}`;
+    };
 
     return (
         <>
@@ -65,7 +105,10 @@ export default function TopNavBar() {
                 <div className="mx-auto flex h-20 max-w-container-max items-center justify-between gap-4 px-gutter">
                     <Link
                         href={route('home')}
-                        onClick={() => setOpen(false)}
+                        onClick={() => {
+                            setOpen(false);
+                            setVenturesOpen(false);
+                        }}
                         className={`group flex shrink-0 items-center gap-3 ${logoClass}`}
                     >
                         <img
@@ -82,29 +125,120 @@ export default function TopNavBar() {
                         aria-label="Primary"
                         className="hidden items-center gap-6 lg:flex"
                     >
-                        {links.map(({ label, href, active }) => {
-                            const linkColor = scrolled
-                                ? active
-                                    ? 'text-secondary after:bg-secondary'
-                                    : 'text-on-surface-variant hover:text-primary after:bg-primary'
-                                : active
-                                  ? 'text-white after:bg-white'
-                                  : 'text-white/80 hover:text-white after:bg-white';
+                        <Link
+                            href={links[0].href}
+                            aria-current={links[0].active ? 'page' : undefined}
+                            className={getLinkClasses(links[0].active)}
+                        >
+                            {links[0].label}
+                        </Link>
+                        <Link
+                            href={links[1].href}
+                            aria-current={links[1].active ? 'page' : undefined}
+                            className={getLinkClasses(links[1].active)}
+                        >
+                            {links[1].label}
+                        </Link>
 
-                            return (
-                                <Link
-                                    key={label}
-                                    href={href}
-                                    className={`relative py-2 text-sm font-semibold transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:transition-all after:duration-300 ${
-                                        active
-                                            ? 'after:w-full'
-                                            : 'after:w-0 hover:after:w-full'
-                                    } ${linkColor}`}
-                                >
-                                    {label}
-                                </Link>
-                            );
-                        })}
+                        {/* Dynamic Ventures Dropdown */}
+                        <div
+                            ref={dropdownRef}
+                            className="relative"
+                            onMouseEnter={() => setVenturesOpen(true)}
+                            onMouseLeave={() => setVenturesOpen(false)}
+                        >
+                            <button
+                                type="button"
+                                aria-expanded={venturesOpen}
+                                aria-controls="desktop-ventures-submenu"
+                                onClick={() => setVenturesOpen((prev) => !prev)}
+                                className={`inline-flex items-center gap-1 ${getLinkClasses(venturesActive)}`}
+                            >
+                                <span>Ventures</span>
+                                <ChevronDown
+                                    size={14}
+                                    aria-hidden="true"
+                                    className={`transition-transform duration-200 ${
+                                        venturesOpen ? 'rotate-180' : ''
+                                    }`}
+                                />
+                            </button>
+
+                            {venturesOpen && (
+                                <div className="pt-2">
+                                    <ul
+                                        id="desktop-ventures-submenu"
+                                        className="absolute top-full left-0 z-50 w-64 rounded-md border border-outline-variant bg-white py-2 text-left shadow-xl"
+                                    >
+                                        <li>
+                                            <Link
+                                                href={route('industries')}
+                                                onClick={() =>
+                                                    setVenturesOpen(false)
+                                                }
+                                                aria-current={
+                                                    route().current(
+                                                        'industries',
+                                                    ) ||
+                                                    route().current(
+                                                        'ventures.index',
+                                                    )
+                                                        ? 'page'
+                                                        : undefined
+                                                }
+                                                className="block border-b border-slate-100 px-4 py-2.5 text-xs font-bold tracking-wider text-primary uppercase hover:bg-surface-container-high hover:text-secondary"
+                                            >
+                                                All Ventures Overview
+                                            </Link>
+                                        </li>
+                                        {ventures.map((venture) => {
+                                            const activeItem = url.includes(
+                                                `/ventures/${venture.slug}`,
+                                            );
+
+                                            return (
+                                                <li key={venture.id}>
+                                                    <Link
+                                                        href={route(
+                                                            'ventures.show',
+                                                            venture.slug,
+                                                        )}
+                                                        onClick={() =>
+                                                            setVenturesOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                        aria-current={
+                                                            activeItem
+                                                                ? 'page'
+                                                                : undefined
+                                                        }
+                                                        className={`block px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-surface-container-low ${
+                                                            activeItem
+                                                                ? 'bg-surface-container-low text-secondary'
+                                                                : 'text-primary hover:text-secondary'
+                                                        }`}
+                                                    >
+                                                        {venture.name}
+                                                    </Link>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+
+                        {links.slice(2).map(({ label, href, active }) => (
+                            <Link
+                                key={label}
+                                href={href}
+                                aria-current={active ? 'page' : undefined}
+                                className={getLinkClasses(active)}
+                            >
+                                {label}
+                            </Link>
+                        ))}
 
                         {authUser?.is_admin && (
                             <Link
@@ -194,13 +328,18 @@ export default function TopNavBar() {
                                 <X size={28} />
                             </button>
                         </div>
-                        <div className="flex flex-1 flex-col items-center justify-center space-y-5 px-4 py-6">
-                            {links.map(({ label, href, active }) => {
-                                return (
+
+                        <div className="flex flex-1 flex-col items-center justify-center space-y-4 px-6 py-6 text-center">
+                            {links
+                                .slice(0, 2)
+                                .map(({ label, href, active }) => (
                                     <Link
                                         key={label}
                                         href={href}
                                         onClick={() => setOpen(false)}
+                                        aria-current={
+                                            active ? 'page' : undefined
+                                        }
                                         className={`block font-serif text-2xl font-bold transition-colors ${
                                             active
                                                 ? 'text-secondary'
@@ -209,8 +348,50 @@ export default function TopNavBar() {
                                     >
                                         {label}
                                     </Link>
-                                );
-                            })}
+                                ))}
+
+                            <div className="w-full max-w-xs rounded-md border border-outline-variant bg-surface-container-low p-4">
+                                <Link
+                                    href={route('industries')}
+                                    onClick={() => setOpen(false)}
+                                    className="mb-2 block text-xs font-bold tracking-widest text-secondary uppercase"
+                                >
+                                    All Ventures
+                                </Link>
+                                <ul className="space-y-2">
+                                    {ventures.map((venture) => (
+                                        <li key={venture.id}>
+                                            <Link
+                                                href={route(
+                                                    'ventures.show',
+                                                    venture.slug,
+                                                )}
+                                                onClick={() => setOpen(false)}
+                                                className="block text-sm font-semibold text-primary hover:text-secondary"
+                                            >
+                                                {venture.name}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {links.slice(2).map(({ label, href, active }) => (
+                                <Link
+                                    key={label}
+                                    href={href}
+                                    onClick={() => setOpen(false)}
+                                    aria-current={active ? 'page' : undefined}
+                                    className={`block font-serif text-2xl font-bold transition-colors ${
+                                        active
+                                            ? 'text-secondary'
+                                            : 'text-primary hover:text-secondary'
+                                    }`}
+                                >
+                                    {label}
+                                </Link>
+                            ))}
+
                             {authUser?.is_admin && (
                                 <Link
                                     href={route('admin.dashboard')}
@@ -222,6 +403,7 @@ export default function TopNavBar() {
                                 </Link>
                             )}
                         </div>
+
                         <div className="border-t border-outline-variant p-6 pb-10 text-center">
                             <Link
                                 href={route('contact')}

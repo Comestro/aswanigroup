@@ -55,6 +55,9 @@ class UpdateSiteSettingRequest extends FormRequest
             'social_links.linkedin' => ['nullable', 'url', 'max:255'],
             'social_links.instagram' => ['nullable', 'url', 'max:255'],
             'social_links.youtube' => ['nullable', 'url', 'max:255'],
+            'page_headers' => ['nullable', 'array'],
+            'page_headers.*' => ['nullable', 'array'],
+            'page_headers.*.*' => ['nullable', 'string', 'max:500'],
         ];
     }
 }

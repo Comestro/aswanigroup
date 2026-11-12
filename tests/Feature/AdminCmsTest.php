@@ -52,10 +52,17 @@ test('admin can update site settings and venture external link', function (): vo
             'company_full_name' => 'Ashwin Group of Companies',
             'est_year' => '1995',
             'primary_phone' => '9507488833',
+            'page_headers' => [
+                'about' => [
+                    'title' => 'Dynamic Heritage',
+                ],
+            ],
         ])
         ->assertRedirect();
 
-    expect($setting->fresh()?->company_name)->toBe('Ashwin Group');
+    $freshSetting = $setting->fresh();
+    expect($freshSetting?->company_name)->toBe('Ashwin Group');
+    expect($freshSetting?->toPublicArray()['page_headers']['about']['title'])->toBe('Dynamic Heritage');
 
     $jewelry = Venture::query()->where('slug', 'jewelry')->firstOrFail();
 

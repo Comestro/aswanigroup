@@ -2,6 +2,7 @@ import { Head, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Building, Clock, Mail, MessageCircle, Phone } from 'lucide-react';
 import InquiryForm from '../components/InquiryForm';
+import PageHero from '../components/PageHero';
 import MainLayout from '../layouts/MainLayout';
 
 const fadeUp = {
@@ -11,68 +12,26 @@ const fadeUp = {
     transition: { duration: 0.5 },
 };
 
-const stagger = {
-    animate: { transition: { staggerChildren: 0.1 } },
-};
-
-const fadeIn = {
-    initial: { opacity: 0, y: 16 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
 export default function Contact({ ventures = [] }) {
     const { props } = usePage();
     const settings = props.siteSettings || {};
     const companyName = settings.company_name || 'Ashwin Group';
+    const headers = settings.page_headers?.contact || {};
 
     return (
         <MainLayout>
             <Head title={`Contact Us - ${companyName}`} />
 
-            <section className="relative flex items-center border-b border-outline-variant bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src="/images/contact-hero-bg.png"
-                        alt="Office Workspace"
-                        className="h-full w-full object-cover opacity-20"
-                    />
-                    <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
-                </div>
-
-                <div className="relative z-10 mx-auto w-full max-w-container-max text-center md:text-left">
-                    <motion.div
-                        initial="initial"
-                        animate="animate"
-                        variants={stagger}
-                        className="max-w-3xl"
-                    >
-                        <motion.div
-                            variants={fadeIn}
-                            className="mx-auto mb-5 inline-flex items-center gap-2 rounded border border-secondary/30 bg-secondary/10 px-3 py-1 text-[10px] font-semibold tracking-wider text-secondary-container uppercase md:mx-0 md:text-xs"
-                        >
-                            Get In Touch
-                        </motion.div>
-                        <motion.h1
-                            variants={fadeIn}
-                            className="mb-4 font-serif text-3xl leading-tight font-bold text-white sm:text-5xl md:text-6xl"
-                        >
-                            Connect With{' '}
-                            <span className="text-secondary-container">
-                                Us.
-                            </span>
-                        </motion.h1>
-                        <motion.p
-                            variants={fadeIn}
-                            className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 md:mx-0 md:text-xl"
-                        >
-                            Interested in Water Industries distributorship,
-                            Green Energy &amp; Eco-Resort projects, or group
-                            brand partnerships? Every inquiry forwards to our
-                            email &amp; WhatsApp desk.
-                        </motion.p>
-                    </motion.div>
-                </div>
-            </section>
+            <PageHero
+                badge={headers.badge || 'Get In Touch'}
+                title={headers.title || 'Connect With Us.'}
+                subtitle={
+                    headers.subtitle ||
+                    'Interested in Water Industries distributorship, Green Energy & Eco-Resort projects, or group brand partnerships? Every inquiry forwards to our email & WhatsApp desk.'
+                }
+                heroImage={headers.hero_image || '/images/contact-hero-bg.png'}
+                imageAlt="Office Workspace"
+            />
 
             <section className="bg-surface-container-low px-gutter py-12 md:py-16">
                 <div className="mx-auto max-w-container-max">
@@ -86,10 +45,12 @@ export default function Contact({ ventures = [] }) {
 
                             <div className="relative z-10">
                                 <h2 className="mb-3 font-serif text-3xl font-bold">
-                                    Corporate Office
+                                    {headers.sidebar_title ||
+                                        'Corporate Office'}
                                 </h2>
                                 <p className="mb-10 text-base text-white/80">
-                                    Direct lines to our division managers.
+                                    {headers.sidebar_subtitle ||
+                                        'Direct lines to our division managers.'}
                                 </p>
 
                                 <div className="space-y-8">
@@ -196,12 +157,11 @@ export default function Contact({ ventures = [] }) {
                             className="p-8 md:p-12 lg:col-span-7"
                         >
                             <h2 className="mb-2 font-serif text-3xl font-bold text-primary">
-                                Send us a Message
+                                {headers.form_title || 'Send us a Message'}
                             </h2>
                             <p className="mb-8 text-base text-on-surface-variant">
-                                Captured directly in our lead tracker, emailed
-                                to our division heads, and ready for instant
-                                WhatsApp handoff.
+                                {headers.form_subtitle ||
+                                    'Captured directly in our lead tracker, emailed to our division heads, and ready for instant WhatsApp handoff.'}
                             </p>
 
                             <InquiryForm

@@ -35,7 +35,11 @@ class VentureController extends Controller
             $validated['division_image'] = $uploads->storePublicFile($request->file('division_image_file'), 'ventures');
         }
 
-        unset($validated['division_image_file']);
+        if ($request->hasFile('hero_image_file')) {
+            $validated['hero_image'] = $uploads->storePublicFile($request->file('hero_image_file'), 'ventures/heroes');
+        }
+
+        unset($validated['division_image_file'], $validated['hero_image_file']);
         Venture::query()->create($validated);
 
         return back()->with('success', 'Venture created successfully.');
@@ -52,7 +56,12 @@ class VentureController extends Controller
             $validated['division_image'] = $uploads->storePublicFile($request->file('division_image_file'), 'ventures');
         }
 
-        unset($validated['division_image_file']);
+        if ($request->hasFile('hero_image_file')) {
+            $uploads->deleteIfStored($venture->hero_image);
+            $validated['hero_image'] = $uploads->storePublicFile($request->file('hero_image_file'), 'ventures/heroes');
+        }
+
+        unset($validated['division_image_file'], $validated['hero_image_file']);
         $venture->update($validated);
 
         return back()->with('success', 'Venture updated successfully.');
@@ -63,6 +72,7 @@ class VentureController extends Controller
         Gate::authorize('access-admin');
 
         $uploads->deleteIfStored($venture->division_image);
+        $uploads->deleteIfStored($venture->hero_image);
         $venture->delete();
 
         return back()->with('success', 'Venture deleted.');
