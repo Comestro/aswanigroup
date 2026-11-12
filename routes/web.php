@@ -93,7 +93,7 @@ Route::prefix('artisan')->group(function () {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Xpert - Artisan Tools</title>
+    <title>Aswani Group - Artisan Tools</title>
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; padding: 40px 20px; margin: 0; }
         .container { max-width: 680px; margin: 0 auto; background: #1e293b; border-radius: 12px; padding: 24px; border: 1px solid #334155; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
