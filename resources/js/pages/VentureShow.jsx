@@ -1,13 +1,12 @@
 import { Head, Link, usePage } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import {
     ArrowLeft,
     ArrowRight,
-    ArrowUpRight,
     Check,
     Download,
     ExternalLink,
     FileText,
-    Images,
     MapPin,
     ShieldCheck,
 } from 'lucide-react';
@@ -18,6 +17,15 @@ import LightboxDialog from '@/components/LightboxDialog';
 import MediaPlayerCard from '@/components/MediaPlayerCard';
 import MainLayout from '@/layouts/MainLayout';
 import { DEMO_IMAGE_URL, handleImageError, VentureIcon } from '@/lib/utils';
+
+const stagger = {
+    animate: { transition: { staggerChildren: 0.1 } },
+};
+
+const fadeIn = {
+    initial: { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
 
 export default function VentureShow({ venture, otherVentures = [] }) {
     const { siteSettings } = usePage().props;
@@ -34,162 +42,103 @@ export default function VentureShow({ venture, otherVentures = [] }) {
         <MainLayout>
             <Head title={`${venture.name} | ${companyName}`} />
 
-            {/* Dedicated Venture Architectural Header */}
-            <section className="border-b border-outline-variant bg-white pt-8 pb-12 sm:pt-12 sm:pb-16">
-                <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
-                    <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-3 font-mono text-[11px] uppercase">
+            <section className="relative flex items-center border-b border-outline-variant bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src={
+                            venture.hero_image ||
+                            venture.division_image ||
+                            DEMO_IMAGE_URL
+                        }
+                        alt={venture.name}
+                        onError={handleImageError}
+                        className="h-full w-full object-cover opacity-20"
+                    />
+                    <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
+                </div>
+
+                <div className="relative z-10 mx-auto w-full max-w-container-max text-center md:text-left">
+                    <motion.div
+                        initial="initial"
+                        animate="animate"
+                        variants={stagger}
+                        className="max-w-3xl"
+                    >
+                        <motion.div
+                            variants={fadeIn}
+                            className="mx-auto mb-5 inline-flex items-center gap-2 rounded border border-secondary/30 bg-secondary/10 px-3 py-1 text-[10px] font-semibold tracking-wider text-secondary-container uppercase md:mx-0 md:text-xs"
+                        >
+                            <VentureIcon
+                                name={venture.icon_name}
+                                className="h-3.5 w-3.5"
+                            />
+                            <span>
+                                {venture.badge ||
+                                    venture.short_label ||
+                                    venture.name}
+                            </span>
+                        </motion.div>
+
+                        <motion.h1
+                            variants={fadeIn}
+                            className="mb-4 font-serif text-3xl leading-tight font-bold text-white sm:text-5xl md:text-6xl"
+                        >
+                            {venture.name}
+                        </motion.h1>
+
+                        {(venture.subtitle || venture.summary) && (
+                            <motion.p
+                                variants={fadeIn}
+                                className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-white/80 md:mx-0 md:text-xl"
+                            >
+                                {venture.subtitle || venture.summary}
+                            </motion.p>
+                        )}
+                    </motion.div>
+
+                    <div className="flex flex-wrap items-center justify-center gap-3 md:justify-start">
                         <Link
                             href={route('industries')}
-                            className="inline-flex items-center gap-1.5 font-semibold text-primary hover:text-secondary"
+                            className="inline-flex items-center gap-2 rounded border border-white/25 bg-white/10 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-white/20"
                         >
-                            <ArrowLeft size={13} />
+                            <ArrowLeft className="h-3.5 w-3.5" />
                             <span>All Ventures</span>
                         </Link>
-                        <span className="text-secondary">
-                            {venture.badge ||
-                                venture.short_label ||
-                                venture.name}
-                        </span>
-                    </div>
 
-                    <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-12">
-                        <div className="lg:col-span-8">
-                            <div className="mb-4 inline-flex items-center gap-2 border border-outline bg-background px-3 py-1.5 font-mono text-[11px] font-semibold text-secondary uppercase">
-                                <VentureIcon
-                                    name={venture.icon_name}
-                                    className="h-3.5 w-3.5"
-                                />
-                                <span>Operating Division</span>
-                            </div>
-                            <h1 className="font-serif text-[clamp(2.1rem,4.5vw,3.75rem)] leading-[1.04] font-bold text-primary">
-                                {venture.name}
-                            </h1>
-                            {(venture.subtitle || venture.summary) && (
-                                <p className="mt-4 max-w-2xl text-base leading-relaxed text-on-surface-variant sm:text-lg">
-                                    {venture.subtitle || venture.summary}
-                                </p>
-                            )}
-                        </div>
+                        <a
+                            href="#venture-inquiry"
+                            className="inline-flex items-center gap-2 rounded bg-secondary px-5 py-2.5 text-xs font-bold text-white transition-colors hover:bg-secondary/90"
+                        >
+                            <span>
+                                Enquire About{' '}
+                                {venture.short_label || venture.name}
+                            </span>
+                            <ArrowRight className="h-3.5 w-3.5" />
+                        </a>
 
-                        <div className="flex flex-col gap-3 sm:flex-row lg:col-span-4 lg:justify-end">
+                        {venture.external_url && (
                             <a
-                                href="#venture-inquiry"
-                                className="inline-flex items-center justify-center gap-2 bg-primary px-5 py-3 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:bg-secondary"
+                                href={venture.external_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1.5 rounded border border-white/25 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-white/10"
                             >
-                                <span>Inquire Now</span>
-                                <ArrowRight size={14} />
-                            </a>
-                            {venture.external_url && (
-                                <a
-                                    href={venture.external_url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center justify-center gap-1.5 border border-outline bg-background px-4 py-3 text-xs font-semibold tracking-wider text-primary uppercase transition-colors hover:border-primary"
-                                >
-                                    <span>
-                                        {venture.external_cta_label ||
-                                            'Website'}
-                                    </span>
-                                    <ExternalLink size={13} />
-                                </a>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Full-Width 16:9 Architectural Hero Frame + Spec Ledger */}
-                    <div className="mt-10 border border-outline-variant bg-background p-2">
-                        <img
-                            src={
-                                venture.hero_image ||
-                                venture.division_image ||
-                                DEMO_IMAGE_URL
-                            }
-                            alt={venture.name}
-                            onError={handleImageError}
-                            className="block aspect-[16/9] max-h-[520px] w-full object-cover"
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-1 border-x border-b border-outline-variant bg-white sm:grid-cols-3 sm:divide-x sm:divide-outline-variant">
-                        <div className="border-b border-outline-variant p-4 sm:border-b-0 sm:p-5">
-                            <span className="font-mono text-[10px] tracking-widest text-on-surface-variant uppercase">
-                                Location / Footprint
-                            </span>
-                            <div className="mt-1 flex items-center gap-1.5 font-serif text-sm font-bold text-primary">
-                                <MapPin
-                                    size={14}
-                                    className="shrink-0 text-secondary"
-                                />
                                 <span>
-                                    {venture.location_details ||
-                                        'Eastern India Operations'}
+                                    {venture.external_cta_label ||
+                                        'Visit Website'}
                                 </span>
-                            </div>
-                        </div>
-                        <div className="border-b border-outline-variant p-4 sm:border-b-0 sm:p-5">
-                            <span className="font-mono text-[10px] tracking-widest text-on-surface-variant uppercase">
-                                Delivered Projects
-                            </span>
-                            <div className="mt-1 font-serif text-sm font-bold text-primary">
-                                {projects.length} Featured Installations
-                            </div>
-                        </div>
-                        <div className="p-4 sm:p-5">
-                            <span className="font-mono text-[10px] tracking-widest text-on-surface-variant uppercase">
-                                Documentation & Media
-                            </span>
-                            <div className="mt-1 font-serif text-sm font-bold text-primary">
-                                {catalogs.length} Catalogs ·{' '}
-                                {certifications.length} Verified Records
-                            </div>
-                        </div>
+                                <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                        )}
                     </div>
                 </div>
             </section>
 
-            {/* Division Overview & Capabilities */}
-            <section className="border-b border-outline-variant bg-background py-14 md:py-20">
-                <div className="mx-auto grid w-full max-w-container-max grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-12 lg:px-8">
-                    <div className="space-y-5 lg:col-span-6">
-                        <p className="font-mono text-xs tracking-widest text-secondary uppercase">
-                            01 · Division Overview
-                        </p>
-                        <h2 className="font-serif text-2xl font-bold text-primary sm:text-3xl">
-                            {venture.short_label || venture.name} Operations
-                        </h2>
-
-                        {venture.summary && (
-                            <p className="text-base leading-relaxed font-semibold text-primary sm:text-lg">
-                                {venture.summary}
-                            </p>
-                        )}
-
-                        {venture.description && (
-                            <p className="text-sm leading-relaxed whitespace-pre-line text-on-surface-variant sm:text-base">
-                                {venture.description}
-                            </p>
-                        )}
-
-                        {highlights.length > 0 && (
-                            <ul className="grid gap-2.5 pt-2 sm:grid-cols-2">
-                                {highlights.map((item, idx) => (
-                                    <li
-                                        key={idx}
-                                        className="flex items-start gap-2.5 border border-outline-variant bg-white p-3.5 text-xs font-medium text-on-surface"
-                                    >
-                                        <Check
-                                            size={14}
-                                            className="mt-0.5 shrink-0 text-secondary"
-                                        />
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-
-                    <div className="lg:col-span-6">
-                        <div className="border border-outline-variant bg-white p-2">
+            {/* Division Overview */}
+            <section className="border-b border-outline-variant bg-white px-gutter py-14 md:py-20">
+                <div className="mx-auto grid max-w-container-max grid-cols-1 items-center gap-10 lg:grid-cols-12">
+                    <div className="lg:col-span-5">
+                        <div className="relative aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-surface-container-high shadow-sm">
                             <img
                                 src={
                                     venture.division_image ||
@@ -198,122 +147,122 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                 }
                                 alt={venture.name}
                                 onError={handleImageError}
-                                className="block aspect-[16/10] w-full object-cover"
+                                className="h-full w-full object-contain p-3"
                             />
                         </div>
+                    </div>
+
+                    <div className="lg:col-span-7">
+                        <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+                            Venture Overview
+                        </span>
+                        <h2 className="mt-1 mb-3 font-serif text-2xl font-bold text-primary md:text-3xl">
+                            {venture.short_label || venture.name}
+                        </h2>
+
+                        {venture.location_details && (
+                            <div className="mb-4 inline-flex items-center gap-2 rounded border border-outline-variant bg-surface-container-low px-3.5 py-2 text-xs font-semibold text-primary md:text-sm">
+                                <MapPin
+                                    size={15}
+                                    className="shrink-0 text-secondary"
+                                />
+                                <span>{venture.location_details}</span>
+                            </div>
+                        )}
+
+                        <p className="mb-5 text-sm leading-relaxed whitespace-pre-line text-on-surface-variant md:text-base">
+                            {venture.description || venture.summary}
+                        </p>
+
+                        {highlights.length > 0 && (
+                            <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                                {highlights.map((item, idx) => (
+                                    <li
+                                        key={idx}
+                                        className="flex items-start gap-2.5 text-sm text-on-surface"
+                                    >
+                                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-secondary/10 text-secondary">
+                                            <Check size={13} />
+                                        </span>
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
             </section>
 
             {/* Completed Projects Showcase */}
             {projects.length > 0 && (
-                <section className="border-b border-outline-variant bg-white py-14 md:py-20">
-                    <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
-                        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-outline-variant pb-5">
+                <section className="border-b border-outline-variant bg-surface-container-low px-gutter py-14 md:py-16">
+                    <div className="mx-auto max-w-container-max">
+                        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
                             <div>
-                                <p className="font-mono text-xs tracking-widest text-secondary uppercase">
-                                    02 · Completed Installations
-                                </p>
-                                <h2 className="mt-1 font-serif text-2xl font-bold text-primary sm:text-3xl">
+                                <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+                                    Completed Projects
+                                </span>
+                                <h2 className="mt-1 font-serif text-2xl font-bold text-primary md:text-3xl">
                                     {venture.short_label || venture.name}{' '}
-                                    Project Gallery
+                                    Gallery
                                 </h2>
                             </div>
                             <Link
                                 href={route('portfolio')}
-                                className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold tracking-wider text-secondary uppercase hover:underline"
+                                className="inline-flex items-center gap-1.5 text-sm font-bold text-secondary hover:underline"
                             >
-                                <span>Full Portfolio</span>
-                                <ArrowUpRight size={14} />
+                                Full Corporate Portfolio{' '}
+                                <ArrowRight size={15} />
                             </Link>
                         </div>
 
-                        <div className="grid grid-cols-1 border-t border-l border-outline-variant sm:grid-cols-2 lg:grid-cols-3">
-                            {projects.map((project, idx) => {
-                                const photoCount = Array.isArray(
-                                    project.image_urls,
-                                )
-                                    ? project.image_urls.length
-                                    : 1;
-
-                                return (
-                                    <button
-                                        key={project.id}
-                                        type="button"
-                                        onClick={() =>
-                                            setLightboxItem({
-                                                title: project.title,
-                                                badge:
-                                                    project.category_label ||
-                                                    venture.name,
-                                                image:
-                                                    project.image_path ||
-                                                    DEMO_IMAGE_URL,
-                                                images: project.image_urls,
-                                                location: project.location,
-                                                date: project.completion_year,
-                                                description: project.summary,
-                                            })
-                                        }
-                                        className="group flex h-full flex-col border-r border-b border-outline-variant bg-white p-5 text-left transition-colors hover:bg-background"
-                                    >
-                                        <div className="mb-3 flex w-full items-center justify-between font-mono text-[10px] tracking-wider text-on-surface-variant uppercase">
-                                            <span className="text-secondary">
-                                                0{idx + 1} ·{' '}
-                                                {project.category_label ||
-                                                    venture.short_label ||
-                                                    venture.name}
-                                            </span>
-                                            <span className="flex items-center gap-2">
-                                                {photoCount > 1 && (
-                                                    <span className="inline-flex items-center gap-1 text-primary">
-                                                        <Images size={11} />
-                                                        {photoCount}
-                                                    </span>
-                                                )}
-                                                {project.completion_year}
-                                            </span>
-                                        </div>
-
-                                        <div className="mb-4 aspect-[16/10] w-full overflow-hidden border border-outline-variant bg-surface-container-low">
-                                            <img
-                                                src={
-                                                    project.image_path ||
-                                                    DEMO_IMAGE_URL
-                                                }
-                                                alt={project.title}
-                                                onError={handleImageError}
-                                                className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            {projects.map((project) => (
+                                <button
+                                    key={project.id}
+                                    type="button"
+                                    onClick={() =>
+                                        setLightboxItem({
+                                            title: project.title,
+                                            badge:
+                                                project.category_label ||
+                                                venture.name,
+                                            image:
+                                                project.image_path ||
+                                                DEMO_IMAGE_URL,
+                                            images: project.image_urls,
+                                            location: project.location,
+                                            date: project.completion_year,
+                                            description: project.summary,
+                                        })
+                                    }
+                                    className="group rounded border border-outline-variant bg-white p-3 text-left shadow-sm transition-shadow hover:shadow-md"
+                                >
+                                    <div className="mb-3 aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-slate-100">
+                                        <img
+                                            src={
+                                                project.image_path ||
+                                                DEMO_IMAGE_URL
+                                            }
+                                            alt={project.title}
+                                            onError={handleImageError}
+                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                        />
+                                    </div>
+                                    <h3 className="font-serif text-base font-bold text-primary">
+                                        {project.title}
+                                    </h3>
+                                    {project.location && (
+                                        <p className="mt-1.5 flex items-center gap-1 text-xs text-on-surface-variant">
+                                            <MapPin
+                                                size={13}
+                                                className="text-secondary"
                                             />
-                                        </div>
-
-                                        <h3 className="font-serif text-lg font-bold text-primary transition-colors group-hover:text-secondary">
-                                            {project.title}
-                                        </h3>
-
-                                        {project.location && (
-                                            <p className="mt-1 flex items-center gap-1 text-xs text-on-surface-variant">
-                                                <MapPin
-                                                    size={12}
-                                                    className="text-secondary"
-                                                />
-                                                {project.location}
-                                            </p>
-                                        )}
-
-                                        {project.summary && (
-                                            <p className="mt-2 line-clamp-2 text-sm text-on-surface-variant">
-                                                {project.summary}
-                                            </p>
-                                        )}
-
-                                        <span className="mt-auto inline-flex items-center gap-1 pt-4 font-mono text-[11px] font-semibold text-primary uppercase group-hover:text-secondary">
-                                            <span>Inspect Project</span>
-                                            <ArrowUpRight size={13} />
-                                        </span>
-                                    </button>
-                                );
-                            })}
+                                            {project.location}
+                                        </p>
+                                    )}
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -321,8 +270,8 @@ export default function VentureShow({ venture, otherVentures = [] }) {
 
             {/* Catalogs & Videos */}
             {(catalogs.length > 0 || promoVideos.length > 0) && (
-                <section className="border-b border-outline-variant bg-background py-14 md:py-16">
-                    <div className="mx-auto grid w-full max-w-container-max gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-12 lg:px-8">
+                <section className="border-b border-outline-variant bg-white px-gutter py-14">
+                    <div className="mx-auto grid max-w-container-max grid-cols-1 gap-10 lg:grid-cols-12">
                         {catalogs.length > 0 && (
                             <div
                                 className={
@@ -331,38 +280,33 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                         : 'lg:col-span-12'
                                 }
                             >
-                                <p className="font-mono text-xs tracking-widest text-secondary uppercase">
+                                <span className="text-xs font-bold tracking-widest text-secondary uppercase">
                                     Technical Brochures
-                                </p>
-                                <h2 className="mt-1 font-serif text-2xl font-bold text-primary">
+                                </span>
+                                <h2 className="mt-1 mb-5 font-serif text-2xl font-bold text-primary">
                                     Downloadable Catalogs
                                 </h2>
-
-                                <div className="mt-6 divide-y divide-outline-variant border border-outline-variant bg-white">
+                                <div className="space-y-3">
                                     {catalogs.map((cat) => (
                                         <div
                                             key={cat.id}
-                                            className="flex items-start justify-between gap-4 p-4"
+                                            className="flex items-start justify-between gap-4 rounded border border-outline-variant bg-surface-container-low p-4"
                                         >
-                                            <div className="flex min-w-0 items-start gap-3">
-                                                <div className="border border-outline-variant bg-background p-2 text-secondary">
-                                                    <FileText size={16} />
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <h3 className="font-serif font-bold text-primary">
+                                            <div className="flex items-start gap-3">
+                                                <FileText
+                                                    size={18}
+                                                    className="mt-0.5 shrink-0 text-secondary"
+                                                />
+                                                <div>
+                                                    <div className="font-serif text-sm font-bold text-primary">
                                                         {cat.title}
-                                                    </h3>
-                                                    {cat.description && (
-                                                        <p className="mt-1 text-xs text-on-surface-variant">
-                                                            {cat.description}
-                                                        </p>
-                                                    )}
+                                                    </div>
                                                     {cat.file_size_label && (
-                                                        <p className="mt-1 font-mono text-[10px] font-semibold text-secondary uppercase">
+                                                        <div className="mt-1 text-xs font-semibold text-secondary">
                                                             {
                                                                 cat.file_size_label
                                                             }
-                                                        </p>
+                                                        </div>
                                                     )}
                                                 </div>
                                             </div>
@@ -371,10 +315,10 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                                     'catalogs.download',
                                                     cat.id,
                                                 )}
-                                                className="inline-flex shrink-0 items-center gap-1.5 bg-primary px-3.5 py-2 font-mono text-[11px] font-semibold text-white uppercase transition-colors hover:bg-secondary"
+                                                className="inline-flex shrink-0 items-center gap-1.5 rounded bg-primary px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-secondary"
                                             >
-                                                <Download size={13} />
-                                                <span>PDF</span>
+                                                <Download size={14} />
+                                                PDF
                                             </a>
                                         </div>
                                     ))}
@@ -390,14 +334,13 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                         : 'lg:col-span-12'
                                 }
                             >
-                                <p className="font-mono text-xs tracking-widest text-secondary uppercase">
+                                <span className="text-xs font-bold tracking-widest text-secondary uppercase">
                                     Video Showcase
-                                </p>
-                                <h2 className="mt-1 font-serif text-2xl font-bold text-primary">
+                                </span>
+                                <h2 className="mt-1 mb-5 font-serif text-2xl font-bold text-primary">
                                     Operations &amp; Facility Film
                                 </h2>
-
-                                <div className="mt-6 grid gap-6 sm:grid-cols-2">
+                                <div className="grid gap-5 sm:grid-cols-2">
                                     {promoVideos.map((video) => (
                                         <MediaPlayerCard
                                             key={video.id}
@@ -413,27 +356,26 @@ export default function VentureShow({ venture, otherVentures = [] }) {
 
             {/* Related Certifications */}
             {certifications.length > 0 && (
-                <section className="border-b border-outline-variant bg-white py-14 md:py-16">
-                    <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-outline-variant pb-5">
+                <section className="border-b border-outline-variant bg-surface-container-low px-gutter py-14">
+                    <div className="mx-auto max-w-container-max">
+                        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                             <div>
-                                <p className="font-mono text-xs tracking-widest text-secondary uppercase">
+                                <span className="text-xs font-bold tracking-widest text-secondary uppercase">
                                     Verified Credentials
-                                </p>
+                                </span>
                                 <h2 className="mt-1 font-serif text-2xl font-bold text-primary">
-                                    Certifications &amp; Agreements
+                                    Related Certifications &amp; Agreements
                                 </h2>
                             </div>
                             <Link
                                 href={route('certifications')}
-                                className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-secondary uppercase hover:underline"
+                                className="inline-flex items-center gap-1.5 text-sm font-bold text-secondary hover:underline"
                             >
-                                <span>All Certifications</span>
-                                <ArrowUpRight size={14} />
+                                View All Certifications <ArrowRight size={15} />
                             </Link>
                         </div>
 
-                        <div className="mt-8 grid border-t border-l border-outline-variant sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {certifications.map((cert) => (
                                 <button
                                     key={cert.id}
@@ -454,9 +396,9 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                                 cert.document_path || null,
                                         })
                                     }
-                                    className="flex h-full flex-col border-r border-b border-outline-variant bg-white p-5 text-left transition-colors hover:bg-background"
+                                    className="flex flex-col rounded border border-outline-variant bg-white p-5 text-left shadow-sm transition-shadow hover:shadow-md"
                                 >
-                                    <div className="flex items-center gap-2 font-mono text-[11px] font-semibold text-secondary uppercase">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-secondary uppercase">
                                         <ShieldCheck size={14} />
                                         <span>
                                             {cert.type || 'Certification'}
@@ -470,11 +412,6 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                             Issued by {cert.issuer}
                                         </p>
                                     )}
-                                    {cert.description && (
-                                        <p className="mt-2 line-clamp-2 text-sm text-on-surface-variant">
-                                            {cert.description}
-                                        </p>
-                                    )}
                                 </button>
                             ))}
                         </div>
@@ -485,25 +422,25 @@ export default function VentureShow({ venture, otherVentures = [] }) {
             {/* Direct Venture Inquiry Desk */}
             <section
                 id="venture-inquiry"
-                className="bg-surface-container-low py-14 md:py-20"
+                className="bg-surface-container-high px-gutter py-16"
             >
-                <div className="mx-auto grid w-full max-w-container-max gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-start lg:px-8">
+                <div className="mx-auto grid max-w-container-max grid-cols-1 items-start gap-10 lg:grid-cols-12">
                     <div className="space-y-4 lg:col-span-5">
-                        <p className="font-mono text-xs tracking-widest text-secondary uppercase">
-                            Direct Venture Desk
-                        </p>
-                        <h2 className="font-serif text-2xl font-bold text-primary sm:text-3xl">
+                        <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+                            Direct Lead Capture
+                        </span>
+                        <h2 className="font-serif text-3xl font-bold text-primary">
                             Discuss Your {venture.short_label || venture.name}{' '}
                             Requirements
                         </h2>
-                        <p className="text-sm leading-relaxed text-on-surface-variant">
+                        <p className="text-sm leading-relaxed text-on-surface-variant md:text-base">
                             Submit a project inquiry, partnership proposal, or
                             technical catalog request directly to our leadership
                             email and WhatsApp desk.
                         </p>
                     </div>
 
-                    <div className="border border-outline bg-white p-5 sm:p-8 lg:col-span-7">
+                    <div className="rounded border border-outline-variant bg-white p-6 shadow-sm md:p-8 lg:col-span-7">
                         <InquiryForm
                             defaultVentureId={String(venture.id)}
                             defaultDivision={venture.name}
@@ -514,47 +451,49 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                 </div>
             </section>
 
-            {/* Other Sister Ventures */}
+            {/* Other Ventures */}
             {otherVentures.length > 0 && (
-                <section className="border-t border-outline bg-primary py-14 text-white md:py-16">
-                    <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/15 pb-5">
+                <section className="border-t border-outline-variant bg-white px-gutter py-14">
+                    <div className="mx-auto max-w-container-max">
+                        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
                             <div>
-                                <p className="font-mono text-xs tracking-widest text-secondary-container uppercase">
-                                    Explore Sister Companies
-                                </p>
-                                <h2 className="mt-1 font-serif text-2xl font-bold">
+                                <span className="text-xs font-bold tracking-widest text-secondary uppercase">
+                                    Explore More
+                                </span>
+                                <h2 className="mt-1 font-serif text-2xl font-bold text-primary">
                                     Other {companyName} Ventures
                                 </h2>
                             </div>
                             <Link
                                 href={route('industries')}
-                                className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-secondary-container uppercase hover:text-white"
+                                className="inline-flex items-center gap-1.5 text-sm font-bold text-secondary hover:underline"
                             >
-                                <span>All Ventures</span>
-                                <ArrowUpRight size={14} />
+                                View All Ventures <ArrowRight size={15} />
                             </Link>
                         </div>
 
-                        <div className="mt-8 grid border-t border-l border-white/15 sm:grid-cols-2 lg:grid-cols-3">
-                            {otherVentures.map((item, idx) => (
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            {otherVentures.map((item) => (
                                 <Link
                                     key={item.id}
                                     href={route('ventures.show', item.slug)}
-                                    className="group flex h-full flex-col border-r border-b border-white/15 bg-white/5 p-6 transition-colors hover:bg-secondary"
+                                    className="group rounded border border-outline-variant bg-surface-container-low p-6 transition-shadow hover:bg-white hover:shadow-md"
                                 >
-                                    <div className="flex items-center justify-between font-mono text-xs text-secondary-container">
-                                        <span>0{idx + 1}</span>
-                                        <ArrowUpRight
-                                            size={15}
-                                            className="text-white/60 group-hover:text-white"
+                                    <div className="flex items-center justify-between">
+                                        <VentureIcon
+                                            name={item.icon_name}
+                                            className="h-5 w-5 text-secondary"
+                                        />
+                                        <ArrowRight
+                                            size={16}
+                                            className="text-on-surface-variant transition-transform group-hover:translate-x-1 group-hover:text-secondary"
                                         />
                                     </div>
-                                    <h3 className="mt-4 font-serif text-xl font-bold text-white">
+                                    <h3 className="mt-4 font-serif text-lg font-bold text-primary">
                                         {item.name}
                                     </h3>
                                     {item.location_details && (
-                                        <p className="mt-2 line-clamp-2 text-xs text-white/70">
+                                        <p className="mt-2 line-clamp-2 text-xs text-on-surface-variant">
                                             {item.location_details}
                                         </p>
                                     )}

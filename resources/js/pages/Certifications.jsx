@@ -1,10 +1,9 @@
 import { Head, usePage } from '@inertiajs/react';
-import { ArrowUpRight, Award, FileText } from 'lucide-react';
+import { Award, ExternalLink, FileText, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
-import LightboxDialog from '@/components/LightboxDialog';
-import PageHero from '@/components/PageHero';
-import MainLayout from '@/layouts/MainLayout';
-import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
+import LightboxDialog from '../components/LightboxDialog';
+import MainLayout from '../layouts/MainLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../lib/utils';
 
 export default function Certifications({ certifications = [] }) {
     const { props } = usePage();
@@ -29,129 +28,142 @@ export default function Certifications({ certifications = [] }) {
         <MainLayout>
             <Head title={`Certifications & Agreements - ${companyName}`} />
 
-            <PageHero
-                badge={headers.badge || 'Verified Credibility'}
-                title={headers.title || 'Certifications & Agreements.'}
-                subtitle={
-                    headers.subtitle ||
-                    'Official documentation, partnership photos, BIS/FSSAI standards, and verification copies of our flagship brand agreements.'
-                }
-                heroImage={headers.hero_image || DEMO_IMAGE_URL}
-                imageAlt="Certifications & Agreements"
-            >
-                <div className="flex flex-wrap gap-2">
-                    {[
-                        { key: 'all', label: 'All Records' },
-                        { key: 'agreement', label: 'Official Agreements' },
-                        { key: 'certificate', label: 'Certificates' },
-                        {
-                            key: 'partnership_photo',
-                            label: 'Partnership Photos',
-                        },
-                    ].map((tab) => (
-                        <button
-                            key={tab.key}
-                            type="button"
-                            onClick={() => setFilter(tab.key)}
-                            className={`border px-3.5 py-2 font-mono text-xs font-semibold uppercase transition-colors ${
-                                filter === tab.key
-                                    ? 'border-primary bg-primary text-white'
-                                    : 'border-outline bg-background text-primary hover:border-primary'
-                            }`}
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
-            </PageHero>
+            <section className="relative border-b border-outline-variant bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
+                {headers.hero_image && (
+                    <div className="absolute inset-0 z-0">
+                        <img
+                            src={headers.hero_image || DEMO_IMAGE_URL}
+                            alt="Certifications & Agreements"
+                            onError={handleImageError}
+                            className="h-full w-full object-cover opacity-20"
+                        />
+                        <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
+                    </div>
+                )}
 
-            <section className="bg-background py-14 md:py-20">
-                <div className="mx-auto w-full max-w-container-max px-4 sm:px-6 lg:px-8">
-                    <div className="mb-6 flex items-center justify-between border-b border-outline-variant pb-3 font-mono text-xs text-on-surface-variant uppercase">
-                        <span>Archive Ledger</span>
-                        <span>{filtered.length} Records</span>
+                <div className="relative z-10 mx-auto max-w-container-max text-center md:text-left">
+                    <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-semibold tracking-wider text-secondary-container uppercase md:mx-0">
+                        <ShieldCheck size={14} />
+                        Verified Credibility
+                    </div>
+                    <h1 className="mb-4 font-serif text-3xl leading-tight font-bold text-white sm:text-5xl md:text-6xl">
+                        Certifications &amp;{' '}
+                        <span className="text-secondary-container">
+                            Agreements.
+                        </span>
+                    </h1>
+                    <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 md:mx-0 md:text-xl">
+                        Official documentation, partnership photos, BIS/FSSAI
+                        standards, and the first-copy verification of our
+                        flagship brand agreements.
+                    </p>
+                </div>
+            </section>
+
+            <section className="bg-surface-container-low px-gutter py-12 md:py-16">
+                <div className="mx-auto max-w-container-max">
+                    <div className="mb-8 flex flex-wrap gap-2">
+                        {[
+                            { key: 'all', label: 'All Credibility Records' },
+                            { key: 'agreement', label: 'Official Agreements' },
+                            { key: 'certificate', label: 'Certificates' },
+                            {
+                                key: 'partnership_photo',
+                                label: 'Partnership Photos',
+                            },
+                        ].map((tab) => (
+                            <button
+                                key={tab.key}
+                                type="button"
+                                onClick={() => setFilter(tab.key)}
+                                className={`rounded border px-4 py-2 text-xs font-bold transition-colors md:text-sm ${
+                                    filter === tab.key
+                                        ? 'border-primary bg-primary text-white'
+                                        : 'border-outline-variant bg-white text-primary hover:bg-surface-variant'
+                                }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
                     </div>
 
-                    <div className="grid grid-cols-1 border-t border-l border-outline-variant md:grid-cols-2 lg:grid-cols-3">
-                        {filtered.map((item, idx) => (
-                            <article
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {filtered.map((item) => (
+                            <div
                                 key={item.id}
-                                className="group flex h-full flex-col justify-between border-r border-b border-outline-variant bg-white p-5 transition-colors hover:bg-surface-container-low"
+                                className="flex flex-col justify-between rounded border border-outline-variant bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
                             >
                                 <div>
-                                    <div className="mb-3 flex items-center justify-between gap-2 font-mono text-[10px] tracking-wider uppercase">
-                                        <span className="inline-flex items-center gap-1.5 font-semibold text-secondary">
+                                    {item.image_path && (
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setLightboxItem({
+                                                    title: item.title,
+                                                    badge:
+                                                        typeLabels[item.type] ||
+                                                        item.type,
+                                                    image:
+                                                        item.image_path ||
+                                                        DEMO_IMAGE_URL,
+                                                    images: item.image_urls,
+                                                    issuer: item.issuer,
+                                                    reference:
+                                                        item.reference_number,
+                                                    date: item.issued_date,
+                                                    description:
+                                                        item.description,
+                                                    documentUrl:
+                                                        item.document_path,
+                                                })
+                                            }
+                                            className="mb-4 block aspect-[16/10] w-full overflow-hidden rounded border border-outline-variant bg-slate-100"
+                                        >
+                                            <img
+                                                src={
+                                                    item.image_path ||
+                                                    DEMO_IMAGE_URL
+                                                }
+                                                alt={item.title}
+                                                onError={handleImageError}
+                                                className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                                            />
+                                        </button>
+                                    )}
+
+                                    <div className="mb-2 flex items-center justify-between gap-2">
+                                        <span className="inline-flex items-center gap-1 rounded bg-secondary/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-secondary uppercase">
                                             <Award size={12} />
-                                            <span>
-                                                REC-0{idx + 1} ·{' '}
-                                                {typeLabels[item.type] ||
-                                                    item.type}
-                                            </span>
+                                            {typeLabels[item.type] || item.type}
                                         </span>
                                         {item.issued_date && (
-                                            <span className="text-on-surface-variant">
+                                            <span className="text-xs font-semibold text-on-surface-variant">
                                                 {item.issued_date}
                                             </span>
                                         )}
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setLightboxItem({
-                                                title: item.title,
-                                                badge:
-                                                    typeLabels[item.type] ||
-                                                    item.type,
-                                                image:
-                                                    item.image_path ||
-                                                    DEMO_IMAGE_URL,
-                                                images: item.image_urls,
-                                                issuer: item.issuer,
-                                                reference:
-                                                    item.reference_number,
-                                                date: item.issued_date,
-                                                description: item.description,
-                                                documentUrl: item.document_path,
-                                            })
-                                        }
-                                        className="mb-4 block aspect-[16/10] w-full overflow-hidden border border-outline-variant bg-surface-container-low"
-                                    >
-                                        <img
-                                            src={
-                                                item.image_path ||
-                                                DEMO_IMAGE_URL
-                                            }
-                                            alt={item.title}
-                                            onError={handleImageError}
-                                            className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                        />
-                                    </button>
-
-                                    <h2 className="font-serif text-lg font-bold text-primary">
+                                    <h2 className="mb-1 font-serif text-lg font-bold text-primary">
                                         {item.title}
                                     </h2>
-
                                     {item.issuer && (
-                                        <p className="mt-1 text-xs font-semibold text-secondary">
+                                        <div className="mb-2 text-xs font-semibold text-secondary">
                                             {item.issuer}
-                                        </p>
+                                        </div>
                                     )}
-
                                     {item.reference_number && (
-                                        <p className="mt-1 font-mono text-[11px] text-on-surface-variant">
+                                        <div className="mb-2 font-mono text-xs text-on-surface-variant">
                                             Ref: {item.reference_number}
-                                        </p>
+                                        </div>
                                     )}
-
                                     {item.description && (
-                                        <p className="mt-2.5 text-sm leading-relaxed text-on-surface-variant">
+                                        <p className="text-sm leading-relaxed text-on-surface-variant">
                                             {item.description}
                                         </p>
                                     )}
                                 </div>
 
-                                <div className="mt-5 flex items-center justify-between gap-2 border-t border-outline-variant pt-4">
+                                <div className="mt-4 flex items-center justify-between gap-2 border-t border-outline-variant pt-3">
                                     <button
                                         type="button"
                                         onClick={() =>
@@ -172,23 +184,23 @@ export default function Certifications({ certifications = [] }) {
                                                 documentUrl: item.document_path,
                                             })
                                         }
-                                        className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-primary uppercase hover:text-secondary"
+                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-secondary"
                                     >
-                                        <span>Inspect Record</span>
-                                        <ArrowUpRight size={13} />
+                                        <ExternalLink size={14} />
+                                        View Preview
                                     </button>
                                     {item.document_path && (
                                         <a
                                             href={item.document_path}
                                             download
-                                            className="inline-flex items-center gap-1.5 bg-primary px-3 py-1.5 font-mono text-[11px] font-semibold text-white uppercase transition-colors hover:bg-secondary"
+                                            className="inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-secondary"
                                         >
-                                            <FileText size={12} />
-                                            <span>Copy</span>
+                                            <FileText size={13} />
+                                            Download Copy
                                         </a>
                                     )}
                                 </div>
-                            </article>
+                            </div>
                         ))}
                     </div>
                 </div>

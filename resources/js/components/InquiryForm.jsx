@@ -109,7 +109,7 @@ export default function InquiryForm({
                 <div>
                     <label
                         htmlFor={`${idPrefix}-name`}
-                        className="mb-1.5 block font-mono text-xs font-semibold tracking-wider text-primary uppercase"
+                        className="mb-1.5 block text-sm font-bold text-primary"
                     >
                         Full Name <span aria-hidden="true">*</span>
                     </label>
@@ -128,7 +128,7 @@ export default function InquiryForm({
                             errors.name ? `${idPrefix}-name-err` : undefined
                         }
                         placeholder="Rajesh Kumar"
-                        className="w-full border border-outline bg-background px-3.5 py-2.5 text-sm text-primary focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary"
+                        className="w-full rounded-sm border border-outline-variant bg-surface-container-low px-4 py-2.5 text-base text-primary focus:border-primary focus:ring-primary"
                     />
                     {errors.name && (
                         <p
@@ -143,7 +143,7 @@ export default function InquiryForm({
                 <div>
                     <label
                         htmlFor={`${idPrefix}-phone`}
-                        className="mb-1.5 block font-mono text-xs font-semibold tracking-wider text-primary uppercase"
+                        className="mb-1.5 block text-sm font-bold text-primary"
                     >
                         Phone / WhatsApp Number{' '}
                         <span aria-hidden="true">*</span>
@@ -164,7 +164,7 @@ export default function InquiryForm({
                             errors.phone ? `${idPrefix}-phone-err` : undefined
                         }
                         placeholder="9507488833"
-                        className="w-full border border-outline bg-background px-3.5 py-2.5 text-sm text-primary focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary"
+                        className="w-full rounded-sm border border-outline-variant bg-surface-container-low px-4 py-2.5 text-base text-primary focus:border-primary focus:ring-primary"
                     />
                     {errors.phone && (
                         <p
@@ -181,7 +181,7 @@ export default function InquiryForm({
                 <div>
                     <label
                         htmlFor={`${idPrefix}-email`}
-                        className="mb-1.5 block font-mono text-xs font-semibold tracking-wider text-primary uppercase"
+                        className="mb-1.5 block text-sm font-bold text-primary"
                     >
                         Email Address
                     </label>
@@ -199,7 +199,7 @@ export default function InquiryForm({
                             errors.email ? `${idPrefix}-email-err` : undefined
                         }
                         placeholder="partner@company.com"
-                        className="w-full border border-outline bg-background px-3.5 py-2.5 text-sm text-primary focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary"
+                        className="w-full rounded-sm border border-outline-variant bg-surface-container-low px-4 py-2.5 text-base text-primary focus:border-primary focus:ring-primary"
                     />
                     {errors.email && (
                         <p
@@ -214,7 +214,7 @@ export default function InquiryForm({
                 <div>
                     <label
                         htmlFor={`${idPrefix}-city`}
-                        className="mb-1.5 block font-mono text-xs font-semibold tracking-wider text-primary uppercase"
+                        className="mb-1.5 block text-sm font-bold text-primary"
                     >
                         City / District & State
                     </label>
@@ -228,7 +228,7 @@ export default function InquiryForm({
                             setData('city_region', event.target.value)
                         }
                         placeholder="Patna, Bihar"
-                        className="w-full border border-outline bg-background px-3.5 py-2.5 text-sm text-primary focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary"
+                        className="w-full rounded-sm border border-outline-variant bg-surface-container-low px-4 py-2.5 text-base text-primary focus:border-primary focus:ring-primary"
                     />
                 </div>
             </div>
@@ -237,7 +237,7 @@ export default function InquiryForm({
                 <div>
                     <label
                         htmlFor={`${idPrefix}-division`}
-                        className="mb-1.5 block font-mono text-xs font-semibold tracking-wider text-primary uppercase"
+                        className="mb-1.5 block text-sm font-bold text-primary"
                     >
                         Venture / Division <span aria-hidden="true">*</span>
                     </label>
@@ -247,7 +247,7 @@ export default function InquiryForm({
                         required
                         value={data.interest_division}
                         onChange={handleDivisionChange}
-                        className="w-full border border-outline bg-background px-3.5 py-2.5 text-sm text-primary focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary"
+                        className="w-full rounded-sm border border-outline-variant bg-surface-container-low px-4 py-2.5 text-base text-primary focus:border-primary focus:ring-primary"
                     >
                         {divisionOptions.map((option) => (
                             <option key={option.label} value={option.label}>
@@ -260,7 +260,7 @@ export default function InquiryForm({
                 <div>
                     <label
                         htmlFor={`${idPrefix}-subject`}
-                        className="mb-1.5 block font-mono text-xs font-semibold tracking-wider text-primary uppercase"
+                        className="mb-1.5 block text-sm font-bold text-primary"
                     >
                         Subject <span aria-hidden="true">*</span>
                     </label>
@@ -280,7 +280,7 @@ export default function InquiryForm({
                                 : undefined
                         }
                         placeholder="Distributor / Business Inquiry"
-                        className="w-full border border-outline bg-background px-3.5 py-2.5 text-sm text-primary focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary"
+                        className="w-full rounded-sm border border-outline-variant bg-surface-container-low px-4 py-2.5 text-base text-primary focus:border-primary focus:ring-primary"
                     />
                     {errors.subject && (
                         <p
@@ -296,7 +296,7 @@ export default function InquiryForm({
             <div>
                 <label
                     htmlFor={`${idPrefix}-message`}
-                    className="mb-1.5 block font-mono text-xs font-semibold tracking-wider text-primary uppercase"
+                    className="mb-1.5 block text-sm font-bold text-primary"
                 >
                     Inquiry Details <span aria-hidden="true">*</span>
                 </label>
@@ -312,7 +312,7 @@ export default function InquiryForm({
                         errors.message ? `${idPrefix}-msg-err` : undefined
                     }
                     placeholder="Share your territory, investment interest, product inquiry, or partnership query..."
-                    className="w-full border border-outline bg-background px-3.5 py-2.5 text-sm text-primary focus:border-secondary focus:bg-white focus:ring-1 focus:ring-secondary"
+                    className="w-full rounded-sm border border-outline-variant bg-surface-container-low px-4 py-2.5 text-base text-primary focus:border-primary focus:ring-primary"
                 />
                 {errors.message && (
                     <p
@@ -327,7 +327,7 @@ export default function InquiryForm({
             <button
                 type="submit"
                 disabled={processing}
-                className="inline-flex w-full items-center justify-center gap-2 bg-primary px-6 py-3 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:bg-secondary disabled:opacity-60 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded bg-primary px-7 py-3.5 text-sm font-bold tracking-wide text-white transition-colors hover:bg-secondary disabled:opacity-60 sm:w-auto"
             >
                 <Send size={16} />
                 <span>

@@ -91,7 +91,7 @@ export default function LightboxDialog({ item, onClose }) {
             ref={dialogRef}
             closedby="any"
             aria-labelledby={titleId}
-            className="m-auto max-h-[90dvh] w-[min(94vw,800px)] overflow-hidden border border-outline bg-white p-0 shadow-2xl"
+            className="m-auto max-h-[90vh] w-[min(92vw,760px)] overflow-hidden rounded-lg border border-outline-variant bg-white p-0 shadow-2xl"
         >
             {item && (
                 <div className="flex max-h-[90vh] flex-col">

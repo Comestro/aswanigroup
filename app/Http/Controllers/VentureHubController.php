@@ -3,26 +3,42 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catalog;
+use App\Models\Certification;
+use App\Models\PromoVideo;
 use App\Models\Venture;
 use App\Services\ImageService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class VentureHubController extends Controller
 {
-    public function index(ImageService $images): Response
+    public function index(Request $request, ImageService $images): Response
     {
         $ventures = Venture::query()
             ->active()
             ->ordered()
             ->with([
+                'projects' => fn ($query) => $query->active()->ordered(),
                 'catalogs' => fn ($query) => $query->active()->ordered(),
+                'promoVideos' => fn ($query) => $query->active()->ordered(),
+                'certifications' => fn ($query) => $query->active()->ordered(),
             ])
             ->withCount(['projects', 'catalogs', 'promoVideos', 'certifications'])
             ->get();
 
         $images->hydrateCollection($ventures, 'image', 'division_image', 'division_image_urls', 'division_images_data');
         $images->hydrateCollection($ventures, 'hero_images', 'hero_image', 'hero_image_urls', 'hero_images_data');
+        $images->hydrateCollection($ventures->pluck('projects')->flatten(), 'image', 'image_path', 'image_urls', 'images_data');
+        $images->hydrateCollection($ventures->pluck('certifications')->flatten(), 'image', 'image_path', 'image_urls', 'images_data');
+        $images->hydrateCollection($ventures->pluck('promoVideos')->flatten(), 'poster_image', 'poster_path', 'poster_urls', 'poster_images_data');
+
+        $certifications = Certification::query()
+            ->active()
+            ->ordered()
+            ->with('venture:id,name,short_label')
+            ->get();
+        $images->hydrateCollection($certifications, 'image', 'image_path', 'image_urls', 'images_data');
 
         $catalogs = Catalog::query()
             ->active()
@@ -30,9 +46,21 @@ class VentureHubController extends Controller
             ->with('venture:id,name,short_label')
             ->get();
 
+        $promoVideos = PromoVideo::query()
+            ->active()
+            ->ordered()
+            ->with('venture:id,name,short_label')
+            ->get();
+        $images->hydrateCollection($promoVideos, 'poster_image', 'poster_path', 'poster_urls', 'poster_images_data');
+
+        $firstVenture = $ventures->first();
+
         return Inertia::render('Industries', [
             'ventures' => $ventures,
+            'certifications' => $certifications,
             'catalogs' => $catalogs,
+            'promoVideos' => $promoVideos,
+            'initialTab' => $request->string('tab')->toString() ?: ($firstVenture !== null ? $firstVenture->slug : 'certifications'),
         ]);
     }
 

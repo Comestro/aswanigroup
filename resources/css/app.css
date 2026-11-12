@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @plugin "@tailwindcss/forms";
@@ -9,11 +9,9 @@
 @source '../js';
 
 @theme {
-    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
     --font-serif:
-        'Space Grotesk', 'Plus Jakarta Sans', ui-sans-serif, system-ui,
-        sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+        'Sora', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 
     /* Color mappings from CSS variables */
     --color-primary: var(--primary);
@@ -41,67 +39,48 @@
     --color-on-error: var(--on-error);
 
     /* Spacing */
-    --spacing-gutter: clamp(1rem, 2.5vw, 2rem);
-    --spacing-container-max: 1280px;
+    --spacing-gutter: 24px;
+    --spacing-container-max: 1200px;
 }
 
 @layer base {
     :root {
-        /* Architectural Stone, Obsidian & Forest Palette */
-        --primary: #111315;
+        /* Institutional & Corporate — Light Only */
+        --primary: #002147;
         --on-primary: #ffffff;
-        --primary-container: #ece9e1;
-        --on-primary-container: #111315;
+        --primary-container: #f1f5f9;
+        --on-primary-container: #001229;
 
-        --secondary: #0f4c3a;
+        --secondary: #8c1515;
         --on-secondary: #ffffff;
-        --secondary-container: #9ee5c3;
-        --on-secondary-container: #062e23;
+        --secondary-container: #fde8e8;
+        --on-secondary-container: #6b0e0e;
 
-        --background: #f8f7f4;
-        --on-background: #14171a;
+        --background: #ffffff;
+        --on-background: #1e293b;
 
         --surface: #ffffff;
-        --on-surface: #14171a;
+        --on-surface: #1e293b;
 
-        --surface-variant: #f1efea;
-        --on-surface-variant: #4d5359;
+        --surface-variant: #f8fafc;
+        --on-surface-variant: #64748b;
 
-        --surface-container: #f1efea;
-        --surface-container-high: #e6e3db;
-        --surface-container-low: #f1efea;
+        --surface-container: #f8fafc;
+        --surface-container-high: #f1f5f9;
+        --surface-container-low: #f8fafc;
         --surface-container-lowest: #ffffff;
 
-        --surface-tint: #1f2428;
+        --surface-tint: #1e293b;
 
-        --outline: #c7c2b7;
-        --outline-variant: #dfdbd2;
+        --outline: #cbd5e1;
+        --outline-variant: #e2e8f0;
 
         --error: #dc2626;
         --on-error: #ffffff;
     }
 
-    html {
-        scroll-behavior: smooth;
-    }
-
     body {
         @apply bg-background font-sans text-on-surface antialiased;
-    }
-
-    h1,
-    h2,
-    h3 {
-        letter-spacing: -0.03em;
-    }
-
-    :target {
-        scroll-margin-top: 5.5rem;
-    }
-
-    :focus-visible {
-        outline: 2px solid var(--secondary);
-        outline-offset: 2px;
     }
 }
 
@@ -113,8 +92,8 @@ dialog:modal {
 dialog::backdrop {
     overflow: hidden;
     overscroll-behavior: contain;
-    background-color: rgb(17 19 21 / 0.72);
-    backdrop-filter: blur(2px);
+    background-color: rgb(0 18 41 / 0.65);
+    backdrop-filter: blur(3px);
 }
 
 .visually-hidden:where(:not(:focus-within, :active)) {
@@ -129,8 +108,25 @@ dialog::backdrop {
     white-space: nowrap !important;
 }
 
+@keyframes vertical-scroll {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+.animate-vertical-scroll {
+    animation: vertical-scroll 24s linear infinite;
+}
+
+.animate-vertical-scroll:hover {
+    animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
+    .animate-vertical-scroll {
+        animation: none;
     }
 }
