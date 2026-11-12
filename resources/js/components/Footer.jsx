@@ -1,5 +1,12 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Mail, MapPin, MessageCircle, Phone, ShieldCheck } from 'lucide-react';
+import {
+    ArrowUpRight,
+    Mail,
+    MapPin,
+    MessageCircle,
+    Phone,
+    ShieldCheck,
+} from 'lucide-react';
 import { route } from 'ziggy-js';
 import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
 
@@ -19,66 +26,87 @@ export default function Footer() {
 
     return (
         <footer className="w-full border-t border-outline-variant bg-primary text-white">
-            <div className="mx-auto max-w-container-max px-4 py-12 sm:px-6 md:py-16 lg:px-8">
-                <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
-                    <div className="md:col-span-4">
+            <div className="mx-auto max-w-container-max px-4 pt-14 pb-10 sm:px-6 lg:px-8">
+                {/* Architectural Statement Header */}
+                <div className="mb-12 grid grid-cols-1 items-end gap-8 border-b border-white/15 pb-10 lg:grid-cols-12">
+                    <div className="lg:col-span-7">
                         <div className="mb-4 flex items-center gap-3">
                             <img
                                 src={logoPath}
                                 alt={`${companyName} Logo`}
                                 onError={handleImageError}
-                                className="h-9 w-9 rounded bg-white object-contain p-1"
+                                className="h-9 w-9 border border-white/20 bg-white object-contain p-1"
                             />
-                            <div>
-                                <span className="block font-serif text-lg font-bold tracking-tight">
-                                    {companyName}
-                                </span>
-                                <span className="block text-[10px] font-medium tracking-widest text-white/60 uppercase">
-                                    Est. {settings.est_year || '1995'}
-                                </span>
-                            </div>
-                        </div>
-                        <p className="mb-5 max-w-xs text-sm leading-relaxed text-white/70">
-                            {settings.footer_summary ||
-                                'Powering a smart, sustainable, and trusted future across packaged water, energy, jewelry, and trade.'}
-                        </p>
-                        <div className="flex items-center gap-2 text-xs font-medium text-white/70">
-                            <MapPin
-                                size={14}
-                                className="shrink-0 text-secondary-container"
-                            />
-                            <span>
+                            <span className="font-mono text-xs tracking-widest text-secondary-container uppercase">
+                                EST. {settings.est_year || '1995'} ·{' '}
                                 {settings.footer_regions ||
                                     'Bihar · Jharkhand · West Bengal'}
                             </span>
                         </div>
+                        <h2 className="font-serif text-3xl leading-[1.08] font-bold text-white sm:text-4xl">
+                            {settings.company_full_name ||
+                                `${companyName} of Companies`}
+                        </h2>
+                        <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/70">
+                            {settings.footer_summary ||
+                                'Powering a smart, sustainable, and trusted future across packaged water, energy, jewelry, and trade.'}
+                        </p>
                     </div>
 
-                    <div className="md:col-span-2">
-                        <h4 className="mb-4 text-xs font-semibold tracking-widest text-white/50 uppercase">
-                            Company
-                        </h4>
+                    <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
+                        <Link
+                            href={route('contact')}
+                            className="inline-flex items-center gap-2 bg-secondary px-5 py-3 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:bg-secondary/90"
+                        >
+                            <span>Partnership Desk</span>
+                            <ArrowUpRight size={14} />
+                        </Link>
+                        <a
+                            href={`https://wa.me/${whatsappNumber}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 border border-white/25 px-5 py-3 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:border-white hover:bg-white hover:text-primary"
+                        >
+                            <MessageCircle size={14} />
+                            <span>WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+
+                {/* Hairline Directory Grid */}
+                <div className="grid grid-cols-1 gap-8 border-b border-white/15 pb-10 sm:grid-cols-2 lg:grid-cols-12">
+                    <div className="lg:col-span-3">
+                        <h3 className="mb-4 font-mono text-[11px] font-semibold tracking-widest text-white/50 uppercase">
+                            01 · Navigation
+                        </h3>
                         <ul className="space-y-2.5">
                             {[
-                                { label: 'About Us', href: route('about') },
+                                { label: 'Home Overview', href: route('home') },
                                 {
-                                    label: 'Ventures Hub',
+                                    label: 'About & Legacy',
+                                    href: route('about'),
+                                },
+                                {
+                                    label: 'Ventures Directory',
                                     href: route('industries'),
                                 },
                                 {
-                                    label: 'Portfolio',
+                                    label: 'Project Portfolio',
                                     href: route('portfolio'),
                                 },
                                 {
-                                    label: 'Certifications',
+                                    label: 'Verified Credentials',
                                     href: route('certifications'),
                                 },
-                                { label: 'Contact', href: route('contact') },
+                                {
+                                    label: 'Contact Desk',
+                                    href: route('contact'),
+                                },
                             ].map((link) => (
                                 <li key={link.label}>
                                     <Link
                                         href={link.href}
-                                        className="text-sm text-white/75 transition-colors hover:text-white"
+                                        className="text-sm text-white/80 transition-colors hover:text-secondary-container"
                                     >
                                         {link.label}
                                     </Link>
@@ -87,45 +115,52 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    <div className="md:col-span-3">
-                        <h4 className="mb-4 text-xs font-semibold tracking-widest text-white/50 uppercase">
-                            Ventures
-                        </h4>
-                        <ul className="space-y-2.5">
-                            {ventures.map((venture) => (
-                                <li key={venture.id}>
-                                    <Link
-                                        href={route(
-                                            'ventures.show',
-                                            venture.slug,
-                                        )}
-                                        className="text-sm text-white/75 transition-colors hover:text-white"
-                                    >
-                                        {venture.name}
-                                    </Link>
-                                </li>
+                    <div className="lg:col-span-5">
+                        <h3 className="mb-4 font-mono text-[11px] font-semibold tracking-widest text-white/50 uppercase">
+                            02 · Operating Companies
+                        </h3>
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            {ventures.map((venture, idx) => (
+                                <Link
+                                    key={venture.id}
+                                    href={route('ventures.show', venture.slug)}
+                                    className="group flex items-center justify-between border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white/85 transition-colors hover:border-secondary-container hover:text-white"
+                                >
+                                    <span className="truncate">
+                                        <span className="mr-2 font-mono text-xs text-secondary-container">
+                                            0{idx + 1}
+                                        </span>
+                                        {venture.short_label || venture.name}
+                                    </span>
+                                    <ArrowUpRight
+                                        size={13}
+                                        className="shrink-0 opacity-60 group-hover:opacity-100"
+                                    />
+                                </Link>
                             ))}
-                        </ul>
+                        </div>
                     </div>
 
-                    <div className="md:col-span-3">
-                        <h4 className="mb-4 text-xs font-semibold tracking-widest text-white/50 uppercase">
-                            Corporate Desk
-                        </h4>
-                        <div className="space-y-3">
+                    <div className="lg:col-span-4">
+                        <h3 className="mb-4 font-mono text-[11px] font-semibold tracking-widest text-white/50 uppercase">
+                            03 · Direct Channels
+                        </h3>
+                        <div className="space-y-3 text-sm">
                             <a
                                 href={`tel:${settings.primary_phone || '9507488833'}`}
-                                className="flex items-center gap-2.5 text-sm text-white/80 transition-colors hover:text-white"
+                                className="flex items-center gap-2.5 text-white/85 transition-colors hover:text-secondary-container"
                             >
                                 <Phone
                                     size={15}
                                     className="shrink-0 text-secondary-container"
                                 />
-                                <span>{phoneDisplay}</span>
+                                <span className="font-mono">
+                                    {phoneDisplay}
+                                </span>
                             </a>
                             <a
                                 href={`mailto:${emailDisplay}`}
-                                className="flex items-center gap-2.5 text-sm text-white/80 transition-colors hover:text-white"
+                                className="flex items-center gap-2.5 text-white/85 transition-colors hover:text-secondary-container"
                             >
                                 <Mail
                                     size={15}
@@ -133,28 +168,23 @@ export default function Footer() {
                                 />
                                 <span>{emailDisplay}</span>
                             </a>
-                        </div>
-                        <div className="mt-5 flex flex-wrap gap-2.5">
-                            <Link
-                                href={route('contact')}
-                                className="inline-flex items-center justify-center rounded-md bg-secondary px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-secondary/90"
-                            >
-                                Partner With Us
-                            </Link>
-                            <a
-                                href={`https://wa.me/${whatsappNumber}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-1.5 rounded-md border border-white/20 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/10"
-                            >
-                                <MessageCircle size={14} />
-                                WhatsApp
-                            </a>
+                            <div className="flex items-start gap-2.5 text-white/70">
+                                <MapPin
+                                    size={15}
+                                    className="mt-0.5 shrink-0 text-secondary-container"
+                                />
+                                <span>
+                                    {settings.hq_address ||
+                                        settings.footer_regions ||
+                                        'Bihar · Jharkhand · West Bengal'}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row">
+                {/* Bottom Legal & Social Row */}
+                <div className="flex flex-col items-start justify-between gap-4 pt-6 font-mono text-xs text-white/60 sm:flex-row sm:items-center">
                     <span>
                         © {new Date().getFullYear()}{' '}
                         {settings.company_full_name || companyName}. All rights
@@ -193,7 +223,7 @@ export default function Footer() {
                         )}
                         <Link
                             href={route('login')}
-                            className="inline-flex items-center gap-1.5 text-white/70 transition-colors hover:text-white"
+                            className="inline-flex items-center gap-1.5 text-white/75 transition-colors hover:text-secondary-container"
                         >
                             <ShieldCheck size={12} />
                             Admin CMS

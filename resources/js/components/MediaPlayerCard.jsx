@@ -28,7 +28,7 @@ export default function MediaPlayerCard({ video, autoPlayPreferred = false }) {
     const isYoutube = video.source_type === 'youtube' && video.youtube_id;
 
     return (
-        <div className="flex h-full flex-col overflow-hidden rounded-xl border border-outline-variant bg-white">
+        <div className="flex h-full flex-col border border-outline-variant bg-white">
             <div className="relative aspect-video w-full border-b border-outline-variant bg-black">
                 {isYoutube ? (
                     <iframe
@@ -56,8 +56,8 @@ export default function MediaPlayerCard({ video, autoPlayPreferred = false }) {
                     />
                 )}
             </div>
-            <div className="p-4">
-                <div className="mb-1 flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-secondary uppercase">
+            <div className="p-4 sm:p-5">
+                <div className="mb-1.5 flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-secondary uppercase">
                     <PlayCircle size={13} />
                     <span>
                         {isYoutube ? 'YouTube Showcase' : 'Commercial Film'}
@@ -67,7 +67,7 @@ export default function MediaPlayerCard({ video, autoPlayPreferred = false }) {
                     {video.title}
                 </h4>
                 {video.description && (
-                    <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+                    <p className="mt-1.5 text-xs leading-relaxed text-on-surface-variant">
                         {video.description}
                     </p>
                 )}

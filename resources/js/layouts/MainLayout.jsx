@@ -8,10 +8,10 @@ export default function MainLayout({ children }) {
     const flash = props.flash || {};
 
     return (
-        <div className="flex min-h-screen flex-col overflow-x-clip bg-white text-on-surface antialiased">
+        <div className="flex min-h-dvh flex-col overflow-x-clip bg-background text-on-surface antialiased">
             <a
                 href="#main-content"
-                className="visually-hidden fixed top-3 left-3 z-[200] rounded bg-primary px-4 py-2 text-sm font-bold text-white shadow-lg"
+                className="visually-hidden fixed top-3 left-3 z-[200] bg-primary px-4 py-2 font-mono text-xs font-semibold text-white uppercase shadow-lg"
             >
                 Skip to main content
             </a>
@@ -22,7 +22,7 @@ export default function MainLayout({ children }) {
                 <div
                     role="status"
                     aria-live="polite"
-                    className={`border-b px-4 py-3 pt-24 text-sm sm:px-6 lg:px-8 ${
+                    className={`border-b px-4 py-3 text-sm sm:px-6 lg:px-8 ${
                         flash.error
                             ? 'border-red-200 bg-red-50 text-red-900'
                             : 'border-emerald-200 bg-emerald-50 text-emerald-950'
@@ -38,7 +38,7 @@ export default function MainLayout({ children }) {
                                 href={flash.whatsapp_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-2 rounded bg-emerald-600 px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-emerald-700"
+                                className="inline-flex items-center gap-2 bg-secondary px-4 py-1.5 font-mono text-xs font-semibold text-white uppercase transition-colors hover:bg-secondary/90"
                             >
                                 <MessageCircle size={14} />
                                 Send on WhatsApp Now

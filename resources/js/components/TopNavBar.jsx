@@ -1,6 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ChevronDown, Menu, Shield, X } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Menu, Shield, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { route } from 'ziggy-js';
 import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
@@ -12,13 +11,13 @@ export default function TopNavBar() {
     const ventures = props.navVentures || [];
 
     const [scrolled, setScrolled] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
     const [venturesOpen, setVenturesOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 10);
-        window.addEventListener('scroll', onScroll);
+        const onScroll = () => setScrolled(window.scrollY > 12);
+        window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
 
         return () => window.removeEventListener('scroll', onScroll);
@@ -37,6 +36,7 @@ export default function TopNavBar() {
         const handleEscape = (event) => {
             if (event.key === 'Escape') {
                 setVenturesOpen(false);
+                setMobileOpen(false);
             }
         };
 
@@ -53,7 +53,11 @@ export default function TopNavBar() {
         route().current('industries') || route().current('ventures.*');
 
     const links = [
-        { label: 'Home', href: route('home'), active: route().current('home') },
+        {
+            label: 'Overview',
+            href: route('home'),
+            active: route().current('home'),
+        },
         {
             label: 'About',
             href: route('about'),
@@ -65,7 +69,7 @@ export default function TopNavBar() {
             active: route().current('portfolio'),
         },
         {
-            label: 'Certifications',
+            label: 'Credentials',
             href: route('certifications'),
             active: route().current('certifications'),
         },
@@ -79,65 +83,59 @@ export default function TopNavBar() {
     const companyName = siteSettings.company_name || 'Ashwin Group';
     const logoPath = siteSettings.logo_path || DEMO_IMAGE_URL;
 
-    const getLinkClasses = (active) =>
-        `relative py-2 text-sm font-medium transition-colors ${
+    const getNavItemClass = (active) =>
+        `relative py-1 text-xs font-semibold tracking-wider uppercase transition-colors ${
             active
-                ? 'font-semibold text-secondary'
+                ? 'text-primary after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:bg-secondary'
                 : 'text-on-surface-variant hover:text-primary'
         }`;
 
     return (
-        <>
-            <header
-                className={`fixed inset-x-0 top-0 z-50 border-b border-outline-variant bg-white/95 text-primary backdrop-blur-sm transition-shadow duration-200 ${
-                    scrolled ? 'shadow-sm' : ''
-                }`}
-            >
-                <div className="mx-auto flex h-16 max-w-container-max items-center justify-between gap-4 px-4 sm:px-6 md:h-18 lg:px-8">
-                    <Link
-                        href={route('home')}
-                        onClick={() => {
-                            setOpen(false);
-                            setVenturesOpen(false);
-                        }}
-                        className="group flex shrink-0 items-center gap-3 text-primary"
-                    >
+        <header
+            className={`sticky top-0 z-50 border-b border-outline-variant bg-background/95 backdrop-blur-sm transition-shadow duration-200 ${
+                scrolled ? 'shadow-xs' : ''
+            }`}
+        >
+            <div className="mx-auto flex h-16 max-w-container-max items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+                <Link
+                    href={route('home')}
+                    onClick={() => {
+                        setMobileOpen(false);
+                        setVenturesOpen(false);
+                    }}
+                    className="flex shrink-0 items-center gap-3"
+                >
+                    <div className="flex h-9 w-9 items-center justify-center border border-outline-variant bg-white p-1">
                         <img
                             src={logoPath}
                             alt={`${companyName} Logo`}
                             onError={handleImageError}
-                            className="h-9 w-9 rounded object-contain"
+                            className="h-full w-full object-contain"
                         />
-                        <div>
-                            <span className="block font-serif text-lg leading-none font-bold tracking-tight">
-                                {companyName}
-                            </span>
-                            <span className="mt-0.5 block text-[10px] font-medium tracking-widest text-on-surface-variant uppercase">
-                                Est. {siteSettings.est_year || '1995'}
-                            </span>
-                        </div>
-                    </Link>
+                    </div>
+                    <div className="border-l border-outline-variant pl-3">
+                        <span className="block font-serif text-base leading-none font-bold tracking-tight text-primary uppercase">
+                            {companyName}
+                        </span>
+                        <span className="mt-1 block font-mono text-[10px] tracking-widest text-on-surface-variant uppercase">
+                            EST. {siteSettings.est_year || '1995'}
+                        </span>
+                    </div>
+                </Link>
 
-                    <nav
-                        aria-label="Primary"
-                        className="hidden items-center gap-7 lg:flex"
-                    >
-                        <Link
-                            href={links[0].href}
-                            aria-current={links[0].active ? 'page' : undefined}
-                            className={getLinkClasses(links[0].active)}
-                        >
-                            {links[0].label}
-                        </Link>
-                        <Link
-                            href={links[1].href}
-                            aria-current={links[1].active ? 'page' : undefined}
-                            className={getLinkClasses(links[1].active)}
-                        >
-                            {links[1].label}
-                        </Link>
+                <nav aria-label="Primary" className="flex items-center gap-4">
+                    <div className="hidden items-center gap-7 lg:flex">
+                        {links.slice(0, 2).map(({ label, href, active }) => (
+                            <Link
+                                key={label}
+                                href={href}
+                                aria-current={active ? 'page' : undefined}
+                                className={getNavItemClass(active)}
+                            >
+                                {label}
+                            </Link>
+                        ))}
 
-                        {/* Dynamic Ventures Dropdown */}
                         <div
                             ref={dropdownRef}
                             className="relative"
@@ -147,13 +145,13 @@ export default function TopNavBar() {
                             <button
                                 type="button"
                                 aria-expanded={venturesOpen}
-                                aria-controls="desktop-ventures-submenu"
+                                aria-controls="desktop-ventures-menu"
                                 onClick={() => setVenturesOpen((prev) => !prev)}
-                                className={`inline-flex items-center gap-1 ${getLinkClasses(venturesActive)}`}
+                                className={`inline-flex items-center gap-1 ${getNavItemClass(venturesActive)}`}
                             >
                                 <span>Ventures</span>
                                 <ChevronDown
-                                    size={14}
+                                    size={13}
                                     aria-hidden="true"
                                     className={`transition-transform duration-150 ${
                                         venturesOpen ? 'rotate-180' : ''
@@ -162,10 +160,10 @@ export default function TopNavBar() {
                             </button>
 
                             {venturesOpen && (
-                                <div className="pt-2">
+                                <div className="pt-3">
                                     <ul
-                                        id="desktop-ventures-submenu"
-                                        className="absolute top-full left-0 z-50 w-72 overflow-hidden rounded-lg border border-outline-variant bg-white py-1.5 text-left shadow-lg"
+                                        id="desktop-ventures-menu"
+                                        className="absolute top-full left-0 z-50 w-72 border border-outline bg-white shadow-sm"
                                     >
                                         <li>
                                             <Link
@@ -183,21 +181,24 @@ export default function TopNavBar() {
                                                         ? 'page'
                                                         : undefined
                                                 }
-                                                className="flex items-center justify-between border-b border-outline-variant px-4 py-2.5 text-xs font-semibold tracking-wider text-primary uppercase transition-colors hover:bg-surface-container-low hover:text-secondary"
+                                                className="flex items-center justify-between border-b border-outline-variant bg-surface-container-low px-4 py-3 font-mono text-[11px] font-semibold tracking-wider text-primary uppercase transition-colors hover:bg-secondary hover:text-white"
                                             >
                                                 <span>
-                                                    All Ventures Overview
+                                                    All Operating Companies
                                                 </span>
-                                                <ArrowRight size={13} />
+                                                <ArrowUpRight size={13} />
                                             </Link>
                                         </li>
-                                        {ventures.map((venture) => {
+                                        {ventures.map((venture, idx) => {
                                             const activeItem = url.includes(
                                                 `/ventures/${venture.slug}`,
                                             );
 
                                             return (
-                                                <li key={venture.id}>
+                                                <li
+                                                    key={venture.id}
+                                                    className="border-b border-outline-variant last:border-b-0"
+                                                >
                                                     <Link
                                                         href={route(
                                                             'ventures.show',
@@ -213,18 +214,21 @@ export default function TopNavBar() {
                                                                 ? 'page'
                                                                 : undefined
                                                         }
-                                                        className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors hover:bg-surface-container-low ${
+                                                        className={`flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-surface-container-low ${
                                                             activeItem
                                                                 ? 'bg-surface-container-low font-semibold text-secondary'
-                                                                : 'text-on-surface hover:text-primary'
+                                                                : 'text-primary'
                                                         }`}
                                                     >
-                                                        <span>
+                                                        <span className="truncate">
+                                                            <span className="mr-2 font-mono text-[11px] text-on-surface-variant">
+                                                                0{idx + 1}
+                                                            </span>
                                                             {venture.name}
                                                         </span>
-                                                        <ArrowRight
+                                                        <ArrowUpRight
                                                             size={13}
-                                                            className="opacity-40"
+                                                            className="shrink-0 opacity-50"
                                                         />
                                                     </Link>
                                                 </li>
@@ -240,177 +244,126 @@ export default function TopNavBar() {
                                 key={label}
                                 href={href}
                                 aria-current={active ? 'page' : undefined}
-                                className={getLinkClasses(active)}
+                                className={getNavItemClass(active)}
                             >
                                 {label}
                             </Link>
                         ))}
+                    </div>
 
+                    <div className="hidden items-center gap-2.5 lg:flex">
                         {authUser?.is_admin && (
                             <Link
                                 href={route('admin.dashboard')}
-                                className="inline-flex items-center gap-1.5 rounded-md border border-outline-variant bg-surface-container-low px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:border-primary"
+                                className="inline-flex items-center gap-1.5 border border-outline bg-white px-3 py-2 font-mono text-[11px] font-semibold text-primary uppercase transition-colors hover:border-primary"
                             >
-                                <Shield size={13} />
+                                <Shield size={12} />
                                 CMS
                             </Link>
                         )}
-
                         <Link
                             href={route('contact')}
-                            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-secondary"
+                            className="inline-flex items-center gap-1.5 bg-primary px-4 py-2 text-xs font-semibold tracking-wider text-white uppercase transition-colors hover:bg-secondary"
                         >
-                            Enquire Now
+                            <span>Connect</span>
+                            <ArrowUpRight size={14} />
                         </Link>
-                    </nav>
+                    </div>
 
                     <button
                         type="button"
-                        onClick={() => setOpen(true)}
-                        className="rounded-md p-2 text-primary transition-colors hover:bg-surface-variant lg:hidden"
-                        aria-label="Open menu"
-                        aria-expanded={open}
+                        onClick={() => setMobileOpen((prev) => !prev)}
+                        className="inline-flex items-center gap-2 border border-outline bg-white px-3 py-2 text-xs font-semibold tracking-wider text-primary uppercase transition-colors hover:border-primary lg:hidden"
+                        aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                        aria-expanded={mobileOpen}
+                        aria-controls="mobile-site-menu"
                     >
-                        <Menu size={22} />
+                        {mobileOpen ? <X size={16} /> : <Menu size={16} />}
+                        <span>{mobileOpen ? 'Close' : 'Menu'}</span>
                     </button>
-                </div>
-            </header>
+                </nav>
+            </div>
 
-            <AnimatePresence>
-                {open && (
-                    <motion.div
-                        key="backdrop"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        onClick={() => setOpen(false)}
-                        className="fixed inset-0 z-[90] bg-black/40 lg:hidden"
-                    />
-                )}
-                {open && (
-                    <motion.nav
-                        key={`sidebar-${url}`}
-                        aria-label="Mobile"
-                        initial={{ y: '-100%' }}
-                        animate={{ y: 0 }}
-                        exit={{ y: '-100%' }}
-                        transition={{
-                            type: 'spring',
-                            damping: 26,
-                            stiffness: 220,
-                        }}
-                        className="fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-white text-primary lg:hidden"
-                    >
-                        <div className="flex items-center justify-between border-b border-outline-variant p-5">
-                            <div className="flex items-center gap-3">
-                                <img
-                                    src={logoPath}
-                                    alt={`${companyName} Logo`}
-                                    onError={handleImageError}
-                                    className="h-9 w-9 object-contain"
-                                />
-                                <span className="font-serif text-lg font-bold tracking-tight">
-                                    {companyName}
-                                </span>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setOpen(false)}
-                                className="rounded-md p-2 text-on-surface-variant transition-colors hover:bg-surface-variant hover:text-primary"
-                                aria-label="Close menu"
-                            >
-                                <X size={24} />
-                            </button>
-                        </div>
-
-                        <div className="flex flex-1 flex-col items-center justify-center space-y-4 px-6 py-6 text-center">
-                            {links
-                                .slice(0, 2)
-                                .map(({ label, href, active }) => (
-                                    <Link
-                                        key={label}
-                                        href={href}
-                                        onClick={() => setOpen(false)}
-                                        aria-current={
-                                            active ? 'page' : undefined
-                                        }
-                                        className={`block font-serif text-2xl font-bold transition-colors ${
-                                            active
-                                                ? 'text-secondary'
-                                                : 'text-primary hover:text-secondary'
-                                        }`}
-                                    >
-                                        {label}
-                                    </Link>
-                                ))}
-
-                            <div className="w-full max-w-xs rounded-lg border border-outline-variant bg-surface-container-low p-4">
+            {mobileOpen && (
+                <div
+                    id="mobile-site-menu"
+                    className="border-t border-outline-variant bg-white px-4 py-5 sm:px-6 lg:hidden"
+                >
+                    <ul className="divide-y divide-outline-variant border border-outline-variant bg-background">
+                        {links.map(({ label, href, active }) => (
+                            <li key={label}>
                                 <Link
-                                    href={route('industries')}
-                                    onClick={() => setOpen(false)}
-                                    className="mb-2 block text-xs font-bold tracking-widest text-secondary uppercase"
-                                >
-                                    All Ventures
-                                </Link>
-                                <ul className="space-y-2">
-                                    {ventures.map((venture) => (
-                                        <li key={venture.id}>
-                                            <Link
-                                                href={route(
-                                                    'ventures.show',
-                                                    venture.slug,
-                                                )}
-                                                onClick={() => setOpen(false)}
-                                                className="block text-sm font-medium text-primary hover:text-secondary"
-                                            >
-                                                {venture.name}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            {links.slice(2).map(({ label, href, active }) => (
-                                <Link
-                                    key={label}
                                     href={href}
-                                    onClick={() => setOpen(false)}
+                                    onClick={() => setMobileOpen(false)}
                                     aria-current={active ? 'page' : undefined}
-                                    className={`block font-serif text-2xl font-bold transition-colors ${
+                                    className={`flex items-center justify-between px-4 py-3 text-sm font-semibold uppercase ${
                                         active
-                                            ? 'text-secondary'
-                                            : 'text-primary hover:text-secondary'
+                                            ? 'bg-primary text-white'
+                                            : 'text-primary hover:bg-surface-container-low'
                                     }`}
                                 >
-                                    {label}
+                                    <span>{label}</span>
+                                    <ArrowUpRight size={15} />
                                 </Link>
-                            ))}
-
-                            {authUser?.is_admin && (
+                            </li>
+                        ))}
+                        <li>
+                            <div className="border-t border-outline-variant bg-white p-4">
                                 <Link
-                                    href={route('admin.dashboard')}
-                                    onClick={() => setOpen(false)}
-                                    className="inline-flex items-center gap-2 rounded-md border border-outline-variant bg-surface-container-low px-4 py-2 text-sm font-semibold text-primary"
+                                    href={route('industries')}
+                                    onClick={() => setMobileOpen(false)}
+                                    className="mb-2.5 flex items-center justify-between font-mono text-xs font-semibold tracking-wider text-secondary uppercase"
                                 >
-                                    <Shield size={16} />
-                                    Admin CMS
+                                    <span>Operating Ventures</span>
+                                    <ArrowUpRight size={13} />
                                 </Link>
-                            )}
-                        </div>
+                                <div className="space-y-1.5">
+                                    {ventures.map((venture, idx) => (
+                                        <Link
+                                            key={venture.id}
+                                            href={route(
+                                                'ventures.show',
+                                                venture.slug,
+                                            )}
+                                            onClick={() => setMobileOpen(false)}
+                                            className="flex items-center justify-between border border-outline-variant bg-background px-3 py-2 text-xs font-medium text-primary hover:border-primary"
+                                        >
+                                            <span>
+                                                <span className="mr-2 font-mono text-on-surface-variant">
+                                                    0{idx + 1}
+                                                </span>
+                                                {venture.name}
+                                            </span>
+                                            <ArrowUpRight size={13} />
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
 
-                        <div className="border-t border-outline-variant p-6 pb-10 text-center">
+                    <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                        {authUser?.is_admin && (
                             <Link
-                                href={route('contact')}
-                                onClick={() => setOpen(false)}
-                                className="inline-block w-full max-w-xs rounded-md bg-primary px-6 py-3.5 text-center text-base font-semibold text-white transition-colors hover:bg-secondary"
+                                href={route('admin.dashboard')}
+                                onClick={() => setMobileOpen(false)}
+                                className="inline-flex items-center justify-center gap-2 border border-outline bg-surface-container-low px-4 py-2.5 font-mono text-xs font-semibold text-primary uppercase"
                             >
-                                Enquire Now
+                                <Shield size={14} />
+                                Admin CMS
                             </Link>
-                        </div>
-                    </motion.nav>
-                )}
-            </AnimatePresence>
-        </>
+                        )}
+                        <Link
+                            href={route('contact')}
+                            onClick={() => setMobileOpen(false)}
+                            className="inline-flex flex-1 items-center justify-center gap-2 bg-primary px-4 py-3 text-xs font-semibold tracking-wider text-white uppercase"
+                        >
+                            <span>Direct Inquiry Desk</span>
+                            <ArrowUpRight size={14} />
+                        </Link>
+                    </div>
+                </div>
+            )}
+        </header>
     );
 }
