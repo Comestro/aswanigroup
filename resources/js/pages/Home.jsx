@@ -15,7 +15,7 @@ import InquiryForm from '@/components/InquiryForm';
 import LightboxDialog from '@/components/LightboxDialog';
 import MediaPlayerCard from '@/components/MediaPlayerCard';
 import MainLayout from '@/layouts/MainLayout';
-import { getVentureIcon } from '@/lib/utils';
+import { DEMO_IMAGE_URL, getVentureIcon, handleImageError } from '@/lib/utils';
 
 const fadeIn = {
     initial: { opacity: 0, y: 16 },
@@ -48,7 +48,18 @@ export default function Home({
                 title={`${settings.company_full_name || 'Ashwin Group of Companies'} | Parent Company & Ventures`}
             />
 
-            <section className="relative flex items-center bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
+            <section className="relative flex items-center overflow-hidden bg-primary px-gutter pt-32 pb-16 md:pt-40 md:pb-24">
+                {homeHeaders.hero_image && (
+                    <div className="absolute inset-0 z-0">
+                        <img
+                            src={homeHeaders.hero_image}
+                            alt={settings.company_name || 'Ashwin Group'}
+                            onError={handleImageError}
+                            className="h-full w-full object-cover opacity-15"
+                        />
+                        <div className="absolute inset-0 bg-primary/80 mix-blend-multiply" />
+                    </div>
+                )}
                 <div className="relative z-10 mx-auto grid w-full max-w-container-max items-center gap-10 md:grid-cols-2">
                     <motion.div
                         className="max-w-2xl"
@@ -117,8 +128,12 @@ export default function Home({
                                         className="relative h-[400px] w-full shrink-0"
                                     >
                                         <img
-                                            src={project.image_path}
+                                            src={
+                                                project.image_path ||
+                                                DEMO_IMAGE_URL
+                                            }
                                             alt={project.title}
+                                            onError={handleImageError}
                                             className="h-full w-full object-cover"
                                         />
                                         <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-primary/85 via-primary/25 to-transparent p-6">
@@ -214,21 +229,16 @@ export default function Home({
                                         )}
                                         className="relative aspect-[16/10] w-full overflow-hidden bg-surface-container-low"
                                     >
-                                        {venture.division_image ||
-                                        venture.hero_image ? (
-                                            <img
-                                                src={
-                                                    venture.division_image ||
-                                                    venture.hero_image
-                                                }
-                                                alt={venture.name}
-                                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full w-full items-center justify-center bg-primary/90 text-white">
-                                                <IconComponent className="h-12 w-12 text-secondary-container" />
-                                            </div>
-                                        )}
+                                        <img
+                                            src={
+                                                venture.division_image ||
+                                                venture.hero_image ||
+                                                DEMO_IMAGE_URL
+                                            }
+                                            alt={venture.name}
+                                            onError={handleImageError}
+                                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                        />
                                         <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded bg-primary/90 px-2.5 py-1 text-[10px] font-bold tracking-wider text-secondary-container uppercase backdrop-blur-sm">
                                             <IconComponent size={12} />
                                             {venture.badge ||

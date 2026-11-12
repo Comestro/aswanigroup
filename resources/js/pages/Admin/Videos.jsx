@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import AdminCrudManager from '../../components/AdminCrudManager';
 import AdminLayout from '../../layouts/AdminLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../../lib/utils';
 
 export default function Videos({ videos = [], ventures = [] }) {
     const ventureOptions = [
@@ -45,6 +46,7 @@ export default function Videos({ videos = [], ventures = [] }) {
             label: 'Poster Image',
             type: 'file',
             accept: 'image/*',
+            existingKey: 'poster_path',
         },
         {
             name: 'sort_order',
@@ -70,12 +72,26 @@ export default function Videos({ videos = [], ventures = [] }) {
         {
             label: 'Video',
             render: (item) => (
-                <div>
-                    <div className="font-bold text-primary">{item.title}</div>
-                    <div className="text-xs text-on-surface-variant">
-                        {item.source_type === 'youtube'
-                            ? `YouTube ID: ${item.youtube_id}`
-                            : item.video_path}
+                <div className="flex items-center gap-3">
+                    <img
+                        src={item.poster_path || DEMO_IMAGE_URL}
+                        alt={item.title}
+                        onError={handleImageError}
+                        className="h-12 w-16 shrink-0 rounded border object-cover"
+                    />
+                    <div>
+                        <div className="font-bold text-primary">
+                            {item.title}
+                        </div>
+                        <div className="text-xs text-on-surface-variant">
+                            {item.source_type === 'youtube'
+                                ? `YouTube ID: ${item.youtube_id}`
+                                : item.video_path}
+                            {Array.isArray(item.poster_image) &&
+                            item.poster_image.length > 0
+                                ? ` · Poster #${item.poster_image.join(', #')}`
+                                : ''}
+                        </div>
                     </div>
                 </div>
             ),

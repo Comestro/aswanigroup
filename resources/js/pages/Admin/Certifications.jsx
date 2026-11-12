@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import AdminCrudManager from '../../components/AdminCrudManager';
 import AdminLayout from '../../layouts/AdminLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../../lib/utils';
 
 export default function Certifications({ certifications = [], ventures = [] }) {
     const ventureOptions = [
@@ -51,6 +52,7 @@ export default function Certifications({ certifications = [], ventures = [] }) {
             label: 'Upload Preview Photo',
             type: 'file',
             accept: 'image/*',
+            existingKey: 'image_path',
         },
         {
             name: 'document_file',
@@ -76,13 +78,26 @@ export default function Certifications({ certifications = [], ventures = [] }) {
         {
             label: 'Title & Issuer',
             render: (item) => (
-                <div>
-                    <div className="font-bold text-primary">{item.title}</div>
-                    <div className="text-xs text-on-surface-variant">
-                        {item.issuer || 'Ashwin Group'}{' '}
-                        {item.reference_number
-                            ? `· ${item.reference_number}`
-                            : ''}
+                <div className="flex items-center gap-3">
+                    <img
+                        src={item.image_path || DEMO_IMAGE_URL}
+                        alt={item.title}
+                        onError={handleImageError}
+                        className="h-12 w-16 shrink-0 rounded border object-cover"
+                    />
+                    <div>
+                        <div className="font-bold text-primary">
+                            {item.title}
+                        </div>
+                        <div className="text-xs text-on-surface-variant">
+                            {item.issuer || 'Ashwin Group'}{' '}
+                            {item.reference_number
+                                ? `· ${item.reference_number}`
+                                : ''}{' '}
+                            {Array.isArray(item.image) && item.image.length > 0
+                                ? `· Image #${item.image.join(', #')}`
+                                : ''}
+                        </div>
                     </div>
                 </div>
             ),

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Catalog;
 use App\Models\Certification;
+use App\Models\Image;
 use App\Models\Inquiry;
 use App\Models\Project;
 use App\Models\PromoVideo;
@@ -23,6 +24,7 @@ class DashboardController extends Controller
             'metrics' => [
                 'ventures' => Venture::query()->count(),
                 'projects' => Project::query()->count(),
+                'images' => Image::query()->count(),
                 'certifications' => Certification::query()->count(),
                 'catalogs' => Catalog::query()->count(),
                 'catalog_downloads' => (int) Catalog::query()->sum('download_count'),

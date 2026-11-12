@@ -23,8 +23,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $external_url
  * @property string|null $external_cta_label
  * @property array<int, string>|null $highlights
- * @property string|null $division_image
- * @property string|null $hero_image
+ * @property array<int, int>|null $image
+ * @property array<int, int>|null $hero_images
  * @property bool $is_featured
  * @property bool $is_active
  * @property int $sort_order
@@ -42,8 +42,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'external_url',
     'external_cta_label',
     'highlights',
-    'division_image',
-    'hero_image',
+    'image',
+    'hero_images',
     'is_featured',
     'is_active',
     'sort_order',
@@ -120,6 +120,8 @@ class Venture extends Model
     {
         return [
             'highlights' => 'array',
+            'image' => 'array',
+            'hero_images' => 'array',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer',

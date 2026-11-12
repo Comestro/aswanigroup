@@ -18,13 +18,13 @@ return new class extends Migration
             $table->string('tagline')->nullable();
             $table->text('hero_description')->nullable();
             $table->string('est_year', 16)->default('1995');
-            $table->string('logo_path')->default('/images/logo.png');
+            $table->json('logo_images')->nullable();
 
             $table->string('founder_name')->nullable();
             $table->string('founder_title')->nullable();
             $table->text('chairman_quote')->nullable();
             $table->longText('chairman_message')->nullable();
-            $table->string('chairman_image')->default('/images/chairman-portrait.png');
+            $table->json('chairman_images')->nullable();
             $table->text('vision_text')->nullable();
             $table->text('mission_text')->nullable();
             $table->json('core_values')->nullable();
@@ -43,6 +43,7 @@ return new class extends Migration
             $table->text('footer_summary')->nullable();
             $table->json('social_links')->nullable();
             $table->json('page_headers')->nullable();
+            $table->json('page_header_images')->nullable();
             $table->timestamps();
         });
     }

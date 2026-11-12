@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('reference_number')->nullable();
             $table->string('issued_date', 64)->nullable();
             $table->text('description')->nullable();
-            $table->string('image_path')->nullable();
+            $table->json('image')->nullable();
             $table->string('document_path')->nullable();
             $table->boolean('is_active')->default(true)->index();
             $table->unsignedInteger('sort_order')->default(0)->index();

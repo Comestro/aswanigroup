@@ -6,6 +6,7 @@ import {
     ExternalLink,
     FileText,
     FolderKanban,
+    Image as ImageIcon,
     LayoutDashboard,
     LogOut,
     Mail,
@@ -50,6 +51,12 @@ export default function AdminLayout({ title = 'Admin CMS', children }) {
             icon: FolderKanban,
         },
         {
+            label: 'Media Library',
+            href: route('admin.images.index'),
+            active: route().current('admin.images.*'),
+            icon: ImageIcon,
+        },
+        {
             label: 'Certifications',
             href: route('admin.certifications.index'),
             active: route().current('admin.certifications.*'),
@@ -85,17 +92,17 @@ export default function AdminLayout({ title = 'Admin CMS', children }) {
             )}
 
             <aside
-                className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-primary text-white transition-transform lg:static lg:translate-x-0 ${
+                className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col bg-primary text-white transition-transform lg:sticky lg:top-0 lg:translate-x-0 ${
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
-                <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
+                <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/10 px-5">
                     <Link
                         href={route('admin.dashboard')}
                         className="flex items-center gap-2.5"
                     >
                         <img
-                            src={settings.logo_path || '/images/logo.png'}
+                            src={settings.logo_path || '/images/demo-image.svg'}
                             alt={settings.company_name || 'Ashwin Group'}
                             className="h-8 w-8 object-contain"
                         />
@@ -134,7 +141,7 @@ export default function AdminLayout({ title = 'Admin CMS', children }) {
                     ))}
                 </nav>
 
-                <div className="space-y-2 border-t border-white/10 p-4">
+                <div className="shrink-0 space-y-2 border-t border-white/10 bg-primary p-4">
                     <Link
                         href={route('home')}
                         className="flex w-full items-center justify-center gap-2 rounded border border-white/20 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/10"

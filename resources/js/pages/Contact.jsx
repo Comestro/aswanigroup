@@ -29,7 +29,7 @@ export default function Contact({ ventures = [] }) {
                     headers.subtitle ||
                     'Interested in Water Industries distributorship, Green Energy & Eco-Resort projects, or group brand partnerships? Every inquiry forwards to our email & WhatsApp desk.'
                 }
-                heroImage={headers.hero_image || '/images/contact-hero-bg.png'}
+                heroImage={headers.hero_image || '/images/demo-image.svg'}
                 imageAlt="Office Workspace"
             />
 

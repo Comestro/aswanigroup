@@ -3,11 +3,12 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
 import AdminLayout from '../../layouts/AdminLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../../lib/utils';
 
 const PAGE_HEADER_SECTIONS = [
     {
         page: 'home',
-        title: 'Home Page Section Copy',
+        title: 'Home Page Section Copy & Hero Background',
         fields: [
             { key: 'ventures_eyebrow', label: 'Ventures Eyebrow' },
             { key: 'ventures_title', label: 'Ventures Section Title' },
@@ -45,7 +46,6 @@ const PAGE_HEADER_SECTIONS = [
         fields: [
             { key: 'badge', label: 'Hero Badge' },
             { key: 'title', label: 'Hero Heading' },
-            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
             { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
         ],
     },
@@ -55,7 +55,6 @@ const PAGE_HEADER_SECTIONS = [
         fields: [
             { key: 'badge', label: 'Hero Badge' },
             { key: 'title', label: 'Hero Heading' },
-            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
             { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
             { key: 'cta_eyebrow', label: 'Bottom CTA Eyebrow' },
             { key: 'cta_title', label: 'Bottom CTA Heading' },
@@ -72,7 +71,6 @@ const PAGE_HEADER_SECTIONS = [
         fields: [
             { key: 'badge', label: 'Hero Badge' },
             { key: 'title', label: 'Hero Heading' },
-            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
             { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
         ],
     },
@@ -82,7 +80,6 @@ const PAGE_HEADER_SECTIONS = [
         fields: [
             { key: 'badge', label: 'Hero Badge' },
             { key: 'title', label: 'Hero Heading' },
-            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
             { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
         ],
     },
@@ -92,7 +89,6 @@ const PAGE_HEADER_SECTIONS = [
         fields: [
             { key: 'badge', label: 'Hero Badge' },
             { key: 'title', label: 'Hero Heading' },
-            { key: 'hero_image', label: 'Hero Background Image URL/Path' },
             { key: 'subtitle', label: 'Hero Subtitle', textarea: true },
             { key: 'sidebar_title', label: 'Sidebar Title' },
             { key: 'sidebar_subtitle', label: 'Sidebar Subtitle' },
@@ -132,6 +128,7 @@ export default function Settings({ setting = {} }) {
         page_headers: setting.page_headers || {},
         logo_file: null,
         chairman_image_file: null,
+        page_header_files: {},
     });
 
     const [processing, setProcessing] = useState(false);
@@ -205,6 +202,22 @@ export default function Settings({ setting = {} }) {
 
         if (!(payload.chairman_image_file instanceof File)) {
             delete payload.chairman_image_file;
+        }
+
+        const headerFiles = {};
+
+        for (const [page, file] of Object.entries(
+            payload.page_header_files || {},
+        )) {
+            if (file instanceof File) {
+                headerFiles[page] = file;
+            }
+        }
+
+        if (Object.keys(headerFiles).length > 0) {
+            payload.page_header_files = headerFiles;
+        } else {
+            delete payload.page_header_files;
         }
 
         router.post(route('admin.settings.update'), payload, {
@@ -312,6 +325,20 @@ export default function Settings({ setting = {} }) {
                             <label className="mb-1 block text-xs font-bold text-primary">
                                 Replace Logo (PNG/SVG/WebP)
                             </label>
+                            <div className="mb-2 flex items-center gap-3">
+                                <img
+                                    src={setting.logo_path || DEMO_IMAGE_URL}
+                                    alt="Current brand logo"
+                                    onError={handleImageError}
+                                    className="h-10 w-10 rounded border border-outline-variant bg-surface-container-low object-contain p-1"
+                                />
+                                <span className="text-[11px] text-on-surface-variant">
+                                    {Array.isArray(setting.logo_images) &&
+                                    setting.logo_images.length > 0
+                                        ? `ImageKit ID #${setting.logo_images.join(', #')}`
+                                        : 'Demo fallback'}
+                                </span>
+                            </div>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -585,6 +612,22 @@ export default function Settings({ setting = {} }) {
                             <label className="mb-1 block text-xs font-bold text-primary">
                                 Chairman Portrait Photo (JPG/PNG/WebP)
                             </label>
+                            <div className="mb-2 flex items-center gap-3">
+                                <img
+                                    src={
+                                        setting.chairman_image || DEMO_IMAGE_URL
+                                    }
+                                    alt="Current chairman portrait"
+                                    onError={handleImageError}
+                                    className="h-12 w-12 rounded border border-outline-variant bg-surface-container-low object-cover"
+                                />
+                                <span className="text-[11px] text-on-surface-variant">
+                                    {Array.isArray(setting.chairman_images) &&
+                                    setting.chairman_images.length > 0
+                                        ? `ImageKit ID #${setting.chairman_images.join(', #')}`
+                                        : 'Demo fallback'}
+                                </span>
+                            </div>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -870,6 +913,54 @@ export default function Settings({ setting = {} }) {
                                     {section.title}
                                 </h3>
                                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                    <div className="flex flex-wrap items-center gap-4 rounded border border-outline-variant bg-white p-3 md:col-span-2">
+                                        <img
+                                            src={
+                                                form.page_headers?.[
+                                                    section.page
+                                                ]?.hero_image || DEMO_IMAGE_URL
+                                            }
+                                            alt={`${section.title} banner`}
+                                            onError={handleImageError}
+                                            className="h-14 w-24 shrink-0 rounded border border-outline-variant object-cover"
+                                        />
+                                        <div className="min-w-0 flex-1">
+                                            <label className="mb-1 block text-[11px] font-bold text-primary">
+                                                Upload Hero Background Image
+                                                (ImageKit){' '}
+                                                {Array.isArray(
+                                                    setting
+                                                        .page_header_images?.[
+                                                        section.page
+                                                    ],
+                                                ) &&
+                                                setting.page_header_images[
+                                                    section.page
+                                                ].length > 0
+                                                    ? `· Current ID #${setting.page_header_images[section.page].join(', #')}`
+                                                    : ''}
+                                            </label>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    const file =
+                                                        e.target.files?.[0] ||
+                                                        null;
+                                                    setForm((prev) => ({
+                                                        ...prev,
+                                                        page_header_files: {
+                                                            ...(prev.page_header_files ||
+                                                                {}),
+                                                            [section.page]:
+                                                                file,
+                                                        },
+                                                    }));
+                                                }}
+                                                className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-1.5 text-xs"
+                                            />
+                                        </div>
+                                    </div>
                                     {section.fields.map((field) => {
                                         const val =
                                             form.page_headers?.[section.page]?.[

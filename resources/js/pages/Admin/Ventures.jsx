@@ -1,14 +1,15 @@
 import { Head } from '@inertiajs/react';
 import AdminCrudManager from '../../components/AdminCrudManager';
 import AdminLayout from '../../layouts/AdminLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../../lib/utils';
 
-export default function Ventures({ ventures = [] }) {
+export default function Ventures({ ventures = [], libraryImages = [] }) {
     const fields = [
         { name: 'name', label: 'Venture Name', type: 'text', required: true },
         { name: 'slug', label: 'URL Slug', type: 'text', required: true },
         {
             name: 'short_label',
-            label: 'Tab Label',
+            label: 'Short Label',
             type: 'text',
             required: true,
         },
@@ -66,18 +67,16 @@ export default function Ventures({ ventures = [] }) {
             label: 'Upload Venture Card Image',
             type: 'file',
             accept: 'image/*',
+            existingKey: 'division_image',
+            libraryIdField: 'division_image_id',
         },
         {
             name: 'hero_image_file',
             label: 'Upload Venture Page Hero Banner',
             type: 'file',
             accept: 'image/*',
-        },
-        {
-            name: 'hero_image',
-            label: 'Hero Banner Image Path / URL (optional)',
-            type: 'text',
-            placeholder: '/images/industries-hero-bg.png',
+            existingKey: 'hero_image',
+            libraryIdField: 'hero_image_id',
         },
         {
             name: 'sort_order',
@@ -103,10 +102,28 @@ export default function Ventures({ ventures = [] }) {
         {
             label: 'Venture',
             render: (item) => (
-                <div>
-                    <div className="font-bold text-primary">{item.name}</div>
-                    <div className="text-xs text-on-surface-variant">
-                        Tab: {item.short_label} · /{item.slug}
+                <div className="flex items-center gap-3">
+                    <img
+                        src={item.division_image || DEMO_IMAGE_URL}
+                        alt={item.name}
+                        onError={handleImageError}
+                        className="h-12 w-16 shrink-0 rounded border object-cover"
+                    />
+                    <div>
+                        <div className="font-bold text-primary">
+                            {item.name}
+                        </div>
+                        <div className="text-xs text-on-surface-variant">
+                            /{item.slug} · Card{' '}
+                            {Array.isArray(item.image) && item.image.length > 0
+                                ? `#${item.image.join(', #')}`
+                                : 'Demo'}{' '}
+                            · Hero{' '}
+                            {Array.isArray(item.hero_images) &&
+                            item.hero_images.length > 0
+                                ? `#${item.hero_images.join(', #')}`
+                                : 'Demo'}
+                        </div>
                     </div>
                 </div>
             ),
@@ -131,14 +148,15 @@ export default function Ventures({ ventures = [] }) {
     ];
 
     return (
-        <AdminLayout title="Ventures & Tabs">
-            <Head title="Ventures - Ashwin Group CMS" />
+        <AdminLayout title="Business Ventures">
+            <Head title="Business Ventures - Ashwin Group CMS" />
             <AdminCrudManager
-                title="Business Ventures / Tabs"
-                subtitle="Configure each tabbed section, custom location text, external venture URLs, highlights, and images."
+                title="Business Ventures"
+                subtitle="Configure each venture page, location details, external website links, highlights, and ImageKit visuals."
                 items={ventures}
                 fields={fields}
                 columns={columns}
+                libraryImages={libraryImages}
                 storeRoute="admin.ventures.store"
                 updateRoute="admin.ventures.update"
                 destroyRoute="admin.ventures.destroy"

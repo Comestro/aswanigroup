@@ -16,7 +16,12 @@ import LightboxDialog from '@/components/LightboxDialog';
 import MediaPlayerCard from '@/components/MediaPlayerCard';
 import PageHero from '@/components/PageHero';
 import MainLayout from '@/layouts/MainLayout';
-import { getVentureIcon, VentureIcon } from '@/lib/utils';
+import {
+    DEMO_IMAGE_URL,
+    getVentureIcon,
+    handleImageError,
+    VentureIcon,
+} from '@/lib/utils';
 
 export default function VentureShow({ venture, otherVentures = [] }) {
     const { siteSettings } = usePage().props;
@@ -126,31 +131,16 @@ export default function VentureShow({ venture, otherVentures = [] }) {
 
                     <div className="lg:col-span-6">
                         <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low shadow-lg">
-                            {venture.division_image || venture.hero_image ? (
-                                <img
-                                    src={
-                                        venture.division_image ||
-                                        venture.hero_image
-                                    }
-                                    alt={venture.name}
-                                    className="aspect-[16/10] w-full object-cover"
-                                />
-                            ) : (
-                                <div className="flex aspect-[16/10] w-full flex-col items-center justify-center bg-primary p-8 text-center text-white">
-                                    <VentureIcon
-                                        name={venture.icon_name}
-                                        className="mb-3 h-12 w-12 text-secondary-container"
-                                    />
-                                    <p className="font-serif text-2xl font-bold">
-                                        {venture.name}
-                                    </p>
-                                    {venture.location_details && (
-                                        <p className="mt-2 text-sm text-white/75">
-                                            {venture.location_details}
-                                        </p>
-                                    )}
-                                </div>
-                            )}
+                            <img
+                                src={
+                                    venture.division_image ||
+                                    venture.hero_image ||
+                                    DEMO_IMAGE_URL
+                                }
+                                alt={venture.name}
+                                onError={handleImageError}
+                                className="aspect-[16/10] w-full object-cover"
+                            />
                         </div>
                     </div>
                 </div>
@@ -189,7 +179,10 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                             badge:
                                                 project.category_label ||
                                                 venture.name,
-                                            image: project.image_path,
+                                            image:
+                                                project.image_path ||
+                                                DEMO_IMAGE_URL,
+                                            images: project.image_urls,
                                             location: project.location,
                                             date: project.completion_year,
                                             description: project.summary,
@@ -198,17 +191,15 @@ export default function VentureShow({ venture, otherVentures = [] }) {
                                     className="group flex flex-col overflow-hidden rounded-xl border border-outline-variant bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                                 >
                                     <div className="aspect-[16/10] w-full overflow-hidden bg-surface-container-high">
-                                        {project.image_path ? (
-                                            <img
-                                                src={project.image_path}
-                                                alt={project.title}
-                                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-xs text-on-surface-variant">
-                                                Project Visual
-                                            </div>
-                                        )}
+                                        <img
+                                            src={
+                                                project.image_path ||
+                                                DEMO_IMAGE_URL
+                                            }
+                                            alt={project.title}
+                                            onError={handleImageError}
+                                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                        />
                                     </div>
                                     <div className="flex flex-1 flex-col p-5">
                                         <div className="flex items-center justify-between gap-2 text-xs text-on-surface-variant">

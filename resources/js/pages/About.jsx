@@ -4,6 +4,7 @@ import { ArrowRight, Eye, Quote, Target, Trophy } from 'lucide-react';
 import { route } from 'ziggy-js';
 import PageHero from '../components/PageHero';
 import MainLayout from '../layouts/MainLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../lib/utils';
 
 const fadeUp = {
     initial: { opacity: 0, y: 16 },
@@ -43,7 +44,7 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
                 }
                 title={headers.title || 'Our Legacy.'}
                 subtitle={headers.subtitle || settings.hero_description}
-                heroImage={headers.hero_image || '/images/about-hero-bg.png'}
+                heroImage={headers.hero_image || DEMO_IMAGE_URL}
                 imageAlt="Corporate Background"
             />
 
@@ -60,11 +61,12 @@ export default function About({ venturesCount = 4, certificationsCount = 6 }) {
                                     <img
                                         src={
                                             settings.chairman_image ||
-                                            '/images/chairman-portrait.png'
+                                            DEMO_IMAGE_URL
                                         }
                                         alt={
                                             settings.founder_name || 'Chairman'
                                         }
+                                        onError={handleImageError}
                                         className="h-full w-full object-cover"
                                     />
                                 </div>

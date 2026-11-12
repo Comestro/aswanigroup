@@ -4,6 +4,7 @@ import {
     Building2,
     Download,
     FolderKanban,
+    Image as ImageIcon,
     Mail,
     Settings,
     Video,
@@ -24,6 +25,12 @@ export default function Dashboard({ metrics = {}, recentInquiries = [] }) {
             value: metrics.projects ?? 0,
             href: route('admin.projects.index'),
             icon: FolderKanban,
+        },
+        {
+            label: 'Media Library (ImageKit)',
+            value: metrics.images ?? 0,
+            href: route('admin.images.index'),
+            icon: ImageIcon,
         },
         {
             label: 'Certifications & Agreements',

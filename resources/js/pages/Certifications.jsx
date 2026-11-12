@@ -35,7 +35,7 @@ export default function Certifications({ certifications = [] }) {
                     headers.subtitle ||
                     'Official documentation, partnership photos, BIS/FSSAI standards, and the first-copy verification of our flagship brand agreements.'
                 }
-                heroImage={headers.hero_image || '/images/about-hero-bg.png'}
+                heroImage={headers.hero_image || '/images/demo-image.svg'}
                 imageAlt="Certifications & Agreements"
             />
 

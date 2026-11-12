@@ -7,6 +7,7 @@ import LightboxDialog from '../components/LightboxDialog';
 import MediaPlayerCard from '../components/MediaPlayerCard';
 import PageHero from '../components/PageHero';
 import MainLayout from '../layouts/MainLayout';
+import { DEMO_IMAGE_URL, handleImageError } from '../lib/utils';
 
 export default function Portfolio({
     projects = [],
@@ -44,9 +45,7 @@ export default function Portfolio({
                     headers.subtitle ||
                     'Completed facilities, solar & hospitality projects, fine jewelry collections, and commercial retail operations across Eastern India.'
                 }
-                heroImage={
-                    headers.hero_image || '/images/portfolio-hero-bg.png'
-                }
+                heroImage={headers.hero_image || DEMO_IMAGE_URL}
                 imageAlt="Portfolio Hub"
             >
                 <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
@@ -102,7 +101,10 @@ export default function Portfolio({
                                         setLightboxItem({
                                             title: project.title,
                                             badge: project.category_label,
-                                            image: project.image_path,
+                                            image:
+                                                project.image_path ||
+                                                DEMO_IMAGE_URL,
+                                            images: project.image_urls,
                                             location: project.location,
                                             date: project.completion_year,
                                             description: project.summary,
@@ -112,8 +114,12 @@ export default function Portfolio({
                                 >
                                     <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-outline-variant">
                                         <img
-                                            src={project.image_path}
+                                            src={
+                                                project.image_path ||
+                                                DEMO_IMAGE_URL
+                                            }
                                             alt={project.title}
+                                            onError={handleImageError}
                                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                         />
                                         <div className="absolute top-3 left-3">

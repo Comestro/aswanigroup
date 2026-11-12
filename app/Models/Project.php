@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $location
  * @property string|null $completion_year
  * @property string|null $summary
- * @property string $image_path
+ * @property array<int, int>|null $image
  * @property bool $is_featured_hero
  * @property bool $is_active
  * @property int $sort_order
@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'location',
     'completion_year',
     'summary',
-    'image_path',
+    'image',
     'is_featured_hero',
     'is_active',
     'sort_order',
@@ -81,6 +81,7 @@ class Project extends Model
     {
         return [
             'venture_id' => 'integer',
+            'image' => 'array',
             'is_featured_hero' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer',

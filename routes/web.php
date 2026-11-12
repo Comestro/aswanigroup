@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\CatalogController as AdminCatalogController;
 use App\Http\Controllers\Admin\CertificationController as AdminCertificationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ImageController as AdminImageController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\PromoVideoController as AdminPromoVideoController;
@@ -77,6 +78,10 @@ Route::prefix('admin')
         Route::post('/videos', [AdminPromoVideoController::class, 'store'])->name('videos.store');
         Route::put('/videos/{promoVideo}', [AdminPromoVideoController::class, 'update'])->name('videos.update');
         Route::delete('/videos/{promoVideo}', [AdminPromoVideoController::class, 'destroy'])->name('videos.destroy');
+
+        Route::get('/images', [AdminImageController::class, 'index'])->name('images.index');
+        Route::post('/images', [AdminImageController::class, 'store'])->name('images.store');
+        Route::delete('/images/{image}', [AdminImageController::class, 'destroy'])->name('images.destroy');
 
         Route::get('/inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');
         Route::patch('/inquiries/{inquiry}', [AdminInquiryController::class, 'update'])->name('inquiries.update');

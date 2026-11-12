@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('location');
             $table->string('completion_year', 16)->nullable();
             $table->text('summary')->nullable();
-            $table->string('image_path');
+            $table->json('image')->nullable();
             $table->boolean('is_featured_hero')->default(false)->index();
             $table->boolean('is_active')->default(true)->index();
             $table->unsignedInteger('sort_order')->default(0)->index();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Certification;
+use App\Models\Image;
 use App\Models\Inquiry;
 use App\Models\Project;
 use App\Models\PromoVideo;
@@ -36,6 +37,7 @@ test('admin can sign in and access all cms management pages', function (string $
     'settings' => 'admin.settings.edit',
     'ventures' => 'admin.ventures.index',
     'projects' => 'admin.projects.index',
+    'images' => 'admin.images.index',
     'certifications' => 'admin.certifications.index',
     'catalogs' => 'admin.catalogs.index',
     'videos' => 'admin.videos.index',
@@ -107,7 +109,10 @@ test('admin can upload certification agreement copy and add youtube promo video'
     $cert = Certification::query()->where('title', 'New Partner Agreement Copy')->first();
     expect($cert)->not->toBeNull();
     expect($cert?->document_path)->toStartWith('/storage/certifications/docs/');
-    expect($cert?->image_path)->toStartWith('/storage/certifications/images/');
+    expect($cert?->image)->toBeArray()->not->toBeEmpty();
+
+    $certImage = Image::query()->find($cert?->image[0]);
+    expect($certImage?->url)->toStartWith('/storage/certifications/images/');
 
     $this->actingAs($admin)
         ->post(route('admin.videos.store'), [

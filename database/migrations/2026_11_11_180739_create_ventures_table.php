@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('external_url')->nullable();
             $table->string('external_cta_label')->nullable();
             $table->json('highlights')->nullable();
-            $table->string('division_image')->nullable();
-            $table->string('hero_image')->nullable();
+            $table->json('image')->nullable();
+            $table->json('hero_images')->nullable();
             $table->boolean('is_featured')->default(true)->index();
             $table->boolean('is_active')->default(true)->index();
             $table->unsignedInteger('sort_order')->default(0)->index();

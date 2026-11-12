@@ -13,9 +13,14 @@ export default function AdminCrudManager({
     updateRoute,
     destroyRoute,
     defaultValues = {},
+    libraryImages = [],
 }) {
     const buildEmpty = () => {
-        const obj = { ...defaultValues };
+        const obj = {
+            remove_image_ids: [],
+            selected_image_ids: [],
+            ...defaultValues,
+        };
 
         for (const field of fields) {
             if (obj[field.name] === undefined) {
@@ -23,11 +28,18 @@ export default function AdminCrudManager({
                     obj[field.name] = field.defaultValue ?? true;
                 } else if (field.type === 'number') {
                     obj[field.name] = field.defaultValue ?? 0;
-                } else if (field.type === 'lines') {
+                } else if (field.type === 'lines' || field.type === 'files') {
                     obj[field.name] = [];
                 } else {
                     obj[field.name] = field.defaultValue ?? '';
                 }
+            }
+
+            if (
+                field.libraryIdField &&
+                obj[field.libraryIdField] === undefined
+            ) {
+                obj[field.libraryIdField] = '';
             }
         }
 
@@ -53,6 +65,8 @@ export default function AdminCrudManager({
         for (const field of fields) {
             if (field.type === 'file') {
                 next[field.name] = null;
+            } else if (field.type === 'files') {
+                next[field.name] = [];
             } else if (field.type === 'lines') {
                 next[field.name] = Array.isArray(item[field.name])
                     ? item[field.name]
@@ -62,6 +76,8 @@ export default function AdminCrudManager({
             }
         }
 
+        next.remove_image_ids = [];
+        next.selected_image_ids = [];
         setEditingItem(item);
         setFormData(next);
         setErrors({});
@@ -81,7 +97,39 @@ export default function AdminCrudManager({
                 !(payload[field.name] instanceof File)
             ) {
                 delete payload[field.name];
+            } else if (field.type === 'files') {
+                const fileList = Array.isArray(payload[field.name])
+                    ? payload[field.name].filter((f) => f instanceof File)
+                    : [];
+
+                if (fileList.length === 0) {
+                    delete payload[field.name];
+                } else {
+                    payload[field.name] = fileList;
+                }
             }
+
+            if (
+                field.libraryIdField &&
+                (payload[field.libraryIdField] === '' ||
+                    payload[field.libraryIdField] === null)
+            ) {
+                delete payload[field.libraryIdField];
+            }
+        }
+
+        if (
+            !Array.isArray(payload.remove_image_ids) ||
+            payload.remove_image_ids.length === 0
+        ) {
+            delete payload.remove_image_ids;
+        }
+
+        if (
+            !Array.isArray(payload.selected_image_ids) ||
+            payload.selected_image_ids.length === 0
+        ) {
+            delete payload.selected_image_ids;
         }
 
         const targetUrl = editingItem
@@ -187,7 +235,8 @@ export default function AdminCrudManager({
                                 const fullWidth =
                                     field.fullWidth ||
                                     field.type === 'textarea' ||
-                                    field.type === 'lines';
+                                    field.type === 'lines' ||
+                                    field.type === 'files';
 
                                 return (
                                     <div
@@ -271,20 +320,328 @@ export default function AdminCrudManager({
                                         )}
 
                                         {field.type === 'file' && (
-                                            <input
-                                                type="file"
-                                                accept={field.accept}
-                                                onChange={(event) =>
-                                                    setFormData((prev) => ({
-                                                        ...prev,
-                                                        [field.name]:
-                                                            event.target
-                                                                .files?.[0] ||
-                                                            null,
-                                                    }))
-                                                }
-                                                className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-1.5 text-xs"
-                                            />
+                                            <div className="space-y-2">
+                                                <input
+                                                    type="file"
+                                                    accept={field.accept}
+                                                    onChange={(event) =>
+                                                        setFormData((prev) => ({
+                                                            ...prev,
+                                                            [field.name]:
+                                                                event.target
+                                                                    .files?.[0] ||
+                                                                null,
+                                                        }))
+                                                    }
+                                                    className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-1.5 text-xs"
+                                                />
+                                                {editingItem &&
+                                                    field.existingKey &&
+                                                    editingItem[
+                                                        field.existingKey
+                                                    ] && (
+                                                        <div className="flex items-center gap-2">
+                                                            <img
+                                                                src={
+                                                                    editingItem[
+                                                                        field
+                                                                            .existingKey
+                                                                    ]
+                                                                }
+                                                                alt="Current preview"
+                                                                className="h-12 w-16 rounded border border-outline-variant object-cover"
+                                                            />
+                                                            <span className="text-[11px] text-on-surface-variant">
+                                                                Current image
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                {field.libraryIdField &&
+                                                    libraryImages.length >
+                                                        0 && (
+                                                        <select
+                                                            value={
+                                                                formData[
+                                                                    field
+                                                                        .libraryIdField
+                                                                ] ?? ''
+                                                            }
+                                                            onChange={(event) =>
+                                                                setFormData(
+                                                                    (prev) => ({
+                                                                        ...prev,
+                                                                        [field.libraryIdField]:
+                                                                            event
+                                                                                .target
+                                                                                .value,
+                                                                    }),
+                                                                )
+                                                            }
+                                                            className="w-full rounded border border-outline-variant bg-white px-2.5 py-1.5 text-xs"
+                                                        >
+                                                            <option value="">
+                                                                Or pick existing
+                                                                Media Library ID
+                                                            </option>
+                                                            {libraryImages.map(
+                                                                (img) => (
+                                                                    <option
+                                                                        key={
+                                                                            img.id
+                                                                        }
+                                                                        value={
+                                                                            img.id
+                                                                        }
+                                                                    >
+                                                                        #
+                                                                        {img.id}{' '}
+                                                                        —{' '}
+                                                                        {
+                                                                            img.original_name
+                                                                        }{' '}
+                                                                        (
+                                                                        {
+                                                                            img.folder
+                                                                        }
+                                                                        )
+                                                                    </option>
+                                                                ),
+                                                            )}
+                                                        </select>
+                                                    )}
+                                            </div>
+                                        )}
+
+                                        {field.type === 'files' && (
+                                            <div className="space-y-3">
+                                                <input
+                                                    type="file"
+                                                    multiple
+                                                    accept={field.accept}
+                                                    onChange={(event) =>
+                                                        setFormData((prev) => ({
+                                                            ...prev,
+                                                            [field.name]:
+                                                                Array.from(
+                                                                    event.target
+                                                                        .files ||
+                                                                        [],
+                                                                ),
+                                                        }))
+                                                    }
+                                                    className="w-full rounded border border-outline-variant bg-surface-container-low px-3 py-1.5 text-xs"
+                                                />
+                                                {editingItem &&
+                                                    Array.isArray(
+                                                        editingItem[
+                                                            field.existingKey ||
+                                                                'images_data'
+                                                        ],
+                                                    ) &&
+                                                    editingItem[
+                                                        field.existingKey ||
+                                                            'images_data'
+                                                    ].some(
+                                                        (img) =>
+                                                            img?.id !== null,
+                                                    ) && (
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {editingItem[
+                                                                field.existingKey ||
+                                                                    'images_data'
+                                                            ]
+                                                                .filter(
+                                                                    (img) =>
+                                                                        img?.id !==
+                                                                        null,
+                                                                )
+                                                                .map((img) => {
+                                                                    const marked =
+                                                                        (
+                                                                            formData.remove_image_ids ||
+                                                                            []
+                                                                        ).includes(
+                                                                            img.id,
+                                                                        );
+
+                                                                    return (
+                                                                        <div
+                                                                            key={
+                                                                                img.id
+                                                                            }
+                                                                            className={`relative overflow-hidden rounded border p-1 ${
+                                                                                marked
+                                                                                    ? 'border-red-500 opacity-50'
+                                                                                    : 'border-outline-variant'
+                                                                            }`}
+                                                                        >
+                                                                            <img
+                                                                                src={
+                                                                                    img.url
+                                                                                }
+                                                                                alt={
+                                                                                    img.original_name ||
+                                                                                    'Uploaded image'
+                                                                                }
+                                                                                className="h-14 w-20 rounded object-cover"
+                                                                            />
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() =>
+                                                                                    setFormData(
+                                                                                        (
+                                                                                            prev,
+                                                                                        ) => {
+                                                                                            const current =
+                                                                                                prev.remove_image_ids ||
+                                                                                                [];
+                                                                                            const next =
+                                                                                                current.includes(
+                                                                                                    img.id,
+                                                                                                )
+                                                                                                    ? current.filter(
+                                                                                                          (
+                                                                                                              id,
+                                                                                                          ) =>
+                                                                                                              id !==
+                                                                                                              img.id,
+                                                                                                      )
+                                                                                                    : [
+                                                                                                          ...current,
+                                                                                                          img.id,
+                                                                                                      ];
+
+                                                                                            return {
+                                                                                                ...prev,
+                                                                                                remove_image_ids:
+                                                                                                    next,
+                                                                                            };
+                                                                                        },
+                                                                                    )
+                                                                                }
+                                                                                title={
+                                                                                    marked
+                                                                                        ? 'Keep image'
+                                                                                        : 'Remove image on save'
+                                                                                }
+                                                                                className={`mt-1 w-full rounded px-1.5 py-0.5 text-[10px] font-bold ${
+                                                                                    marked
+                                                                                        ? 'bg-red-600 text-white'
+                                                                                        : 'bg-surface-container-high text-primary hover:bg-red-100 hover:text-red-700'
+                                                                                }`}
+                                                                            >
+                                                                                {marked
+                                                                                    ? 'Undo Remove'
+                                                                                    : `Remove #${img.id}`}
+                                                                            </button>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                        </div>
+                                                    )}
+                                                {field.librarySelectKey &&
+                                                    libraryImages.length >
+                                                        0 && (
+                                                        <details className="rounded border border-outline-variant bg-surface-container-low p-2.5">
+                                                            <summary className="cursor-pointer text-xs font-bold text-primary">
+                                                                Or attach from
+                                                                Media Library (
+                                                                {
+                                                                    (
+                                                                        formData[
+                                                                            field
+                                                                                .librarySelectKey
+                                                                        ] || []
+                                                                    ).length
+                                                                }{' '}
+                                                                selected)
+                                                            </summary>
+                                                            <div className="mt-2 grid max-h-48 grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-6">
+                                                                {libraryImages.map(
+                                                                    (img) => {
+                                                                        const selected =
+                                                                            (
+                                                                                formData[
+                                                                                    field
+                                                                                        .librarySelectKey
+                                                                                ] ||
+                                                                                []
+                                                                            ).includes(
+                                                                                img.id,
+                                                                            );
+
+                                                                        return (
+                                                                            <button
+                                                                                key={
+                                                                                    img.id
+                                                                                }
+                                                                                type="button"
+                                                                                onClick={() =>
+                                                                                    setFormData(
+                                                                                        (
+                                                                                            prev,
+                                                                                        ) => {
+                                                                                            const cur =
+                                                                                                prev[
+                                                                                                    field
+                                                                                                        .librarySelectKey
+                                                                                                ] ||
+                                                                                                [];
+                                                                                            const next =
+                                                                                                cur.includes(
+                                                                                                    img.id,
+                                                                                                )
+                                                                                                    ? cur.filter(
+                                                                                                          (
+                                                                                                              id,
+                                                                                                          ) =>
+                                                                                                              id !==
+                                                                                                              img.id,
+                                                                                                      )
+                                                                                                    : [
+                                                                                                          ...cur,
+                                                                                                          img.id,
+                                                                                                      ];
+
+                                                                                            return {
+                                                                                                ...prev,
+                                                                                                [field.librarySelectKey]:
+                                                                                                    next,
+                                                                                            };
+                                                                                        },
+                                                                                    )
+                                                                                }
+                                                                                className={`relative overflow-hidden rounded border-2 p-0.5 text-left transition ${
+                                                                                    selected
+                                                                                        ? 'border-secondary bg-secondary/10'
+                                                                                        : 'border-outline-variant bg-white hover:border-primary'
+                                                                                }`}
+                                                                            >
+                                                                                <img
+                                                                                    src={
+                                                                                        img.thumbnail_url ||
+                                                                                        img.url
+                                                                                    }
+                                                                                    alt={
+                                                                                        img.original_name ||
+                                                                                        `#${img.id}`
+                                                                                    }
+                                                                                    className="h-12 w-full rounded object-cover"
+                                                                                />
+                                                                                <span className="mt-0.5 block truncate px-0.5 font-mono text-[10px] font-bold text-primary">
+                                                                                    #
+                                                                                    {
+                                                                                        img.id
+                                                                                    }
+                                                                                </span>
+                                                                            </button>
+                                                                        );
+                                                                    },
+                                                                )}
+                                                            </div>
+                                                        </details>
+                                                    )}
+                                            </div>
                                         )}
 
                                         {[

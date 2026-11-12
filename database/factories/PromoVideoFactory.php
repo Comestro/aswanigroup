@@ -24,7 +24,7 @@ class PromoVideoFactory extends Factory
             'youtube_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
             'youtube_id' => 'dQw4w9WgXcQ',
             'video_path' => null,
-            'poster_path' => '/images/ashwin-distributor.jpg',
+            'poster_image' => [],
             'is_featured' => true,
             'is_active' => true,
             'sort_order' => 1,

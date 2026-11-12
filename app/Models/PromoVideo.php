@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $youtube_url
  * @property string|null $youtube_id
  * @property string|null $video_path
- * @property string|null $poster_path
+ * @property array<int, int>|null $poster_image
  * @property bool $is_featured
  * @property bool $is_active
  * @property int $sort_order
@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'youtube_url',
     'youtube_id',
     'video_path',
-    'poster_path',
+    'poster_image',
     'is_featured',
     'is_active',
     'sort_order',
@@ -106,6 +106,7 @@ class PromoVideo extends Model
     {
         return [
             'venture_id' => 'integer',
+            'poster_image' => 'array',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer',

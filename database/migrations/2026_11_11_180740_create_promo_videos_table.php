@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('youtube_url')->nullable();
             $table->string('youtube_id', 32)->nullable();
             $table->string('video_path')->nullable();
-            $table->string('poster_path')->nullable();
+            $table->json('poster_image')->nullable();
             $table->boolean('is_featured')->default(false)->index();
             $table->boolean('is_active')->default(true)->index();
             $table->unsignedInteger('sort_order')->default(0)->index();

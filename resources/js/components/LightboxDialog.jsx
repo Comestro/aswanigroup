@@ -1,9 +1,19 @@
 import { Calendar, Download, MapPin, ShieldCheck, X } from 'lucide-react';
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
 
 export default function LightboxDialog({ item, onClose }) {
     const dialogRef = useRef(null);
     const titleId = useId();
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const galleryImages = item
+        ? Array.isArray(item.images) && item.images.length > 0
+            ? item.images
+            : [item.image || DEMO_IMAGE_URL]
+        : [];
+    const safeIndex = activeIndex < galleryImages.length ? activeIndex : 0;
+    const currentImage = galleryImages[safeIndex] || DEMO_IMAGE_URL;
 
     useEffect(() => {
         const dialog = dialogRef.current;
@@ -110,13 +120,42 @@ export default function LightboxDialog({ item, onClose }) {
                     </div>
 
                     <div className="overflow-y-auto p-5 md:p-6">
-                        {item.image && (
-                            <div className="mb-5 overflow-hidden rounded border border-outline-variant bg-surface-container-high">
-                                <img
-                                    src={item.image}
-                                    alt={item.title}
-                                    className="max-h-[420px] w-full object-contain"
-                                />
+                        {galleryImages.length > 0 && (
+                            <div className="mb-5 space-y-3">
+                                <div className="overflow-hidden rounded border border-outline-variant bg-surface-container-high">
+                                    <img
+                                        src={currentImage}
+                                        alt={item.title}
+                                        onError={handleImageError}
+                                        className="max-h-[420px] w-full object-contain"
+                                    />
+                                </div>
+
+                                {galleryImages.length > 1 && (
+                                    <div className="flex flex-wrap gap-2">
+                                        {galleryImages.map((imgUrl, idx) => (
+                                            <button
+                                                key={`${imgUrl}-${idx}`}
+                                                type="button"
+                                                onClick={() =>
+                                                    setActiveIndex(idx)
+                                                }
+                                                className={`overflow-hidden rounded border-2 transition ${
+                                                    idx === safeIndex
+                                                        ? 'border-secondary'
+                                                        : 'border-outline-variant opacity-70 hover:opacity-100'
+                                                }`}
+                                            >
+                                                <img
+                                                    src={imgUrl}
+                                                    alt={`${item.title} ${idx + 1}`}
+                                                    onError={handleImageError}
+                                                    className="h-14 w-20 object-cover"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
 

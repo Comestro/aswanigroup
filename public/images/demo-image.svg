@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-label="Ashwin Group Showcase Placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)" />
+  <rect width="800" height="500" fill="url(#grid)" />
+  <rect x="28" y="28" width="744" height="444" rx="16" fill="none" stroke="#f59e0b" stroke-opacity="0.3" stroke-width="1.5" />
+  <g transform="translate(400, 215)" text-anchor="middle">
+    <circle cx="0" cy="-22" r="36" fill="#f59e0b" fill-opacity="0.14" stroke="#f59e0b" stroke-opacity="0.5" stroke-width="2" />
+    <path d="M-14 -12 L0 -36 L14 -12 M-9 -19 L9 -19" fill="none" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <text x="0" y="42" fill="#ffffff" font-family="Georgia, serif" font-size="28" font-weight="bold" letter-spacing="1.5">ASHWIN GROUP</text>
+    <text x="0" y="72" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14" letter-spacing="3">CORPORATE SHOWCASE · DEMO IMAGE</text>
+  </g>
+</svg>
+

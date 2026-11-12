@@ -12,7 +12,7 @@ import {
 import { route } from 'ziggy-js';
 import PageHero from '@/components/PageHero';
 import MainLayout from '@/layouts/MainLayout';
-import { getVentureIcon } from '@/lib/utils';
+import { DEMO_IMAGE_URL, getVentureIcon, handleImageError } from '@/lib/utils';
 
 export default function Industries({ ventures = [], catalogs = [] }) {
     const { props } = usePage();
@@ -31,9 +31,7 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                     headers.subtitle ||
                     'Dedicated operating companies across packaged drinking water, green energy & hospitality, fine jewelry, and commercial distribution.'
                 }
-                heroImage={
-                    headers.hero_image || '/images/industries-hero-bg.png'
-                }
+                heroImage={headers.hero_image || DEMO_IMAGE_URL}
                 imageAlt={headers.title || 'Ashwin Group Ventures'}
             />
 
@@ -55,24 +53,16 @@ export default function Industries({ ventures = [], catalogs = [] }) {
                                             isReversed ? 'lg:order-2' : ''
                                         }`}
                                     >
-                                        {venture.division_image ||
-                                        venture.hero_image ? (
-                                            <img
-                                                src={
-                                                    venture.division_image ||
-                                                    venture.hero_image
-                                                }
-                                                alt={venture.name}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full min-h-[260px] w-full flex-col items-center justify-center bg-primary p-8 text-white">
-                                                <IconComponent className="mb-3 h-12 w-12 text-secondary-container" />
-                                                <span className="font-serif text-xl font-bold">
-                                                    {venture.name}
-                                                </span>
-                                            </div>
-                                        )}
+                                        <img
+                                            src={
+                                                venture.division_image ||
+                                                venture.hero_image ||
+                                                DEMO_IMAGE_URL
+                                            }
+                                            alt={venture.name}
+                                            onError={handleImageError}
+                                            className="h-full w-full object-cover"
+                                        />
                                         <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded bg-primary/90 px-3 py-1 text-[10px] font-bold tracking-wider text-secondary-container uppercase backdrop-blur-sm">
                                             <IconComponent size={13} />
                                             {venture.badge ||

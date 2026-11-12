@@ -1,6 +1,7 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Lock } from 'lucide-react';
 import { route } from 'ziggy-js';
+import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
 
 export default function Login() {
     const { props } = usePage();
@@ -25,8 +26,9 @@ export default function Login() {
             <div className="w-full max-w-md rounded-lg border border-outline-variant bg-white p-8 shadow-sm">
                 <div className="mb-6 flex items-center gap-3">
                     <img
-                        src={settings.logo_path || '/images/logo.png'}
+                        src={settings.logo_path || DEMO_IMAGE_URL}
                         alt={companyName}
+                        onError={handleImageError}
                         className="h-10 w-10 object-contain"
                     />
                     <div>

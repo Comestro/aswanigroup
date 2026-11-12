@@ -81,7 +81,7 @@ export default function TopNavBar() {
 
     const logoClass = scrolled ? 'text-primary' : 'text-white';
     const companyName = siteSettings.company_name || 'Ashwin Group';
-    const logoPath = siteSettings.logo_path || '/images/logo.png';
+    const logoPath = siteSettings.logo_path || '/images/demo-image.svg';
 
     const getLinkClasses = (active) => {
         const color = scrolled

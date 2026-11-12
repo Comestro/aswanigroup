@@ -23,7 +23,7 @@ class ProjectFactory extends Factory
             'location' => fake()->city().', Bihar',
             'completion_year' => (string) fake()->numberBetween(2020, 2026),
             'summary' => fake()->sentence(),
-            'image_path' => '/images/portfolio-water-1.png',
+            'image' => [],
             'is_featured_hero' => false,
             'is_active' => true,
             'sort_order' => 1,

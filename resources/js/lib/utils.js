@@ -12,6 +12,15 @@ import {
 import { createElement } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+export const DEMO_IMAGE_URL = '/images/demo-image.svg';
+
+export function handleImageError(event) {
+    if (event?.currentTarget && !event.currentTarget.dataset.fallbackApplied) {
+        event.currentTarget.dataset.fallbackApplied = '1';
+        event.currentTarget.src = DEMO_IMAGE_URL;
+    }
+}
+
 export function cn(...inputs) {
     return twMerge(clsx(inputs));
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ImageService;
 use Database\Factories\SiteSettingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,12 +16,12 @@ use Illuminate\Support\Facades\Cache;
  * @property string|null $tagline
  * @property string|null $hero_description
  * @property string $est_year
- * @property string $logo_path
+ * @property array<int, int>|null $logo_images
  * @property string|null $founder_name
  * @property string|null $founder_title
  * @property string|null $chairman_quote
  * @property string|null $chairman_message
- * @property string $chairman_image
+ * @property array<int, int>|null $chairman_images
  * @property string|null $vision_text
  * @property string|null $mission_text
  * @property array<int, string>|null $core_values
@@ -38,6 +39,7 @@ use Illuminate\Support\Facades\Cache;
  * @property string|null $footer_summary
  * @property array<string, string>|null $social_links
  * @property array<string, array<string, string|null>>|null $page_headers
+ * @property array<string, array<int, int>>|null $page_header_images
  */
 #[Fillable([
     'company_name',
@@ -45,12 +47,12 @@ use Illuminate\Support\Facades\Cache;
     'tagline',
     'hero_description',
     'est_year',
-    'logo_path',
+    'logo_images',
     'founder_name',
     'founder_title',
     'chairman_quote',
     'chairman_message',
-    'chairman_image',
+    'chairman_images',
     'vision_text',
     'mission_text',
     'core_values',
@@ -68,6 +70,7 @@ use Illuminate\Support\Facades\Cache;
     'footer_summary',
     'social_links',
     'page_headers',
+    'page_header_images',
 ])]
 class SiteSetting extends Model
 {
@@ -83,8 +86,6 @@ class SiteSetting extends Model
         'company_name' => 'Ashwin Group',
         'company_full_name' => 'Ashwin Group of Companies',
         'est_year' => '1995',
-        'logo_path' => '/images/logo.png',
-        'chairman_image' => '/images/chairman-portrait.png',
     ];
 
     protected static function booted(): void
@@ -147,18 +148,19 @@ class SiteSetting extends Model
                 'cta_eyebrow' => 'Instant Lead Desk',
                 'cta_title' => 'Partner with Ashwin Group',
                 'cta_subtitle' => 'Interested in Water Industries distributorship, Green Energy & Eco-Resort development, brand collaborations, or retail franchises? Submit once to notify our email desk and connect instantly on WhatsApp.',
+                'hero_image' => Image::DEMO_URL,
             ],
             'about' => [
                 'badge' => 'Corporate Heritage',
                 'title' => 'Our Legacy.',
                 'subtitle' => 'Decades of enduring excellence, building trusted ventures that power regional growth and sustainability.',
-                'hero_image' => '/images/about-hero-bg.png',
+                'hero_image' => Image::DEMO_URL,
             ],
             'industries' => [
                 'badge' => 'Group Portfolio',
                 'title' => 'Our Business Ventures.',
                 'subtitle' => 'Dedicated operating companies across packaged drinking water, green energy & hospitality, fine jewelry, and commercial distribution.',
-                'hero_image' => '/images/industries-hero-bg.png',
+                'hero_image' => Image::DEMO_URL,
                 'cta_eyebrow' => 'Direct Partnership Desk',
                 'cta_title' => 'Need Territory Pricing, Catalogs, or Custom Quotes?',
                 'cta_subtitle' => 'Reach our acquisition desk directly via hotline, email, or WhatsApp.',
@@ -167,19 +169,19 @@ class SiteSetting extends Model
                 'badge' => 'Completed Projects & Catalogs',
                 'title' => 'Ventures & Portfolio.',
                 'subtitle' => 'Completed facilities, solar & hospitality projects, fine jewelry collections, and commercial retail operations across Eastern India.',
-                'hero_image' => '/images/portfolio-hero-bg.png',
+                'hero_image' => Image::DEMO_URL,
             ],
             'certifications' => [
                 'badge' => 'Verified Credibility',
                 'title' => 'Certifications & Agreements.',
                 'subtitle' => 'Official documentation, partnership photos, BIS/FSSAI standards, and the first-copy verification of our flagship brand agreements.',
-                'hero_image' => '/images/about-hero-bg.png',
+                'hero_image' => Image::DEMO_URL,
             ],
             'contact' => [
                 'badge' => 'Get In Touch',
                 'title' => 'Connect With Us.',
                 'subtitle' => 'Interested in Water Industries distributorship, Green Energy & Eco-Resort projects, or group brand partnerships? Every inquiry forwards to our email & WhatsApp desk.',
-                'hero_image' => '/images/contact-hero-bg.png',
+                'hero_image' => Image::DEMO_URL,
                 'sidebar_title' => 'Corporate Office',
                 'sidebar_subtitle' => 'Direct lines to our division managers.',
                 'form_title' => 'Send us a Message',
@@ -213,16 +215,39 @@ class SiteSetting extends Model
      */
     public function toPublicArray(): array
     {
+        $imageService = app(ImageService::class);
+        $headerImageMap = is_array($this->page_header_images) ? $this->page_header_images : [];
+        $imageIds = [
+            ...$imageService->normalizeIds($this->logo_images),
+            ...$imageService->normalizeIds($this->chairman_images),
+        ];
+
+        foreach ($headerImageMap as $ids) {
+            foreach ($imageService->normalizeIds($ids) as $id) {
+                $imageIds[] = $id;
+            }
+        }
+
+        $imageMap = $imageService->loadMapForIds($imageIds);
+
         $defaults = self::defaultPageHeaders();
         $storedHeaders = is_array($this->page_headers) ? $this->page_headers : [];
         $mergedHeaders = [];
 
         foreach ($defaults as $page => $sectionDefaults) {
             $pageOverrides = $storedHeaders[$page] ?? [];
-            $mergedHeaders[$page] = array_merge(
+            $merged = array_merge(
                 $sectionDefaults,
                 array_filter($pageOverrides, static fn (?string $v): bool => $v !== null && $v !== ''),
             );
+
+            $pageImageIds = $imageService->normalizeIds($headerImageMap[$page] ?? []);
+
+            if ($pageImageIds !== []) {
+                $merged['hero_image'] = $imageService->resolveUrl($pageImageIds, preloadedMap: $imageMap);
+            }
+
+            $mergedHeaders[$page] = $merged;
         }
 
         return [
@@ -231,12 +256,15 @@ class SiteSetting extends Model
             'tagline' => $this->tagline,
             'hero_description' => $this->hero_description,
             'est_year' => $this->est_year,
-            'logo_path' => $this->logo_path,
+            'logo_images' => $this->logo_images ?? [],
+            'logo_path' => $imageService->resolveUrl($this->logo_images, preloadedMap: $imageMap),
             'founder_name' => $this->founder_name,
             'founder_title' => $this->founder_title,
             'chairman_quote' => $this->chairman_quote,
             'chairman_message' => $this->chairman_message,
-            'chairman_image' => $this->chairman_image,
+            'chairman_images' => $this->chairman_images ?? [],
+            'chairman_image' => $imageService->resolveUrl($this->chairman_images, preloadedMap: $imageMap),
+            'page_header_images' => $headerImageMap,
             'vision_text' => $this->vision_text,
             'mission_text' => $this->mission_text,
             'core_values' => $this->core_values ?? [],
@@ -262,11 +290,14 @@ class SiteSetting extends Model
     protected function casts(): array
     {
         return [
+            'logo_images' => 'array',
+            'chairman_images' => 'array',
             'core_values' => 'array',
             'timeline_items' => 'array',
             'hero_stats' => 'array',
             'social_links' => 'array',
             'page_headers' => 'array',
+            'page_header_images' => 'array',
         ];
     }
 }

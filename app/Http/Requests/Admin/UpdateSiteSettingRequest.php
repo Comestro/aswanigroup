@@ -58,6 +58,8 @@ class UpdateSiteSettingRequest extends FormRequest
             'page_headers' => ['nullable', 'array'],
             'page_headers.*' => ['nullable', 'array'],
             'page_headers.*.*' => ['nullable', 'string', 'max:500'],
+            'page_header_files' => ['nullable', 'array'],
+            'page_header_files.*' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 }

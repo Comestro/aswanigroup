@@ -24,7 +24,7 @@ class CertificationFactory extends Factory
             'reference_number' => strtoupper(fake()->bothify('AG-####-??')),
             'issued_date' => '2026',
             'description' => fake()->sentence(),
-            'image_path' => '/images/ashwin-distributor.jpg',
+            'image' => [],
             'document_path' => '/images/Barista_Brand_Deck_2026.pdf',
             'is_active' => true,
             'sort_order' => 1,

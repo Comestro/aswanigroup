@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $reference_number
  * @property string|null $issued_date
  * @property string|null $description
- * @property string|null $image_path
+ * @property array<int, int>|null $image
  * @property string|null $document_path
  * @property bool $is_active
  * @property int $sort_order
@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'reference_number',
     'issued_date',
     'description',
-    'image_path',
+    'image',
     'document_path',
     'is_active',
     'sort_order',
@@ -83,6 +83,7 @@ class Certification extends Model
     {
         return [
             'venture_id' => 'integer',
+            'image' => 'array',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
         ];

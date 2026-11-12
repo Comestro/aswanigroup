@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { route } from 'ziggy-js';
+import { DEMO_IMAGE_URL, handleImageError } from '@/lib/utils';
 
 export default function Footer() {
     const { props } = usePage();
@@ -9,7 +10,7 @@ export default function Footer() {
     const social = settings.social_links || {};
 
     const companyName = settings.company_name || 'Ashwin Group';
-    const logoPath = settings.logo_path || '/images/logo.png';
+    const logoPath = settings.logo_path || DEMO_IMAGE_URL;
     const whatsappNumber = settings.whatsapp_number || '919507488833';
     const phoneDisplay = settings.secondary_phone
         ? `${settings.primary_phone} / ${settings.secondary_phone}`
@@ -25,6 +26,7 @@ export default function Footer() {
                             <img
                                 src={logoPath}
                                 alt={`${companyName} Logo`}
+                                onError={handleImageError}
                                 className="h-8 w-8 object-contain"
                             />
                             <span className="text-xl font-bold tracking-tight">
