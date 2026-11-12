@@ -93,7 +93,7 @@ Route::prefix('artisan')->group(function () {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aswani Group - Artisan Tools</title>
+    <title>ashwanigroup - Artisan Tools</title>
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; padding: 40px 20px; margin: 0; }
         .container { max-width: 680px; margin: 0 auto; background: #1e293b; border-radius: 12px; padding: 24px; border: 1px solid #334155; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
@@ -113,7 +113,7 @@ Route::prefix('artisan')->group(function () {
 </head>
 <body>
     <div class="container">
-        <h1>🛠️ Aswaani Group - Artisan Utilities</h1>
+        <h1>🛠️ ashwanigroup - Artisan Utilities</h1>
         <p>Click any action below to safely execute the Artisan command directly from the browser.</p>
         <div class="btn-grid">
             <a href="/artisan/migrate" class="btn">🚀 php artisan migrate</a>
@@ -137,48 +137,48 @@ HTML;
         Artisan::call('migrate', ['--force' => true]);
         $output = Artisan::output();
 
-        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#38bdf8;">🚀 php artisan migrate Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">' . e($output ?: 'Migrations ran successfully. Nothing to migrate.') . '</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
+        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#38bdf8;">🚀 php artisan migrate Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">'.e($output ?: 'Migrations ran successfully. Nothing to migrate.').'</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
     });
 
     Route::get('/migrate-fresh-seed', function () {
         Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
         $output = Artisan::output();
 
-        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#ef4444;">⚠️ php artisan migrate:fresh --seed Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">' . e($output ?: 'Database refreshed and seeded successfully.') . '</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
+        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#ef4444;">⚠️ php artisan migrate:fresh --seed Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">'.e($output ?: 'Database refreshed and seeded successfully.').'</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
     });
 
     Route::get('/optimize-clear', function () {
         Artisan::call('optimize:clear');
         $output = Artisan::output();
 
-        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#f59e0b;">🧹 php artisan optimize:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">' . e($output ?: 'All caches cleared successfully.') . '</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
+        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#f59e0b;">🧹 php artisan optimize:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">'.e($output ?: 'All caches cleared successfully.').'</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
     });
 
     Route::get('/cache-clear', function () {
         Artisan::call('cache:clear');
         $output = Artisan::output();
 
-        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#f59e0b;">⚡ php artisan cache:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">' . e($output ?: 'Cache cleared successfully.') . '</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
+        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#f59e0b;">⚡ php artisan cache:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">'.e($output ?: 'Cache cleared successfully.').'</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
     });
 
     Route::get('/route-clear', function () {
         Artisan::call('route:clear');
         $output = Artisan::output();
 
-        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#38bdf8;">🛣️ php artisan route:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">' . e($output ?: 'Route cache cleared successfully.') . '</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
+        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#38bdf8;">🛣️ php artisan route:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">'.e($output ?: 'Route cache cleared successfully.').'</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
     });
 
     Route::get('/config-clear', function () {
         Artisan::call('config:clear');
         $output = Artisan::output();
 
-        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#38bdf8;">⚙️ php artisan config:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">' . e($output ?: 'Config cache cleared successfully.') . '</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
+        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#38bdf8;">⚙️ php artisan config:clear Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">'.e($output ?: 'Config cache cleared successfully.').'</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
     });
 
     Route::get('/storage-link', function () {
         Artisan::call('storage:link');
         $output = Artisan::output();
 
-        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#10b981;">🔗 php artisan storage:link Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">' . e($output ?: 'Storage link created successfully.') . '</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
+        return response('<div style="background:#0f172a;color:#f8fafc;padding:30px;min-height:100vh;font-family:system-ui;"><div style="max-width:700px;margin:0 auto;"><h2 style="color:#10b981;">🔗 php artisan storage:link Output:</h2><pre style="background:#1e293b;color:#4ade80;padding:16px;border-radius:8px;border:1px solid #334155;font-family:monospace;white-space:pre-wrap;">'.e($output ?: 'Storage link created successfully.').'</pre><br><a href="/artisan" style="color:#38bdf8;text-decoration:none;font-weight:bold;">← Back to Artisan Tools</a></div></div>');
     });
 });
